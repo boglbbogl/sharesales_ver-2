@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'constant/material_black.dart';
 import 'main_home_page.dart';
 
 void main() => runApp(MyApp());
@@ -9,7 +10,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'sharesales',
       theme: ThemeData(
-        primarySwatch: Colors.black
+        canvasColor: blackColor,
+        primarySwatch: blackColor,
       ),
       home: MainHomePage(),
     );
