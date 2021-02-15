@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sharesales_ver2/constant/material_black.dart';
+import 'package:sharesales_ver2/screen/sales_management_screen.dart';
+
+import 'constant/color.dart';
 
 class MainHomePage extends StatefulWidget {
   @override
@@ -21,11 +23,11 @@ class _MainHomePageState extends State<MainHomePage> {
   ];
 
   List<Widget> _pageList = [
-   Container(color: Colors.yellow,),
-   Container(),
-   Container(color: Colors.grey,),
-   Container(color: Colors.green,),
-   Container(color: Colors.red,),
+    Container(color: Colors.yellow,),
+    Container(),
+    SalesManagementScreen(),
+    Container(color: Colors.green,),
+    Container(color: Colors.red,),
   ];
 
   @override
@@ -46,22 +48,26 @@ class _MainHomePageState extends State<MainHomePage> {
           });
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: blackColor,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        items: _btmNavItems,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedItemColor: Colors.pinkAccent,
-        unselectedItemColor: Colors.white54,
-        onTap: (index){
-          setState(() {
-            _selectedIndex = index;
-            _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.fastOutSlowIn,);
-          });
-        },
-      ),
+      bottomNavigationBar: _btmNav(),
+    );
+  }
+
+  BottomNavigationBar _btmNav() {
+    return BottomNavigationBar(
+      backgroundColor: blackColor,
+      type: BottomNavigationBarType.fixed,
+      currentIndex: _selectedIndex,
+      items: _btmNavItems,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      selectedItemColor: Colors.yellowAccent,
+      unselectedItemColor: Colors.white54,
+      onTap: (index){
+        setState(() {
+          _selectedIndex = index;
+          _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.fastOutSlowIn,);
+        });
+      },
     );
   }
 }
