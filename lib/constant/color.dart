@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
     colors: <Color>[Color(0xffff6e02), Color(0xffffff00), Color(0xffff6d00)],
   ).createShader(new Rect.fromLTWH(0.0, 300.0, 300.0, 0.0));
 
+
 const MaterialColor blackColor = MaterialColor(
   0xFF000000,
   <int, Color>{
