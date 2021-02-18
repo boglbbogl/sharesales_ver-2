@@ -24,7 +24,7 @@ class _SalesManagementScreenState extends State<SalesManagementScreen> {
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
             fontSize: appbarFontsize,
-            foreground: Paint()..shader = appbarColor,
+            foreground: Paint()..shader = mainColor,
           ),
         ),
         actions: [

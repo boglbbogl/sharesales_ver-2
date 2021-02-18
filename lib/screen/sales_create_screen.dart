@@ -20,7 +20,7 @@ class _SalesCreateScreenState extends State<SalesCreateScreen> {
         title: Text(
           'CREATE',
           style: TextStyle(
-              foreground: Paint()..shader = appbarColor,
+              foreground: Paint()..shader = mainColor,
               fontWeight: FontWeight.bold,
               fontStyle: FontStyle.italic),
         ),
@@ -69,9 +69,9 @@ class _SalesCreateScreenState extends State<SalesCreateScreen> {
                       width: tffSizeWidth,
                       child: TextFormField(
                         validator: _salesInputValidator,
-                        style: textInputStyle(),
+                        style: blackInputStyle(),
                         cursorColor: Colors.white,
-                        decoration: textInputDecor('총매출'),
+                        decoration: blackInputDecor('총매출'),
                         keyboardType: TextInputType.number,
                       ),
                     ),
@@ -79,9 +79,9 @@ class _SalesCreateScreenState extends State<SalesCreateScreen> {
                       height: tffSizeHeight,
                       width: tffSizeWidth,
                       child: TextFormField(
-                        style: textInputStyle(),
+                        style: blackInputStyle(),
                         cursorColor: Colors.white,
-                        decoration: textInputDecor('실제매출'),
+                        decoration: blackInputDecor('실제매출'),
                         keyboardType: TextInputType.number,
                         validator: _salesInputValidator,
                       ),
@@ -96,9 +96,9 @@ class _SalesCreateScreenState extends State<SalesCreateScreen> {
                       height: tffSizeHeight,
                       width: tffSizeWidth,
                       child: TextFormField(
-                        style: textInputStyle(),
+                        style: blackInputStyle(),
                         cursorColor: Colors.white,
-                        decoration: textInputDecor('공급가액'),
+                        decoration: blackInputDecor('공급가액'),
                         keyboardType: TextInputType.number,
                         validator: _salesInputValidator,
                       ),
@@ -107,9 +107,9 @@ class _SalesCreateScreenState extends State<SalesCreateScreen> {
                       height: tffSizeHeight,
                       width: tffSizeWidth,
                       child: TextFormField(
-                        style: textInputStyle(),
+                        style: blackInputStyle(),
                         cursorColor: Colors.white,
-                        decoration: textInputDecor('세액'),
+                        decoration: blackInputDecor('세액'),
                         keyboardType: TextInputType.number,
                         validator: _salesInputValidator,
                       ),

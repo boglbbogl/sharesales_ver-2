@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
+import 'package:sharesales_ver2/main_home_page.dart';
 
 class SignUpForm extends StatefulWidget {
   @override
@@ -29,17 +31,26 @@ class _SignUpFormState extends State<SignUpForm> {
       body: Container(
         color: Colors.amberAccent,
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25, top: 150),
+          padding: const EdgeInsets.only(left: 30, right: 30, top: 100),
           child: Form(
             key: _formKey,
             child: ListView(
               children: <Widget>[
+                Center(
+                  child: Text('share sales',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 60,
+                      foreground: Paint()..shader = subColor,
+                    ),),
+                ),
                 SizedBox(
                   height: 100,
                 ),
                 TextFormField(
                   controller: _emailController,
-                  decoration: logoutInputDecor('Email'),
+                  decoration: amberInputDecor('Email'),
                   validator: (text){
                     if(text.isNotEmpty && text.contains('@')){
                       return null;
@@ -50,7 +61,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
                 TextFormField(
                   controller: _pwController,
-                  decoration: logoutInputDecor('Password'),
+                  decoration: amberInputDecor('Password'),
                   validator: (text){
                     if(text.isNotEmpty && text.length > 3){
                       return null;
@@ -61,7 +72,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
                 TextFormField(
                   controller: _cpwController,
-                  decoration: logoutInputDecor('Confirm Password'),
+                  decoration: amberInputDecor('Confirm Password'),
                   validator: (text){
                     if(text.isNotEmpty && _pwController.text == text){
                       return null;
@@ -76,8 +87,9 @@ class _SignUpFormState extends State<SignUpForm> {
                     color: Colors.black,
                       onPressed: (){
                         if(_formKey.currentState.validate()){
-                          return print('기능잘 작동합니다');
-                        };
+                          print('기능잘 작동합니다');
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>MainHomePage()));
+                        }
                       },
                       child: Text(
                         'CREATE',

@@ -8,7 +8,6 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-
   Widget signUpForm = SignUpForm();
   Widget signInForm = SignInForm();
 
@@ -16,8 +15,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   void initState() {
-    if(currentWidget == null)
-      currentWidget = signUpForm;
+    if (currentWidget == null) currentWidget = signUpForm;
     super.initState();
   }
 
@@ -28,10 +26,10 @@ class _AuthScreenState extends State<AuthScreen> {
       body: Stack(
         children: <Widget>[
           AnimatedSwitcher(
-              duration: Duration(milliseconds: 1000),
-          switchInCurve: Curves.fastLinearToSlowEaseIn,
-          switchOutCurve: Curves.fastOutSlowIn,
-          child: currentWidget,
+            duration: Duration(milliseconds: 1000),
+            // switchInCurve: Curves.fastLinearToSlowEaseIn,
+            switchOutCurve: Curves.fastLinearToSlowEaseIn,
+            child: currentWidget,
           ),
           Positioned(
             left: 0,
@@ -41,29 +39,37 @@ class _AuthScreenState extends State<AuthScreen> {
               child: FlatButton(
                 onPressed: () {
                   setState(() {
-                    if(currentWidget is SignUpForm){
+                    if (currentWidget is SignUpForm) {
                       currentWidget = signInForm;
-                    } else{
+                    } else {
                       currentWidget = signUpForm;
                     }
                   });
-
                 },
-              child: RichText(
-                text: TextSpan(
-                  text: (currentWidget is SignUpForm) ? '로그인 하실래요?':'회원가입 하실래요?',
-                  children: [
-                    TextSpan(
-                      text: (currentWidget is SignUpForm) ? 'Sign In' : 'Sign UP',
-                      style: TextStyle(color: (currentWidget is SignUpForm) ? Colors.blue : Colors.redAccent),
-                    ),
-                    TextSpan(
-                      text: (currentWidget is SignUpForm) ? '테스트1' : 'test2',
-                    ),
-                  ],
+                child: InkWell(
+                  child: Text(
+                    (currentWidget is SignUpForm) ? 'CREATE PAGE' : 'LOGIN PAGE',
+                    style: TextStyle(
+                      fontSize: 25,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                        color: (currentWidget is SignUpForm) ? Colors.black : Colors.amberAccent),
+                  ),
                 ),
-              ),
-
+                // child: RichText(
+                //   text: TextSpan(
+                //     text: (currentWidget is SignUpForm) ? '로그인 하실래요?':'회원가입 하실래요?',
+                //     children: [
+                //       TextSpan(
+                //         text: (currentWidget is SignUpForm) ? 'Sign In' : 'Sign UP',
+                //         style: TextStyle(color: (currentWidget is SignUpForm) ? Colors.blue : Colors.redAccent),
+                //       ),
+                //       TextSpan(
+                //         text: (currentWidget is SignUpForm) ? '테스트1' : 'test2',
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ),
             ),
           ),

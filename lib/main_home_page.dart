@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/screen/sales_management_screen.dart';
 
 import 'constant/color.dart';
+import 'screen/ad_screen.dart';
 
 class MainHomePage extends StatefulWidget {
   @override
@@ -23,7 +24,7 @@ class _MainHomePageState extends State<MainHomePage> {
   ];
 
   List<Widget> _pageList = [
-    Container(color: Colors.yellow,),
+    AdScreen(),
     Container(),
     SalesManagementScreen(),
     Container(color: Colors.green,),

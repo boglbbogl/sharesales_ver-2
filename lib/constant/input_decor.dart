@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
-TextStyle textInputStyle(){
+TextStyle blackInputStyle(){
   return TextStyle(
     color: Colors.white,
   );
 }
 
-InputDecoration textInputDecor(String hint) {
+InputDecoration blackInputDecor(String hint) {
   return InputDecoration(
-    enabledBorder: _activeInputBorder(),
-    focusedBorder: _activeInputBorder(),
-    errorBorder: _errorInputBorder(),
-    focusedErrorBorder: _errorInputBorder(),
+    enabledBorder: _blackActiveInputBorder(),
+    focusedBorder: _blackActiveInputBorder(),
+    errorBorder: _blackErrorInputBorder(),
+    focusedErrorBorder: _blackErrorInputBorder(),
     labelText: hint,
-    labelStyle: TextStyle(color: Colors.yellow),
+    labelStyle: TextStyle(color: Colors.amberAccent),
   );
 }
 
-UnderlineInputBorder _errorInputBorder() {
+UnderlineInputBorder _blackErrorInputBorder() {
   return UnderlineInputBorder(
     borderSide: BorderSide(
       color: Colors.redAccent,
@@ -25,26 +25,26 @@ UnderlineInputBorder _errorInputBorder() {
   );
 }
 
-UnderlineInputBorder _activeInputBorder() {
+UnderlineInputBorder _blackActiveInputBorder() {
   return UnderlineInputBorder(
     borderSide: BorderSide(
-        color: Colors.yellow,
+        color: Colors.amberAccent,
     ),
   );
 }
 
-InputDecoration logoutInputDecor(String hint) {
+InputDecoration amberInputDecor(String hint) {
   return InputDecoration(
-    enabledBorder: _logoutActiveInputBorder(),
-    focusedBorder: _logoutActiveInputBorder(),
-    errorBorder: _errorInputBorder(),
-    focusedErrorBorder: _errorInputBorder(),
+    enabledBorder: _amberActiveInputBorder(),
+    focusedBorder: _amberActiveInputBorder(),
+    errorBorder: _blackErrorInputBorder(),
+    focusedErrorBorder: _blackErrorInputBorder(),
     labelText: hint,
     labelStyle: TextStyle(color: Colors.black),
   );
 }
 
-UnderlineInputBorder _logoutActiveInputBorder() {
+UnderlineInputBorder _amberActiveInputBorder() {
   return UnderlineInputBorder(
     borderSide: BorderSide(
       color: Colors.black,
