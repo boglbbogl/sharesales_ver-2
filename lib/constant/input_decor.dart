@@ -32,3 +32,22 @@ UnderlineInputBorder _activeInputBorder() {
     ),
   );
 }
+
+InputDecoration logoutInputDecor(String hint) {
+  return InputDecoration(
+    enabledBorder: _logoutActiveInputBorder(),
+    focusedBorder: _logoutActiveInputBorder(),
+    errorBorder: _errorInputBorder(),
+    focusedErrorBorder: _errorInputBorder(),
+    labelText: hint,
+    labelStyle: TextStyle(color: Colors.black),
+  );
+}
+
+UnderlineInputBorder _logoutActiveInputBorder() {
+  return UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.black,
+    ),
+  );
+}
