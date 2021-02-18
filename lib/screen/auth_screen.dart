@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/widget/sign_in_form.dart';
 import 'package:sharesales_ver2/widget/sign_up_form.dart';
 
+
 class AuthScreen extends StatefulWidget {
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+
+
   Widget signUpForm = SignUpForm();
   Widget signInForm = SignInForm();
 

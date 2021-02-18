@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/models/firebase_auth_state.dart';
 import 'package:sharesales_ver2/screen/auth_screen.dart';
 
 class AdScreen extends StatelessWidget {
@@ -23,7 +25,7 @@ class AdScreen extends StatelessWidget {
               icon: Icon(
                   Icons.exit_to_app,),
               onPressed: (){
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>AuthScreen()));
+                Provider.of<FirebaseAuthState>(context, listen: false).signOut();
               })
         ],
       ),

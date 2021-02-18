@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
+import 'package:sharesales_ver2/models/firebase_auth_state.dart';
 import '../main_home_page.dart';
 
 class SignInForm extends StatefulWidget {
@@ -43,6 +45,8 @@ class _SignInFormState extends State<SignInForm> {
               ),
               SizedBox(height: 100,),
               TextFormField(
+                cursorColor: Colors.white,
+                style: blackInputStyle(),
                 controller: _emailController,
                 decoration: blackInputDecor('Email'),
                 validator: (text){
@@ -54,6 +58,8 @@ class _SignInFormState extends State<SignInForm> {
                 },
               ),
               TextFormField(
+                cursorColor: Colors.white,
+                style: blackInputStyle(),
                 controller: _pwController,
                 decoration: blackInputDecor('Password'),
                 validator: (text){
@@ -69,11 +75,12 @@ class _SignInFormState extends State<SignInForm> {
                 child: FlatButton(
                   color: Colors.amberAccent,
                   onPressed: (){
-                    if(_formKey.currentState.validate()){
-                      print('기능잘 작동합니다');
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>MainHomePage()));
-                    }
-                  },
+                    if(_formKey.currentState.validate());
+                    {
+                      print('잘 작동해');
+                      Provider.of<FirebaseAuthState>(context, listen: false)
+                          .login(email: _emailController.text, password: _pwController.text);
+                    }},
                   child: Text(
                     'START',
                     style: TextStyle(

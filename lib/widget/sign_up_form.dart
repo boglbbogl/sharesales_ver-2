@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/main_home_page.dart';
+import 'package:sharesales_ver2/models/firebase_auth_state.dart';
 
 class SignUpForm extends StatefulWidget {
   @override
@@ -88,7 +90,7 @@ class _SignUpFormState extends State<SignUpForm> {
                       onPressed: (){
                         if(_formKey.currentState.validate()){
                           print('기능잘 작동합니다');
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>MainHomePage()));
+                          Provider.of<FirebaseAuthState>(context, listen: false).registerUser(email: _emailController.text, password: _pwController.text);
                         }
                       },
                       child: Text(
