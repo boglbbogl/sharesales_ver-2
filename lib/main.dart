@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sharesales_ver2/screen/auth_screen.dart';
 import 'constant/color.dart';
 import 'main_home_page.dart';
 
@@ -13,7 +14,8 @@ class MyApp extends StatelessWidget {
         canvasColor: blackColor,
         primarySwatch: blackColor,
       ),
-      home: MainHomePage(),
+      // home: MainHomePage(),
+      home: AuthScreen(),
     );
   }
 }

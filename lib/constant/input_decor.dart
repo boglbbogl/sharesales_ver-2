@@ -6,7 +6,6 @@ TextStyle textInputStyle(){
   );
 }
 
-
 InputDecoration textInputDecor(String hint) {
   return InputDecoration(
     enabledBorder: _activeInputBorder(),
