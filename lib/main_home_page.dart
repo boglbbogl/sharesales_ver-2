@@ -17,9 +17,9 @@ class _MainHomePageState extends State<MainHomePage> {
 
 
   List<BottomNavigationBarItem> _btmNavItems = [
-    BottomNavigationBarItem(icon: Icon(Icons.star_half_outlined), label: ''),
-    BottomNavigationBarItem(icon: Icon(Icons.details_outlined), label: ''),
     BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+    BottomNavigationBarItem(icon: Icon(Icons.calendar_today_rounded), label: ''),
+    BottomNavigationBarItem(icon: Icon(Icons.view_list), label: ''),
     BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: ''),
     BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: ''),
   ];
