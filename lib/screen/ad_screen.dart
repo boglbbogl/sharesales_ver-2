@@ -29,6 +29,15 @@ class AdScreen extends StatelessWidget {
               })
         ],
       ),
+      body:  Padding(
+        padding: const EdgeInsets.only(top: 590),
+        child: Center(
+          child: IconButton(
+            onPressed: (){
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> AuthScreen()));
+            }, icon: Icon(Icons.star_half_outlined,),color: Colors.amberAccent,),
+        ),
+      ),
     );
   }
 }

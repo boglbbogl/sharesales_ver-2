@@ -18,7 +18,7 @@ class FirebaseAuthState extends ChangeNotifier{
     });
   }
 
-  void registerUser({@required String email, @required String password}) async{
+  void registerUser(BuildContext context, {@required String email, @required String password}) async{
     await _firebaseAuth.createUserWithEmailAndPassword(email: email.trim(), password: password.trim())
     .catchError((error){
       print(error);
@@ -31,20 +31,42 @@ class FirebaseAuthState extends ChangeNotifier{
         _massage = '폼이 안맞어';
         break;
       case 'operation-not-allowed':
-        _massage = '무슨뜻인지 몰겟어';
+        _massage = '잠시후 다시 시도해주세요';
         break;
       case 'weak-password':
-        _massage = '패스워드 일치 안해';
+        _massage = '6자리 이상사용해라';
         break;
       }
       SnackBar snackBar = SnackBar(
-          content: Text(_massage),);
-      // Scaffold.of(context).showSnackBar(snackBar);
+        content: Text(_massage),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
     });
   }
 
-  void login({@required String email, @required String password}){
-    _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+  void login(BuildContext context, {@required String email, @required String password}){
+    _firebaseAuth.signInWithEmailAndPassword(email: email, password: password).catchError((error){
+      print(error);
+      String _massage = '';
+      switch(error.code){
+        case 'invalid-email':
+          _massage = 'Email 주소가 아닙니다';
+          break;
+        case 'user-disabled':
+          _massage = '해당 Email 계정은 사용할 수 없습니다';
+          break;
+        case 'user-not-found':
+          _massage = '회원이 아닙니다';
+          break;
+        case 'wrong-password':
+          _massage = '패스워드가 정확하지 않습니다';
+          break;
+      }
+      SnackBar snackBar = SnackBar(
+          content: Text(_massage),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    });
   }
 
   void signOut(){

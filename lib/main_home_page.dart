@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/screen/sales_management_screen.dart';
 
 import 'constant/color.dart';
+import 'screen/account_screen.dart';
 import 'screen/ad_screen.dart';
 
 class MainHomePage extends StatefulWidget {
@@ -28,7 +29,7 @@ class _MainHomePageState extends State<MainHomePage> {
     Container(),
     SalesManagementScreen(),
     Container(color: Colors.green,),
-    Container(color: Colors.red,),
+    AccountScreen(),
   ];
 
   @override

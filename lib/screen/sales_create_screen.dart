@@ -15,44 +15,45 @@ class _SalesCreateScreenState extends State<SalesCreateScreen> {
     final tffSizeHeight = MediaQuery.of(context).size.width * 0.19;
     final tffSizeWidth = MediaQuery.of(context).size.width * 0.4;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'CREATE',
-          style: TextStyle(
-              foreground: Paint()..shader = mainColor,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic),
-        ),
-        iconTheme: IconThemeData(color: Colors.amberAccent),
-        actionsIconTheme: IconThemeData(color: Colors.yellowAccent),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () {
-              if (!_formKey.currentState.validate()) {
-                return;
-              }
-              _formKey.currentState.save();
-            },
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'CREATE',
+            style: TextStyle(
+                foreground: Paint()..shader = mainColor,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 18, top: 18),
-            child: InkWell(
-              onTap: () {},
-              child: Text(
-                'save',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+          iconTheme: IconThemeData(color: Colors.amberAccent),
+          actionsIconTheme: IconThemeData(color: Colors.yellowAccent),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                if (!_formKey.currentState.validate()) {
+                  return;
+                }
+                _formKey.currentState.save();
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 18, top: 18),
+              child: InkWell(
+                onTap: () {},
+                child: Text(
+                  'save',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      body: GestureDetector(
-        onTap: (){
-          FocusScope.of(context).unfocus();
-        },
-        child: SingleChildScrollView(
+          ],
+        ),
+        body: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
