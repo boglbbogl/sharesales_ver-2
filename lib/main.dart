@@ -23,31 +23,31 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<FirebaseAuthState>.value(
       value: _firebaseAuthState,
       child: MaterialApp(
+        // debugShowCheckedModeBanner: ,
         title: 'share sales',
         theme: ThemeData(
           canvasColor: blackColor,
           primarySwatch: blackColor,
         ),
-        // home: Consumer(
-        //     builder: (BuildContext context, FirebaseAuthState firebaseAuthState, Widget child) {
-        //       switch(firebaseAuthState.firebaseAuthStatus){
-        //         case FirebaseAuthStatus.logout:
-        //           _currentWidget = AuthScreen();
-        //           break;
-        //           case FirebaseAuthStatus.login:
-        //           _currentWidget = MainHomePage();
-        //           break;
-        //         default:
-        //           _currentWidget = MyProgressIndicator();
-        //       }
-        //       return AnimatedSwitcher(
-        //           duration: Duration(milliseconds: 300),
-        //       child: _currentWidget,
-        //       );
-        //     },
-        // ),
+        home: Consumer(
+            builder: (BuildContext context, FirebaseAuthState firebaseAuthState, Widget child) {
+              switch(firebaseAuthState.firebaseAuthStatus){
+                case FirebaseAuthStatus.logout:
+                  _currentWidget = AuthScreen();
+                  break;
+                  case FirebaseAuthStatus.login:
+                  _currentWidget = MainHomePage();
+                  break;
+                default:
+                  _currentWidget = MyProgressIndicator();
+              }
+              return AnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+              child: _currentWidget,
+              );
+            },
+        ),
         // home: MyProgressIndicator(),
-        home: AuthScreen(),
       ),
     );
   }

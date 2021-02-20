@@ -13,7 +13,6 @@ class MainHomePage extends StatefulWidget {
 class _MainHomePageState extends State<MainHomePage> {
 
   int _selectedIndex = 0;
-  PageController _pageController = PageController(initialPage: 0);
 
 
   List<BottomNavigationBarItem> _btmNavItems = [
@@ -24,7 +23,7 @@ class _MainHomePageState extends State<MainHomePage> {
     BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: ''),
   ];
 
-  List<Widget> _pageList = [
+  List<Widget> _screenList = [
     AdScreen(),
     Container(),
     SalesManagementScreen(),
@@ -32,23 +31,13 @@ class _MainHomePageState extends State<MainHomePage> {
     AccountScreen(),
   ];
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        children: _pageList,
-        onPageChanged: (index){
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _screenList,
       ),
       bottomNavigationBar: _btmNav(),
     );
@@ -67,7 +56,6 @@ class _MainHomePageState extends State<MainHomePage> {
       onTap: (index){
         setState(() {
           _selectedIndex = index;
-          _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.fastOutSlowIn,);
         });
       },
     );
