@@ -45,7 +45,7 @@ class FirebaseAuthState extends ChangeNotifier{
   }
 
   void login(BuildContext context, {@required String email, @required String password}){
-    _firebaseAuth.signInWithEmailAndPassword(email: email, password: password).catchError((error){
+    _firebaseAuth.signInWithEmailAndPassword(email: email.trim(), password: password.trim()).catchError((error){
       print(error);
       String _massage = '';
       switch(error.code){

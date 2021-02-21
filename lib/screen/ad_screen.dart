@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
@@ -8,6 +9,10 @@ import 'package:sharesales_ver2/screen/auth_screen.dart';
 class AdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    final heightSize = MediaQuery.of(context).size.height;
+    final widthSize = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -16,9 +21,14 @@ class AdScreen extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
-            fontSize: appbarFontsize,
+            fontSize: fontSize,
             foreground: Paint()..shader = mainColor,
           ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.cloud), onPressed: () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> AuthScreen()));
+        },
         ),
         actions: [
           IconButton(
@@ -29,13 +39,71 @@ class AdScreen extends StatelessWidget {
               })
         ],
       ),
-      body:  Padding(
-        padding: const EdgeInsets.only(top: 590),
-        child: Center(
-          child: IconButton(
-            onPressed: (){
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> AuthScreen()));
-            }, icon: Icon(Icons.star_half_outlined,),color: Colors.amberAccent,),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Container(
+                  height: widthSize,
+                  width: widthSize,
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(child: Text('Ad..1',style: TextStyle(fontSize: 100),)),
+                ),
+                Container(
+                  height: widthSize/8,
+                  width: widthSize,
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(child: Text('Banner..1',)),
+                ),
+                Container(
+                  height: widthSize/8,
+                  width: widthSize,
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.orangeAccent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(child: Text('Banner..2',)),
+                ),
+                Container(
+                  height: widthSize/8,
+                  width: widthSize,
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(child: Text('Banner..3',)),
+                ),
+                Container(
+                  height: widthSize/8,
+                  width: widthSize,
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurpleAccent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(child: Text('Banner..4',)),
+                ),
+
+              ],
+            ),
+          ),
         ),
       ),
     );

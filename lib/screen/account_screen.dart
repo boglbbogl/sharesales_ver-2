@@ -1,62 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:sharesales_ver2/constant/color.dart';
-import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/widget/account_screen_body.dart';
 
-class AccountScreen extends StatefulWidget {
-  @override
-  _AccountScreenState createState() => _AccountScreenState();
-}
+class AccountScreen extends StatelessWidget {
 
-class _AccountScreenState extends State<AccountScreen> with SingleTickerProviderStateMixin {
-
-  AnimationController _animationController;
-
-  @override
-  void initState() {
-    _animationController = AnimationController(
-        vsync: this, duration: Duration(seconds: 5));
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
+  final duration = Duration(milliseconds: 3000);
 
   @override
   Widget build(BuildContext context) {
+
+    final widthSize = MediaQuery.of(context).size.width;
+    final heightSize = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      appBar: AppBar(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
-        ),
-        backgroundColor: Colors.amberAccent,
-        title: Text(
-          '스타벅스',
-          style: TextStyle(
-            foreground: Paint()..shader = subColor,
-            fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: IconButton(
-              onPressed: () {
-                _animationController.status == AnimationStatus.completed ? _animationController.reverse():_animationController.forward();
-              },
-              icon: AnimatedIcon(
-                  icon: AnimatedIcons.menu_close,
-                  progress: _animationController,
-                color: Colors.black,
+      backgroundColor: Colors.amberAccent,
+      body: Stack(
+        children: <Widget>[
+          Positioned(
+              top: 0,
+              bottom: 0,
+              width: widthSize/2,
+              child: Container(
+                color: Colors.deepPurpleAccent,
               ),
-            ),
-          )
+          ),
+          AccountScreenBody(),
         ],
       ),
     );
   }
 }
+

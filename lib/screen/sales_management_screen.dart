@@ -23,7 +23,7 @@ class _SalesManagementScreenState extends State<SalesManagementScreen> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
-            fontSize: appbarFontsize,
+            fontSize: fontSize,
             foreground: Paint()..shader = mainColor,
           ),
         ),
