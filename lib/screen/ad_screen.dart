@@ -9,10 +9,6 @@ import 'package:sharesales_ver2/screen/auth_screen.dart';
 class AdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-    final heightSize = MediaQuery.of(context).size.height;
-    final widthSize = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -21,23 +17,17 @@ class AdScreen extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
-            fontSize: fontSize,
+            // fontSize: fontSize,
             foreground: Paint()..shader = mainColor,
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.cloud), onPressed: () {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> AuthScreen()));
-        },
+          icon: Icon(Icons.cloud),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => AuthScreen()));
+          },
         ),
-        actions: [
-          IconButton(
-              icon: Icon(
-                  Icons.exit_to_app,),
-              onPressed: (){
-                Provider.of<FirebaseAuthState>(context, listen: false).signOut();
-              })
-        ],
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -46,61 +36,76 @@ class AdScreen extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  height: widthSize,
-                  width: widthSize,
+                  height: size.width,
+                  width: size.width,
                   margin: EdgeInsets.all(8),
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.yellow,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(child: Text('Ad..1',style: TextStyle(fontSize: 100),)),
+                  child: Center(
+                      child: Text(
+                    'Ad..1',
+                    style: TextStyle(fontSize: 100),
+                  )),
                 ),
                 Container(
-                  height: widthSize/8,
-                  width: widthSize,
+                  height: size.height / 8,
+                  width: size.width,
                   margin: EdgeInsets.all(8),
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.redAccent,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(child: Text('Banner..1',)),
+                  child: Center(
+                      child: Text(
+                    'Banner..1',
+                  )),
                 ),
                 Container(
-                  height: widthSize/8,
-                  width: widthSize,
+                  height: size.height / 8,
+                  width: size.width,
                   margin: EdgeInsets.all(8),
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.orangeAccent,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(child: Text('Banner..2',)),
+                  child: Center(
+                      child: Text(
+                    'Banner..2',
+                  )),
                 ),
                 Container(
-                  height: widthSize/8,
-                  width: widthSize,
+                  height: size.height / 8,
+                  width: size.width,
                   margin: EdgeInsets.all(8),
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(child: Text('Banner..3',)),
+                  child: Center(
+                      child: Text(
+                    'Banner..3',
+                  )),
                 ),
                 Container(
-                  height: widthSize/8,
-                  width: widthSize,
+                  height: size.height / 8,
+                  width: size.width,
                   margin: EdgeInsets.all(8),
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.deepPurpleAccent,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(child: Text('Banner..4',)),
+                  child: Center(
+                      child: Text(
+                    'Banner..4',
+                  )),
                 ),
-
               ],
             ),
           ),

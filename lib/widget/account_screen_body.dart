@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 
-class AccountScreenBody extends StatelessWidget {
+class AccountScreenBody extends StatefulWidget {
+
+  final Function onPageChanged;
+
+  const AccountScreenBody({Key key, this.onPageChanged}) : super(key: key);
+
+  @override
+  _AccountScreenBodyState createState() => _AccountScreenBodyState();
+}
+
+class _AccountScreenBodyState extends State<AccountScreenBody> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _appbar(),
         ],
@@ -27,7 +38,7 @@ class AccountScreenBody extends StatelessWidget {
                 Icons.menu,
             ),
             onPressed: (){
-
+              widget.onPageChanged();
             }
         ),
       ],

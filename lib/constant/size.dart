@@ -3,5 +3,5 @@ import 'dart:ui';
 Size size;
 
 
-const double fontSize = 30.0;
+// const double fontSize = 30.0;
 

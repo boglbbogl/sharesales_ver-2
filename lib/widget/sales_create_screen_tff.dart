@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
+import 'package:sharesales_ver2/constant/size.dart';
 
 class SalesCreateScreenTff extends StatefulWidget {
   @override
@@ -7,11 +8,15 @@ class SalesCreateScreenTff extends StatefulWidget {
 }
 
 class _SalesCreateScreenTffState extends State<SalesCreateScreenTff> {
+
+  final tffSizeHeight = size.width*0.19;
+  final tffSizeWidth = size.height*0.35;
+
   @override
   Widget build(BuildContext context) {
 
-    final tffSizeHeight = MediaQuery.of(context).size.width * 0.19;
-    final tffSizeWidth = MediaQuery.of(context).size.width * 0.35;
+    // final tffSizeHeight = MediaQuery.of(context).size.width * 0.19;
+    // final tffSizeWidth = MediaQuery.of(context).size.width * 0.35;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,

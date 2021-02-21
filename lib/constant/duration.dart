@@ -1,0 +1,1 @@
+const mainDuration = Duration(milliseconds: 1000);

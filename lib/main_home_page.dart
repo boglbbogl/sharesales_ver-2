@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/screen/sales_management_screen.dart';
 
 import 'constant/color.dart';
+import 'constant/size.dart';
 import 'screen/account_screen.dart';
 import 'screen/ad_screen.dart';
 
@@ -13,7 +14,6 @@ class MainHomePage extends StatefulWidget {
 class _MainHomePageState extends State<MainHomePage> {
 
   int _selectedIndex = 0;
-
 
   List<BottomNavigationBarItem> _btmNavItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
@@ -34,6 +34,8 @@ class _MainHomePageState extends State<MainHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (size == null) size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,

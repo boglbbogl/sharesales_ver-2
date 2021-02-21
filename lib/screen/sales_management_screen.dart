@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sharesales_ver2/constant/color.dart';
-import 'package:sharesales_ver2/constant/size.dart';
 import 'sales_create_screen.dart';
 
 class SalesManagementScreen extends StatefulWidget {
@@ -23,7 +22,7 @@ class _SalesManagementScreenState extends State<SalesManagementScreen> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
-            fontSize: fontSize,
+            // fontSize: fontSize,
             foreground: Paint()..shader = mainColor,
           ),
         ),
