@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sharesales_ver2/constant/color.dart';
-import 'sales_create_screen.dart';
+import 'package:sharesales_ver2/constant/size.dart';
+import 'create_management_screen.dart';
 
-class SalesManagementScreen extends StatefulWidget {
+class ManagementScreen extends StatefulWidget {
   @override
-  _SalesManagementScreenState createState() => _SalesManagementScreenState();
+  _ManagementScreenState createState() => _ManagementScreenState();
 }
 
-class _SalesManagementScreenState extends State<SalesManagementScreen> {
+class _ManagementScreenState extends State<ManagementScreen> {
   @override
   Widget build(BuildContext context) {
 
@@ -22,7 +23,7 @@ class _SalesManagementScreenState extends State<SalesManagementScreen> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
-            // fontSize: fontSize,
+            fontSize: fontSize,
             foreground: Paint()..shader = mainColor,
           ),
         ),
@@ -30,7 +31,7 @@ class _SalesManagementScreenState extends State<SalesManagementScreen> {
           IconButton(
             icon: Icon(Icons.add,
             color: Colors.amberAccent,), onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>SalesCreateScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateManagementScreen()));
           },
           )
         ],

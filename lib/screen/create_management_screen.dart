@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/color.dart';
-import 'package:sharesales_ver2/widget/sales_create_screen_tff.dart';
+import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
-class SalesCreateScreen extends StatefulWidget {
+class CreateManagementScreen extends StatefulWidget {
 
   @override
-  _SalesCreateScreenState createState() => _SalesCreateScreenState();
+  _CreateManagementScreenState createState() => _CreateManagementScreenState();
 }
 
-class _SalesCreateScreenState extends State<SalesCreateScreen> {
+class _CreateManagementScreenState extends State<CreateManagementScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -24,12 +24,7 @@ class _SalesCreateScreenState extends State<SalesCreateScreen> {
             key: _formKey,
             child: Column(
               children: [
-                Row(
-                  children: <Widget>[
-
-                  ],
-                ),
-                SalesCreateScreenTff(),
+                SalesCreateForm(),
               ],
             ),
           ),

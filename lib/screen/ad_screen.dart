@@ -17,7 +17,7 @@ class AdScreen extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
-            // fontSize: fontSize,
+            fontSize: fontSize,
             foreground: Paint()..shader = mainColor,
           ),
         ),
