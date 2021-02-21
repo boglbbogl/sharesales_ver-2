@@ -9,7 +9,7 @@ class SalesCreateForm extends StatefulWidget {
 
 class _SalesCreateFormState extends State<SalesCreateForm> {
 
-  final tffSizeHeight = size.width*0.19;
+  final tffSizeHeight = size.width*0.4;
   final tffSizeWidth = size.width*0.35;
 
   @override

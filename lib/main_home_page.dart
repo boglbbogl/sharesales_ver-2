@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
+import 'package:sharesales_ver2/widget/example.dart';
 
 import 'constant/color.dart';
 import 'constant/size.dart';
@@ -25,7 +26,7 @@ class _MainHomePageState extends State<MainHomePage> {
 
   List<Widget> _screenList = [
     AdScreen(),
-    Container(),
+    Example(),
     ManagementScreen(),
     Container(color: Colors.green,),
     AccountScreen(),
