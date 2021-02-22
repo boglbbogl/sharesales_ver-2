@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
-import 'package:sharesales_ver2/constant/size.dart';
 
 class AccountScreenBody extends StatefulWidget {
   final Function onPageChanged;
@@ -47,10 +46,9 @@ class _AccountScreenBodyState extends State<AccountScreenBody>
             ),),
           ),
           leading: IconButton(
-            color: Colors.black,
-            onPressed: () {  },
+            color: Colors.amberAccent,
+            onPressed: (){},
             icon: Icon(Icons.add),
-
           ),
           actions: [
                   IconButton(

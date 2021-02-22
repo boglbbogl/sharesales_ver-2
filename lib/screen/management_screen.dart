@@ -16,7 +16,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: blackColor,
         centerTitle: true,
         title: Text(
           'share sales',

@@ -11,6 +11,7 @@ class AdScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: blackColor,
         centerTitle: true,
         title: Text(
           'share sales',

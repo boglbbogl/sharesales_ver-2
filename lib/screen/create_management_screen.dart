@@ -47,7 +47,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     AnimatedContainer(
                         duration: mainDuration,
                         transform: Matrix4.translationValues(_expensePos, 0, 0),
-                        curve: Curves.linearToEaseOut,
+                        curve: Curves.fastOutSlowIn,
                         child: ExpenseCreateForm()),
                   ],
                 ),
@@ -71,7 +71,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                   child: Container(
                     height: 3,
                     width: size.width / 3,
-                    color: Colors.amberAccent,
+                    color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent: Colors.redAccent,
                   ),
                   curve: Curves.fastOutSlowIn,
                 ),
@@ -100,6 +100,9 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                             child: Text(
                               '매출',
                               style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                                 color: _selectedIndicator == SelectedIndicator.left
                                     ? Colors.amberAccent
                                     : Colors.white,
@@ -123,9 +126,12 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                             child: Text(
                               '지출',
                               style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                                 color: _selectedIndicator == SelectedIndicator.left
                                     ? Colors.white
-                                    : Colors.amberAccent,
+                                    : Colors.redAccent,
                               ),
                             ),
                           ),
@@ -139,15 +145,19 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
 
   AppBar _salesCreateAppbar(BuildContext context) {
     return AppBar(
+      backgroundColor: blackColor,
       title: Text(
         'CREATE',
         style: TextStyle(
-            foreground: Paint()..shader = mainColor,
+          color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent : Colors.redAccent,
+            // foreground:  Paint()..shader = mainColor,
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic),
       ),
-      iconTheme: IconThemeData(color: Colors.amberAccent),
-      actionsIconTheme: IconThemeData(color: Colors.yellowAccent),
+      iconTheme: IconThemeData(
+          color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent : Colors.redAccent),
+      actionsIconTheme: IconThemeData(
+          color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent : Colors.redAccent),
       actions: [
         IconButton(
           icon: Icon(Icons.save),

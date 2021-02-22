@@ -6,6 +6,25 @@ TextStyle blackInputStyle(){
   );
 }
 
+InputDecoration expenseInputDecor(String hint){
+  return InputDecoration(
+    enabledBorder: _expenseInputDecor(),
+    focusedBorder: _expenseInputDecor(),
+    labelText: hint,
+      labelStyle: TextStyle(color: Colors.redAccent,),
+  );
+}
+
+OutlineInputBorder _expenseInputDecor() {
+  return OutlineInputBorder(
+    borderRadius: BorderRadius.circular(20),
+    borderSide: BorderSide(
+      color: Colors.redAccent,
+    ),
+  );
+}
+
+
 InputDecoration blackInputDecor(String hint) {
   return InputDecoration(
     enabledBorder: _blackActiveInputBorder(),

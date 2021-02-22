@@ -1,10 +1,5 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:sharesales_ver2/constant/color.dart';
-import 'package:sharesales_ver2/constant/duration.dart';
-import 'package:sharesales_ver2/constant/size.dart';
-import 'package:sharesales_ver2/widget/expense_create_form.dart';
-import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
 class Example extends StatefulWidget {
   @override
@@ -12,172 +7,130 @@ class Example extends StatefulWidget {
 }
 
 class _ExampleState extends State<Example> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _nameController;
+  static List<String> friendsList = [null];
 
-  SelectedIndicator _selectedIndicator = SelectedIndicator.left;
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+  }
 
-  double _salesPos = 0;
-  double _expensePos = size.width;
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: _salesCreateAppbar(context),
-        body: Column(
-          children: [
-            Expanded(
-              child: Form(
-                key: _formKey,
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverList(delegate: SliverChildListDelegate([
-                      Column(
-                        children: <Widget>[
-                          _tapButton(),
-                          _tapIndicator(),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Stack(
-                            children: <Widget>[
-                              AnimatedContainer(
-                                  duration: mainDuration,
-                                  transform: Matrix4.translationValues(_salesPos, 0, 0),
-                                  curve: Curves.fastOutSlowIn,
-                                  child: SalesCreateForm()),
-                              AnimatedContainer(
-                                  duration: mainDuration,
-                                  transform: Matrix4.translationValues(_expensePos, 0, 0),
-                                  curve: Curves.linearToEaseOut,
-                                  child: SalesCreateForm()),
-                            ],
-                          ),
-
-                        ],
-                      ),
-                    ]))
-                  ],
-
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Padding _tapIndicator() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 57),
-      child: AnimatedContainer(
-        duration: mainDuration,
-        alignment: _selectedIndicator == SelectedIndicator.left
-            ? Alignment.centerLeft
-            : Alignment.centerRight,
-        child: Container(
-          height: 3,
-          width: size.width / 3,
-          color: Colors.amberAccent,
-        ),
-        curve: Curves.fastOutSlowIn,
-      ),
-    );
-  }
-
-  Padding _tapButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
-      child: SizedBox(
-        height: size.width * 0.12,
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    print('매출클릭');
-                    _selectedIndicator = SelectedIndicator.left;
-                    _salesPos = 0;
-                    _expensePos = size.width;
-                  });
-                },
-                child: Center(
-                  child: Text(
-                    '매출',
-                    style: TextStyle(
-                      color: _selectedIndicator == SelectedIndicator.left
-                          ? Colors.amberAccent
-                          : Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    print('지출클릭');
-                    _selectedIndicator = SelectedIndicator.right;
-                    _salesPos = -size.width;
-                    _expensePos = 0;
-                  });
-                },
-                child: Center(
-                  child: Text(
-                    '지출',
-                    style: TextStyle(
-                      color: _selectedIndicator == SelectedIndicator.left
-                          ? Colors.white
-                          : Colors.amberAccent,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  AppBar _salesCreateAppbar(BuildContext context) {
-    return AppBar(
-      title: Text(
-        'CREATE',
-        style: TextStyle(
-            foreground: Paint()..shader = mainColor,
-            fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic),
-      ),
-      iconTheme: IconThemeData(color: Colors.amberAccent),
-      actionsIconTheme: IconThemeData(color: Colors.yellowAccent),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.save),
-          onPressed: () {
-            FocusScope.of(context).unfocus();
-            if (!_formKey.currentState.validate()) {
-              return;
-            }
-            _formKey.currentState.save();
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 18, top: 18),
-          child: InkWell(
-            onTap: () {},
-            child: Text(
-              'save',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ..._getFriends(),
+              ],
             ),
           ),
         ),
-      ],
+      ),
+
+    );
+  }
+
+  /// get firends text-fields
+  List<Widget> _getFriends(){
+    List<Widget> friendsTextFields = [];
+    for(int i=0; i<friendsList.length; i++){
+      friendsTextFields.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Row(
+              children: [
+                Expanded(child: FriendTextFields(i)),
+                SizedBox(width: 16,),
+                // we need add button at last friends row
+                _addRemoveButton(i == friendsList.length-1, i),
+              ],
+            ),
+          )
+      );
+    }
+    return friendsTextFields;
+  }
+
+  /// add / remove button
+  Widget _addRemoveButton(bool add, int index){
+    return InkWell(
+      onTap: (){
+        if(add){
+          // add new text-fields at the top of all friends textfields
+          friendsList.insert(0, null);
+        }
+        else friendsList.removeAt(index);
+        setState((){});
+      },
+      child: Container(
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(
+          color: (add) ? Colors.green : Colors.red,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Icon((add) ? Icons.add : Icons.remove, color: Colors.white,),
+      ),
+    );
+  }
+
+
+}
+
+class FriendTextFields extends StatefulWidget {
+  final int index;
+  FriendTextFields(this.index);
+  @override
+  _FriendTextFieldsState createState() => _FriendTextFieldsState();
+}
+
+class _FriendTextFieldsState extends State<FriendTextFields> {
+  TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _nameController.text = _ExampleState.friendsList[widget.index] ?? '';
+    });
+
+    return TextFormField(
+      controller: _nameController,
+      onChanged: (v) => _ExampleState.friendsList[widget.index] = v,
+      decoration: InputDecoration(
+          hintText: 'Enter your friend\'s name'
+      ),
+      validator: (v){
+        if(v.trim().isEmpty) return 'Please enter something';
+        return null;
+      },
     );
   }
 }
-
-enum SelectedIndicator{left, right}

@@ -11,7 +11,7 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  final sideWidth = size.width/2;
+  final sideWidth = size.width / 2;
 
   PageSlide _pageSlide = PageSlide.closed;
   double pagePos = size.width;
@@ -19,54 +19,37 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        setState(() {
-            _pageSlide = (_pageSlide == PageSlide.closed)
-                ? PageSlide.opened
-                : PageSlide.closed;
-            switch(_pageSlide){
-              case PageSlide.opened:
-                break;
-              case PageSlide.closed:
-                bodyPos = 0;
-                pagePos = size.width;
-                break;
-            }
-        });
-      },
-      child: Scaffold(
-        backgroundColor: Colors.amberAccent,
-        body: Stack(
-          children: <Widget>[
-            AnimatedContainer(
-                duration: mainDuration,
-                child: AccountScreenBody(onPageChanged: () {
-                  setState(() {
-                    _pageSlide = (_pageSlide == PageSlide.closed)
-                        ? PageSlide.opened
-                        : PageSlide.closed;
-                    switch(_pageSlide){
-                      case PageSlide.opened:
-                        bodyPos = -sideWidth;
-                        pagePos = size.width-sideWidth;
-                        break;
-                      case PageSlide.closed:
-                        bodyPos = 0;
-                        pagePos = size.width;
-                        break;
-                    }
-                  });
-                }),
-              transform: Matrix4.translationValues(bodyPos, 0, 0),
-            ),
-            AnimatedContainer(
-              transform: Matrix4.translationValues(pagePos, 0, 0),
-              duration: mainDuration,
-              child: AccountScreenSideMenu(),
-            ),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: Colors.amberAccent,
+      body: Stack(
+        children: <Widget>[
+          AnimatedContainer(
+            duration: mainDuration,
+            child: AccountScreenBody(onPageChanged: () {
+              setState(() {
+                _pageSlide = (_pageSlide == PageSlide.closed)
+                    ? PageSlide.opened
+                    : PageSlide.closed;
+                switch (_pageSlide) {
+                  case PageSlide.opened:
+                    bodyPos = -sideWidth;
+                    pagePos = size.width - sideWidth;
+                    break;
+                  case PageSlide.closed:
+                    bodyPos = 0;
+                    pagePos = size.width;
+                    break;
+                }
+              });
+            }),
+            transform: Matrix4.translationValues(bodyPos, 0, 0),
+          ),
+          AnimatedContainer(
+            transform: Matrix4.translationValues(pagePos, 0, 0),
+            duration: mainDuration,
+            child: AccountScreenSideMenu(),
+          ),
+        ],
       ),
     );
   }

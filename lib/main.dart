@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         title: 'share sales',
         theme: ThemeData(
           canvasColor: blackColor,
-          primarySwatch: blackColor,
+          primarySwatch: Colors.red,
         ),
         home: Consumer(
             builder: (BuildContext context, FirebaseAuthState firebaseAuthState, Widget child) {
