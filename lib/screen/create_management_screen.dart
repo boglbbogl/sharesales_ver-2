@@ -93,6 +93,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                               _selectedIndicator = SelectedIndicator.left;
                               _salesPos = 0;
                               _expensePos = size.width;
+                              FocusScope.of(context).unfocus();
                             });
                           },
                           child: Center(
@@ -115,6 +116,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                               _selectedIndicator = SelectedIndicator.right;
                               _salesPos = -size.width;
                               _expensePos = 0;
+                              FocusScope.of(context).unfocus();
                             });
                           },
                           child: Center(

@@ -9,7 +9,7 @@ class SalesCreateForm extends StatefulWidget {
 
 class _SalesCreateFormState extends State<SalesCreateForm> {
 
-  final tffSizeHeight = size.width*0.4;
+  final tffSizeHeight = size.width*0.19;
   final tffSizeWidth = size.width*0.35;
 
   @override
@@ -18,148 +18,44 @@ class _SalesCreateFormState extends State<SalesCreateForm> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                validator: _salesInputValidator,
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('실제매출'),
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor(''),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('총매출'),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('할인'),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('공급가액'),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('세액'),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('배달'),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('신용카드'),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('현금'),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-            Container(
-              height: tffSizeHeight,
-              width: tffSizeWidth,
-              child: TextFormField(
-                style: blackInputStyle(),
-                cursorColor: Colors.white,
-                decoration: blackInputDecor('현금영수증'),
-                keyboardType: TextInputType.number,
-                validator: _salesInputValidator,
-              ),
-            ),
-          ],
-        ),
+        _createTextForm('총매출','실제매출'),
+        _createTextForm('공급가액','세액'),
+        _createTextForm('할인','신용카드'),
+        _createTextForm('현금','현금영수증'),
+        _createTextForm('Delivery','Gift Card'),
       ],
     );
+  }
+
+  Row _createTextForm(String leftText, String rightText) {
+    return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Container(
+            height: tffSizeHeight,
+            width: tffSizeWidth,
+            child: TextFormField(
+              validator: _salesInputValidator,
+              style: blackInputStyle(),
+              cursorColor: Colors.white,
+              decoration: blackInputDecor(leftText),
+              keyboardType: TextInputType.number,
+            ),
+          ),
+          Container(
+            height: tffSizeHeight,
+            width: tffSizeWidth,
+            child: TextFormField(
+              style: blackInputStyle(),
+              cursorColor: Colors.white,
+              decoration: blackInputDecor(rightText),
+              keyboardType: TextInputType.number,
+              validator: _salesInputValidator,
+            ),
+          ),
+        ],
+      );
   }
 
 
