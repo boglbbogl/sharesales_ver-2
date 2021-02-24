@@ -70,3 +70,20 @@ UnderlineInputBorder _amberActiveInputBorder() {
     ),
   );
 }
+
+InputDecoration expenseTextAddInputDecor(String hint){
+  return InputDecoration(
+    enabledBorder: _expenseTextAddInputDecor(),
+    focusedBorder: _expenseTextAddInputDecor(),
+    labelText: hint,
+    labelStyle: TextStyle(color: Colors.redAccent,),
+  );
+}
+
+UnderlineInputBorder _expenseTextAddInputDecor() {
+  return UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.redAccent,
+    ),
+  );
+}

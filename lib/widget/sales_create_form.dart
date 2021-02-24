@@ -9,9 +9,6 @@ class SalesCreateForm extends StatefulWidget {
 
 class _SalesCreateFormState extends State<SalesCreateForm> {
 
-  final tffSizeHeight = size.width*0.19;
-  final tffSizeWidth = size.width*0.35;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,8 +30,8 @@ class _SalesCreateFormState extends State<SalesCreateForm> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Container(
-            height: tffSizeHeight,
-            width: tffSizeWidth,
+            height: salTtfHeightSize,
+            width: salTtfWidthSize,
             child: TextFormField(
               validator: _salesInputValidator,
               style: blackInputStyle(),
@@ -45,8 +42,8 @@ class _SalesCreateFormState extends State<SalesCreateForm> {
             ),
           ),
           Container(
-            height: tffSizeHeight,
-            width: tffSizeWidth,
+            height: salTtfHeightSize,
+            width: salTtfWidthSize,
             child: TextFormField(
               validator: _salesInputValidator,
               style: blackInputStyle(),

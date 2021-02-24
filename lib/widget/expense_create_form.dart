@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/widget/text_add_form.dart';
 
 class ExpenseCreateForm extends StatefulWidget {
+  final int index;
+
+  const ExpenseCreateForm({Key key, this.index}) : super(key: key);
+
   @override
   _ExpenseCreateFormState createState() => _ExpenseCreateFormState();
 }
 
 class _ExpenseCreateFormState extends State<ExpenseCreateForm> {
-  final tffSizeHeight = size.width * 0.19;
-  final tffSizeWidth = size.width * 0.40;
 
   @override
   Widget build(BuildContext context) {
@@ -17,49 +21,77 @@ class _ExpenseCreateFormState extends State<ExpenseCreateForm> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        _expenseTextForm('식자재..1', '식자재..2'),
-        _expenseTextForm('주류', '음료'),
+        _expenseTextForm('식자재', '음료', '주류'),
+        Column(
+          children: [
+            SizedBox(
+              height: 40,
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Container(
+                    color: Colors.white,
+                    height: 1,
+                    width: size.width*0.9,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Container(
+                      color: Colors.white,
+                      height: 1,
+                      width: size.width*0.88,
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+          ],
+        ),
+        TextAddForm(),
+      ]
+    );
+  }
+
+  Row _expenseTextForm(String startText, String centerText, String endText ) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
         Container(
-          height: tffSizeHeight,
-          width: tffSizeWidth,
+          height: expTtfHeightSize,
+          width: expTtfWidthSize,
           child: TextFormField(
             style: blackInputStyle(),
             cursorColor: Colors.white,
-            decoration: expenseInputDecor('Add..'),
+            decoration: expenseInputDecor(startText),
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        Container(
+          height: expTtfHeightSize,
+          width: expTtfWidthSize,
+          child: TextFormField(
+            style: blackInputStyle(),
+            cursorColor: Colors.white,
+            decoration: expenseInputDecor(centerText),
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        Container(
+          height: expTtfHeightSize,
+          width: expTtfWidthSize,
+          child: TextFormField(
+            style: blackInputStyle(),
+            cursorColor: Colors.white,
+            decoration: expenseInputDecor(endText),
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
           ),
         ),
       ],
     );
-  }
-
-  Row _expenseTextForm(String leftText, String rightText) {
-    return Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Container(
-            height: tffSizeHeight,
-            width: tffSizeWidth,
-            child: TextFormField(
-              style: blackInputStyle(),
-              cursorColor: Colors.white,
-              decoration: expenseInputDecor(leftText),
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.next,
-            ),
-          ),
-          Container(
-            height: tffSizeHeight,
-            width: tffSizeWidth,
-            child: TextFormField(
-              style: blackInputStyle(),
-              cursorColor: Colors.white,
-              decoration: expenseInputDecor(rightText),
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.next,
-            ),
-          ),
-        ],
-      );
   }
 }
