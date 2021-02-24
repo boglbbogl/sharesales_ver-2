@@ -3,6 +3,7 @@ import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 
+
 class AddText {
   bool isDone;
   String expenseTitle;
@@ -64,6 +65,7 @@ class _TextAddFormState extends State<TextAddForm> {
       height: expTtfHeightSize,
       width: expTtfWidthSize,
       child: TextFormField(
+        inputFormatters: [wonMaskFormatter],
         controller: _amountController,
         style: blackInputStyle(),
         cursorColor: Colors.white,

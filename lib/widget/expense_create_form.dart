@@ -62,6 +62,7 @@ class _ExpenseCreateFormState extends State<ExpenseCreateForm> {
           height: expTtfHeightSize,
           width: expTtfWidthSize,
           child: TextFormField(
+            inputFormatters: [wonMaskFormatter],
             style: blackInputStyle(),
             cursorColor: Colors.white,
             decoration: expenseInputDecor(startText),
@@ -73,6 +74,7 @@ class _ExpenseCreateFormState extends State<ExpenseCreateForm> {
           height: expTtfHeightSize,
           width: expTtfWidthSize,
           child: TextFormField(
+            inputFormatters: [wonMaskFormatter],
             style: blackInputStyle(),
             cursorColor: Colors.white,
             decoration: expenseInputDecor(centerText),
@@ -84,6 +86,7 @@ class _ExpenseCreateFormState extends State<ExpenseCreateForm> {
           height: expTtfHeightSize,
           width: expTtfWidthSize,
           child: TextFormField(
+            inputFormatters: [wonMaskFormatter],
             style: blackInputStyle(),
             cursorColor: Colors.white,
             decoration: expenseInputDecor(endText),

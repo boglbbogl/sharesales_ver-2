@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 
@@ -8,7 +9,6 @@ class SalesCreateForm extends StatefulWidget {
 }
 
 class _SalesCreateFormState extends State<SalesCreateForm> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,6 +33,7 @@ class _SalesCreateFormState extends State<SalesCreateForm> {
             height: salTtfHeightSize,
             width: salTtfWidthSize,
             child: TextFormField(
+              inputFormatters: [wonMaskFormatter],
               validator: _salesInputValidator,
               style: blackInputStyle(),
               cursorColor: Colors.white,
@@ -45,6 +46,7 @@ class _SalesCreateFormState extends State<SalesCreateForm> {
             height: salTtfHeightSize,
             width: salTtfWidthSize,
             child: TextFormField(
+              inputFormatters: [wonMaskFormatter],
               validator: _salesInputValidator,
               style: blackInputStyle(),
               cursorColor: Colors.white,
