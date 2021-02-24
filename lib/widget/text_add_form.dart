@@ -5,8 +5,9 @@ import 'package:sharesales_ver2/constant/size.dart';
 class AddText {
   bool isDone;
   String title;
+  String title2;
 
-  AddText(this.title, {this.isDone = false});
+  AddText(this.title, this.title2, {this.isDone = false});
 }
 
 class TextAddForm extends StatefulWidget {
@@ -18,12 +19,14 @@ class _TextAddFormState extends State<TextAddForm> {
   final _expenseList = <AddText>[];
 
   TextEditingController _expController = TextEditingController();
+  TextEditingController _exp2Controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
     _expController.dispose();
     _scrollController.dispose();
+    _exp2Controller.dispose();
     super.dispose();
   }
 
@@ -44,7 +47,7 @@ class _TextAddFormState extends State<TextAddForm> {
                 style: blackInputStyle(),
                 cursorColor: Colors.white,
                 decoration: expenseTextAddInputDecor('내용'),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
               ),
             ),
@@ -52,6 +55,7 @@ class _TextAddFormState extends State<TextAddForm> {
               height: expTtfHeightSize,
               width: expTtfWidthSize,
               child: TextFormField(
+                controller: _exp2Controller,
                 style: blackInputStyle(),
                 cursorColor: Colors.white,
                 decoration: expenseTextAddInputDecor('지출금액'),
@@ -93,7 +97,7 @@ class _TextAddFormState extends State<TextAddForm> {
               width: size.width*0.5,
               child: RaisedButton(
                 onPressed: () {
-                  _addExpense(AddText(_expController.text));
+                  _addExpense(AddText(_expController.text, _exp2Controller.text));
                 },
                   elevation: 0,
                 color: Colors.grey,
@@ -106,49 +110,85 @@ class _TextAddFormState extends State<TextAddForm> {
             ),
           ],
         ),
-        Row(
-          children: [
-            Container(
-              height: size.height * 0.5,
-              width: size.width * 0.4,
-              child: ListView(
-                controller: _scrollController,
-                children: _expenseList
-                    .map((addText) => _expenseListView(addText))
-                    .toList(),
-              ),
-            ),
-          ],
+        Container(
+          height: size.height * 0.5,
+          width: size.width*0.98,
+          child: ListView(
+            controller: _scrollController,
+            children: _expenseList
+                .map((addText) => _expenseListView(addText))
+                .toList(),
+          ),
         )
       ],
     );
   }
 
   Widget _expenseListView(AddText addText) {
-    return ListTile(
-      onTap: () {
-        _toggleExpense(addText);
-      },
-      title: Text(
-        addText.title,
-        style: addText.isDone
-            ? TextStyle(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 19, left: 10),
+          child: Text('내용 : ', style: TextStyle(color: Colors.white),),
+        ),
+        Flexible(
+          child: ListTile(
+            onTap: () {
+              _toggleExpense(addText);
+            },
+            title: Text(
+              addText.title,
+              style: addText.isDone
+                  ? TextStyle(
+                      color: Colors.redAccent,
+                      decoration: TextDecoration.lineThrough,
+                      fontStyle: FontStyle.italic,
+                    )
+                  : TextStyle(
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 19),
+          child: Text('지출금액 : ', style: TextStyle(color: Colors.white),),
+        ),
+        Flexible(
+          child: ListTile(
+            onTap: () {
+              _toggleExpense(addText);
+            },
+            title: Text(
+              addText.title2,
+              style: addText.isDone
+                  ? TextStyle(
                 color: Colors.redAccent,
                 decoration: TextDecoration.lineThrough,
                 fontStyle: FontStyle.italic,
               )
-            : TextStyle(
+                  : TextStyle(
                 color: Colors.white,
                 fontStyle: FontStyle.italic,
               ),
-      ),
-      trailing: IconButton(
-        color: Colors.white,
-        icon: Icon(Icons.delete_forever),
-        onPressed: () {
-          _deleteExpense(addText);
-        },
-      ),
+            ),
+            trailing: SizedBox(
+              width: 35,
+              child: IconButton(
+                color: Colors.white,
+                icon: Icon(Icons.delete_forever),
+                onPressed: () {
+                  _deleteExpense(addText);
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -156,6 +196,7 @@ class _TextAddFormState extends State<TextAddForm> {
     setState(() {
       _expenseList.add(addText);
       _expController.text = '';
+      _exp2Controller.text = '';
     });
   }
 
