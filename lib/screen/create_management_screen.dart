@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/widget/expense_create_form.dart';
 import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
@@ -26,7 +27,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: _salesCreateAppbar(context),
+        appBar: _createScreenAppbar(context),
         body: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -59,6 +60,15 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
       ),
     );
   }
+
+  SnackBar saveSnackBar = SnackBar(
+    content: Text(
+      '매출 항목은 필수로 입력 해야 합니다.  0을 입력하세요',
+      // maxLines: 2,
+      style: snackBarStyle(),
+    ),
+    backgroundColor: Colors.lightBlueAccent,
+  );
 
   Padding _tapIndicator() {
     return Padding(
@@ -143,7 +153,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
               );
   }
 
-  AppBar _salesCreateAppbar(BuildContext context) {
+  AppBar _createScreenAppbar(BuildContext context) {
     return AppBar(
       backgroundColor: blackColor,
       title: Text(
@@ -164,8 +174,9 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
           onPressed: () {
             FocusScope.of(context).unfocus();
             if (!_formKey.currentState.validate()) {
-              return;
-            }
+              return ;
+              // return Scaffold.of(context).showSnackBar(saveSnackBar);
+            }  else
             _formKey.currentState.save();
           },
         ),
@@ -183,5 +194,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
     );
   }
 }
+
 
 enum SelectedIndicator{left, right}

@@ -1,54 +1,66 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 
-class FirebaseAuthState extends ChangeNotifier{
+class FirebaseAuthState extends ChangeNotifier {
   FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.logout;
   User _user;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  void watchAuthChange(){
+  void watchAuthChange() {
     _firebaseAuth.authStateChanges().listen((firebaseUser) {
-      if(firebaseUser == null && _user == null){
+      if (firebaseUser == null && _user == null) {
         return;
-      } else if(firebaseUser != null){
+      } else if (firebaseUser != null) {
         _user = firebaseUser;
         changeFirebaseAuthStatus();
       }
     });
   }
 
-  void registerUser(BuildContext context, {@required String email, @required String password}) async{
-    await _firebaseAuth.createUserWithEmailAndPassword(email: email.trim(), password: password.trim())
-    .catchError((error){
+  void registerUser(BuildContext context,
+      {@required String email, @required String password}) async {
+    await _firebaseAuth
+        .createUserWithEmailAndPassword(
+            email: email.trim(), password: password.trim())
+        .catchError((error) {
       print(error);
       String _massage = '';
-      switch (error.code){
-      case 'email-already-in-use':
-        _massage = '이미 사용중';
-        break;
-      case 'invalid-email':
-        _massage = '폼이 안맞어';
-        break;
-      case 'operation-not-allowed':
-        _massage = '잠시후 다시 시도해주세요';
-        break;
-      case 'weak-password':
-        _massage = '6자리 이상사용해라';
-        break;
+      switch (error.code) {
+        case 'email-already-in-use':
+          _massage = '이미 사용중';
+          break;
+        case 'invalid-email':
+          _massage = '폼이 안맞어';
+          break;
+        case 'operation-not-allowed':
+          _massage = '잠시후 다시 시도해주세요';
+          break;
+        case 'weak-password':
+          _massage = '6자리 이상사용해라';
+          break;
       }
       SnackBar snackBar = SnackBar(
-        content: Text(_massage),
+        content: Text(
+          _massage,
+          style: snackBarStyle(),
+        ),
+        backgroundColor: Colors.lightBlueAccent,
       );
       Scaffold.of(context).showSnackBar(snackBar);
     });
   }
 
-  void login(BuildContext context, {@required String email, @required String password}){
-    _firebaseAuth.signInWithEmailAndPassword(email: email.trim(), password: password.trim()).catchError((error){
+  void login(BuildContext context,
+      {@required String email, @required String password}) {
+    _firebaseAuth
+        .signInWithEmailAndPassword(
+            email: email.trim(), password: password.trim())
+        .catchError((error) {
       print(error);
       String _massage = '';
-      switch(error.code){
+      switch (error.code) {
         case 'invalid-email':
           _massage = 'Email 주소가 아닙니다';
           break;
@@ -63,35 +75,37 @@ class FirebaseAuthState extends ChangeNotifier{
           break;
       }
       SnackBar snackBar = SnackBar(
-          content: Text(_massage),
+        content: Text(_massage,
+        style: snackBarStyle(),
+        ),
+        backgroundColor: Colors.lightBlueAccent,
       );
       Scaffold.of(context).showSnackBar(snackBar);
     });
   }
 
-  void signOut(){
+  void signOut() {
     _firebaseAuthStatus = FirebaseAuthStatus.logout;
-    if(_user != null){
+    if (_user != null) {
       _user = null;
       _firebaseAuth.signOut();
     }
     notifyListeners();
   }
 
-  void changeFirebaseAuthStatus([FirebaseAuthStatus firebaseAuthStatus]){
-    if(firebaseAuthStatus != null){
+  void changeFirebaseAuthStatus([FirebaseAuthStatus firebaseAuthStatus]) {
+    if (firebaseAuthStatus != null) {
       _firebaseAuthStatus = firebaseAuthStatus;
     } else {
-      if(_user != null){
+      if (_user != null) {
         _firebaseAuthStatus = FirebaseAuthStatus.login;
       } else
         _firebaseAuthStatus = FirebaseAuthStatus.logout;
     }
     notifyListeners();
   }
+
   FirebaseAuthStatus get firebaseAuthStatus => _firebaseAuthStatus;
 }
 
-enum FirebaseAuthStatus{
-  logout, progress, login
-}
+enum FirebaseAuthStatus { logout, progress, login }
