@@ -7,6 +7,7 @@ import 'constant/color.dart';
 import 'constant/size.dart';
 import 'screen/account_screen.dart';
 import 'screen/ad_screen.dart';
+import 'widget/date_picker_form.dart';
 
 class MainHomePage extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _MainHomePageState extends State<MainHomePage> {
 
   List<Widget> _screenList = [
     AdScreen(),
-    TextAddForm(),
+    Container(),
     ManagementScreen(),
     Container(color: Colors.green,),
     AccountScreen(),

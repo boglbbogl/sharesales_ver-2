@@ -12,8 +12,8 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MyApp());
 }
-class MyApp extends StatelessWidget {
 
+class MyApp extends StatelessWidget {
   FirebaseAuthState _firebaseAuthState = FirebaseAuthState();
   Widget _currentWidget;
 
@@ -25,27 +25,32 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         // debugShowCheckedModeBanner: ,
         title: 'share sales',
+        supportedLocales: [
+          const Locale('en', 'US'),
+          const Locale('ko', 'KO'),
+        ],
         theme: ThemeData(
           canvasColor: blackColor,
           primarySwatch: Colors.red,
         ),
         home: Consumer(
-            builder: (BuildContext context, FirebaseAuthState firebaseAuthState, Widget child) {
-              switch(firebaseAuthState.firebaseAuthStatus){
-                case FirebaseAuthStatus.logout:
-                  _currentWidget = AuthScreen();
-                  break;
-                  case FirebaseAuthStatus.login:
-                  _currentWidget = MainHomePage();
-                  break;
-                default:
-                  _currentWidget = MyProgressIndicator();
-              }
-              return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 300),
+          builder: (BuildContext context, FirebaseAuthState firebaseAuthState,
+              Widget child) {
+            switch (firebaseAuthState.firebaseAuthStatus) {
+              case FirebaseAuthStatus.logout:
+                _currentWidget = AuthScreen();
+                break;
+              case FirebaseAuthStatus.login:
+                _currentWidget = MainHomePage();
+                break;
+              default:
+                _currentWidget = MyProgressIndicator();
+            }
+            return AnimatedSwitcher(
+              duration: Duration(milliseconds: 300),
               child: _currentWidget,
-              );
-            },
+            );
+          },
         ),
         // home: MyProgressIndicator(),
       ),
