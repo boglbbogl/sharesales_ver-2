@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 
@@ -62,7 +61,7 @@ class _SalesCreateFormState extends State<SalesCreateForm> {
 
   String _salesInputValidator(text) {
     if (text.isEmpty) {
-      return '필수로 입력하여야 합니다.';
+      return '필수 입력사항  ex)  0';
     } else
       return null;
   }

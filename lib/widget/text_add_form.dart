@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
@@ -19,6 +20,9 @@ class TextAddForm extends StatefulWidget {
 
 class _TextAddFormState extends State<TextAddForm> {
   final _expenseList = <AddText>[];
+
+  bool _titleBadge = false;
+  bool _amountBadge = false;
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
@@ -64,14 +68,23 @@ class _TextAddFormState extends State<TextAddForm> {
     return Container(
       height: expTtfHeightSize,
       width: expTtfWidthSize,
-      child: TextFormField(
-        inputFormatters: [wonMaskFormatter],
-        controller: _amountController,
-        style: blackInputStyle(),
-        cursorColor: Colors.white,
-        decoration: expenseTextAddInputDecor('지출금액'),
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.done,
+      child: Stack(
+        children: [
+          Badge(
+            showBadge: _amountBadge,
+            position: BadgePosition.topEnd(end: 10,top: 30),
+            badgeColor: Colors.amberAccent,
+            child: TextFormField(
+              inputFormatters: [wonMaskFormatter],
+              controller: _amountController,
+              style: blackInputStyle(),
+              cursorColor: Colors.white,
+              decoration: expenseTextAddInputDecor('지출금액'),
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.done,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -80,13 +93,22 @@ class _TextAddFormState extends State<TextAddForm> {
     return Container(
       height: salTtfHeightSize,
       width: salTtfWidthSize * 1.5,
-      child: TextFormField(
-        controller: _titleController,
-        style: blackInputStyle(),
-        cursorColor: Colors.white,
-        decoration: expenseTextAddInputDecor('내용'),
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.next,
+      child: Stack(
+        children: [
+          Badge(
+            showBadge: _titleBadge,
+            position: BadgePosition.topEnd(end: 10,top: 30),
+            badgeColor: Colors.amberAccent,
+            child: TextFormField(
+              controller: _titleController,
+              style: blackInputStyle(),
+              cursorColor: Colors.white,
+              decoration: expenseTextAddInputDecor('내용'),
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -114,14 +136,20 @@ class _TextAddFormState extends State<TextAddForm> {
           width: size.width * 0.5,
           child: RaisedButton(
             onPressed: () {
-              FocusScope.of(context).unfocus();
-              if (_titleController.text.isEmpty) {
-                return Scaffold.of(context).showSnackBar(titleSnackBar);
-              } else if (_amountController.text.isEmpty) {
-                return Scaffold.of(context).showSnackBar(amountSnackBar);
-              }
-              _addExpense(
-                  AddText(_titleController.text, _amountController.text));
+              setState(() {
+                FocusScope.of(context).unfocus();
+                if (_titleController.text.isEmpty) {
+                  _titleBadge = true;
+                  return Scaffold.of(context).showSnackBar(titleSnackBar);
+                } else if (_amountController.text.isEmpty) {
+                  _titleBadge = false;
+                  _amountBadge = true;
+                  return Scaffold.of(context).showSnackBar(amountSnackBar);
+                }
+                _amountBadge = false;
+                _addExpense(
+                    AddText(_titleController.text, _amountController.text));
+              });
             },
             elevation: 0,
             color: Colors.grey,
@@ -145,7 +173,6 @@ class _TextAddFormState extends State<TextAddForm> {
       style: snackBarStyle(),
     ),
     backgroundColor: Colors.lightBlueAccent,
-    action: SnackBarAction(label: '취소', onPressed: (){},),
   );
 
   SnackBar amountSnackBar = SnackBar(

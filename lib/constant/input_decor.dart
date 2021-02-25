@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 final wonMaskFormatter = MoneyInputFormatter(
   thousandSeparator: ThousandSeparator.None,

@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/color.dart';
@@ -6,6 +7,7 @@ import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/widget/expense_create_form.dart';
 import 'package:sharesales_ver2/widget/sales_create_form.dart';
+
 
 class CreateManagementScreen extends StatefulWidget {
   @override
@@ -19,6 +21,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
 
   double _salesPos = 0;
   double _expensePos = size.width;
+
+  bool _showTabBarBadge = false;
 
   @override
   Widget build(BuildContext context) {
@@ -61,15 +65,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
     );
   }
 
-  SnackBar saveSnackBar = SnackBar(
-    content: Text(
-      '매출 항목은 필수로 입력 해야 합니다.  0을 입력하세요',
-      // maxLines: 2,
-      style: snackBarStyle(),
-    ),
-    backgroundColor: Colors.lightBlueAccent,
-  );
-
   Padding _tapIndicator() {
     return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 57),
@@ -96,40 +91,61 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              print('매출클릭');
-                              _selectedIndicator = SelectedIndicator.left;
-                              _salesPos = 0;
-                              _expensePos = size.width;
-                              FocusScope.of(context).unfocus();
-                            });
-                          },
-                          child: Center(
-                            child: Text(
-                              '매출',
-                              style: TextStyle(
-                                fontStyle: FontStyle.italic,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: _selectedIndicator == SelectedIndicator.left
-                                    ? Colors.amberAccent
-                                    : Colors.white,
+                        child: Stack(
+                          children: [
+                            Badge(
+                              showBadge: _showTabBarBadge,
+                              position: BadgePosition.bottomEnd(bottom: 9, end: 10),
+                              badgeColor: _selectedIndicator==SelectedIndicator.right ? Colors.amberAccent : Colors.redAccent,
+                              badgeContent: InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    _selectedIndicator = SelectedIndicator.left;
+                                    _salesPos = 0;
+                                    _expensePos = size.width;
+                                  });
+                                },
+                                child: ImageIcon(
+                                  AssetImage('assets/images/exclamation_mark.png'),
+                                  size: 17,),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    FocusScope.of(context).unfocus();
+                                    print('매출클릭');
+                                    _selectedIndicator = SelectedIndicator.left;
+                                    _salesPos = 0;
+                                    _expensePos = size.width;
+                                  });
+                                },
+                                child: Center(
+                                  child: Text(
+                                    '매출',
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: _selectedIndicator == SelectedIndicator.left
+                                          ? Colors.amberAccent
+                                          : Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                       Expanded(
                         child: InkWell(
                           onTap: () {
                             setState(() {
+                              FocusScope.of(context).unfocus();
                               print('지출클릭');
                               _selectedIndicator = SelectedIndicator.right;
                               _salesPos = -size.width;
                               _expensePos = 0;
-                              FocusScope.of(context).unfocus();
                             });
                           },
                           child: Center(
@@ -169,16 +185,28 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
       actionsIconTheme: IconThemeData(
           color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent : Colors.redAccent),
       actions: [
-        IconButton(
-          icon: Icon(Icons.save),
-          onPressed: () {
-            FocusScope.of(context).unfocus();
-            if (!_formKey.currentState.validate()) {
-              return ;
-              // return Scaffold.of(context).showSnackBar(saveSnackBar);
-            }  else
-            _formKey.currentState.save();
-          },
+        Stack(
+          children: [
+            Badge(
+              showBadge: _showTabBarBadge,
+              position: BadgePosition.topEnd(end: 5,top: 5),
+              badgeColor: _selectedIndicator==SelectedIndicator.right ? Colors.amberAccent : Colors.redAccent,
+              child: IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () {
+                  setState(() {
+                    FocusScope.of(context).unfocus();
+                    if (!_formKey.currentState.validate()) {
+                      _showTabBarBadge = true;
+                    }  else
+                      _showTabBarBadge = false;
+                    _formKey.currentState.save();
+                  });
+
+                },
+              ),
+            ),
+          ],
         ),
         Padding(
           padding: const EdgeInsets.only(right: 18, top: 18),
