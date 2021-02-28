@@ -155,8 +155,10 @@ class _TextAddFormState extends State<TextAddForm> {
             color: Colors.grey,
             splashColor: Colors.redAccent,
             child: Text(
-              'CLICK',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              '추가하기',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.bold),
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),

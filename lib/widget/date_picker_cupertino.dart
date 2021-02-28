@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 
 class Example extends StatefulWidget {
   @override
@@ -75,9 +78,6 @@ class _ExampleState extends State<Example> {
   @override
   Widget build(BuildContext context) {
     var formatDate = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
-    String format = DateFormat('EEE,').format(pickerDate);
-    String yearFormat = DateFormat('yyyy').format(pickerDate);
-    print(yearFormat);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,12 +114,18 @@ class _ExampleState extends State<Example> {
                 maxTime: DateTime(2100, 12, 31),
                 onChanged: (selectedDate) {
                   setState(() {
-                    pickerDate = selectedDate;
-                    print('$selectedDate');
-                    print('$pickerDate');
-                    print('$formatDate');
+                    if (selectedDate != null || pickerDate != null) {
+                      pickerDate = selectedDate;
+                    } else
+                      return Scaffold.of(context).showSnackBar(pickerSnackBar);
                   });
                 },
+                // if(selectedDate != null || pickerDate != null){
+                //   setState(() {
+                //     pickerDate = selectedDate;
+                //   }); } else
+                //     return Scaffold.of(context).showSnackBar(pickerSnackBar);
+                // },
                 currentTime: pickerDate,
                 locale: LocaleType.ko,
               );
@@ -150,4 +156,12 @@ class _ExampleState extends State<Example> {
       ],
     );
   }
+  SnackBar pickerSnackBar = SnackBar(
+    duration: Duration(seconds: 1),
+    content: Text(
+      '날짜를 선택 해주세요',
+      style: snackBarStyle(),
+    ),
+    backgroundColor: Colors.lightBlueAccent,
+  );
 }

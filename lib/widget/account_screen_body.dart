@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
+import 'package:sharesales_ver2/models/user_model_state.dart';
 
 class AccountScreenBody extends StatefulWidget {
   final Function onPageChanged;
@@ -32,6 +34,9 @@ class _AccountScreenBodyState extends State<AccountScreenBody>
 
   @override
   Widget build(BuildContext context) {
+
+    UserModelState userModelState = Provider.of<UserModelState>(context);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -69,6 +74,14 @@ class _AccountScreenBodyState extends State<AccountScreenBody>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             // _appbar(),
+            Container(
+              height: 100,
+              width: 100,
+              color: Colors.red,
+            child: Text(
+              userModelState == null || userModelState.userModel == null ?
+              "":userModelState.userModel.userName,
+            ),),
           ],
         ),
       ),

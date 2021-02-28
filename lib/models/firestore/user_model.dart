@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 
@@ -23,4 +21,13 @@ class UserModel {
     snapshot.id,
     reference: snapshot.reference
   );
+
+  static Map<String, dynamic> getMapForCreateUser(String email){
+    Map<String, dynamic> map = Map();
+    map[KEY_USERNAME] = email.split("@")[0];
+    map[KEY_EMAIL] = email;
+    map[STORE_NAME] = '';
+    map[STORE_NUMBER] = '';
+    return map;
+  }
 }

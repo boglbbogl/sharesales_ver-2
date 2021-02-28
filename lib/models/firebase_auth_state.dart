@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
+import 'package:sharesales_ver2/repository/user_network_repository.dart';
 
 class FirebaseAuthState extends ChangeNotifier {
   FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.logout;
@@ -21,7 +22,8 @@ class FirebaseAuthState extends ChangeNotifier {
 
   void registerUser(BuildContext context,
       {@required String email, @required String password}) async {
-    await _firebaseAuth
+    changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
+    UserCredential userCredential = await _firebaseAuth
         .createUserWithEmailAndPassword(
             email: email.trim(), password: password.trim())
         .catchError((error) {
@@ -41,6 +43,7 @@ class FirebaseAuthState extends ChangeNotifier {
           _massage = '6자리 이상사용해라';
           break;
       }
+
       SnackBar snackBar = SnackBar(
         content: Text(
           _massage,
@@ -50,11 +53,26 @@ class FirebaseAuthState extends ChangeNotifier {
       );
       Scaffold.of(context).showSnackBar(snackBar);
     });
+
+    _user = userCredential.user;
+    if (_user == null) {
+      SnackBar snackBar = SnackBar(
+        content: Text(
+          '잠시후 다시 이용해 주세요',
+          style: snackBarStyle(),
+        ),
+        backgroundColor: Colors.lightBlueAccent,
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    } else {
+      await userNetworkRepository.attemptCreateUser(
+          userKey: _user.uid, email: _user.email);
+    }
   }
 
   void login(BuildContext context,
-      {@required String email, @required String password}) {
-    _firebaseAuth
+      {@required String email, @required String password}) async{
+    UserCredential userCredential = await _firebaseAuth
         .signInWithEmailAndPassword(
             email: email.trim(), password: password.trim())
         .catchError((error) {
@@ -75,13 +93,26 @@ class FirebaseAuthState extends ChangeNotifier {
           break;
       }
       SnackBar snackBar = SnackBar(
-        content: Text(_massage,
-        style: snackBarStyle(),
+        content: Text(
+          _massage,
+          style: snackBarStyle(),
         ),
         backgroundColor: Colors.lightBlueAccent,
       );
       Scaffold.of(context).showSnackBar(snackBar);
     });
+
+    _user = userCredential.user;
+    if (_user == null) {
+      SnackBar snackBar = SnackBar(
+        content: Text(
+          '잠시후 다시 이용해 주세요',
+          style: snackBarStyle(),
+        ),
+        backgroundColor: Colors.lightBlueAccent,
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
   }
 
   void signOut() {
@@ -106,6 +137,7 @@ class FirebaseAuthState extends ChangeNotifier {
   }
 
   FirebaseAuthStatus get firebaseAuthStatus => _firebaseAuthStatus;
+  User get user => _user;
 }
 
 enum FirebaseAuthStatus { logout, progress, login }
