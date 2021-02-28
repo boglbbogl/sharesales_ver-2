@@ -168,6 +168,7 @@ class _TextAddFormState extends State<TextAddForm> {
   }
 
   SnackBar titleSnackBar = SnackBar(
+    duration: Duration(seconds: 1),
     content: Text(
       '지출 내용을 입력 해주세요',
       style: snackBarStyle(),
@@ -176,6 +177,7 @@ class _TextAddFormState extends State<TextAddForm> {
   );
 
   SnackBar amountSnackBar = SnackBar(
+    duration: Duration(seconds: 1),
     content: Text(
       '지출 금액을 입력 해주세요',
       style: snackBarStyle(),

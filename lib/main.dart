@@ -13,22 +13,27 @@ void main() async {
   runApp(MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   FirebaseAuthState _firebaseAuthState = FirebaseAuthState();
   Widget _currentWidget;
 
   @override
   Widget build(BuildContext context) {
+
+    // ThemeData inheritTheme = Theme.of(context, shadowThemeOnly:true);
+
+
     _firebaseAuthState.watchAuthChange();
     return ChangeNotifierProvider<FirebaseAuthState>.value(
       value: _firebaseAuthState,
       child: MaterialApp(
         // debugShowCheckedModeBanner: ,
         title: 'share sales',
-        supportedLocales: [
-          const Locale('en', 'US'),
-          const Locale('ko', 'KO'),
-        ],
+        // supportedLocales: [
+        //   const Locale('en', 'US'),
+        //   const Locale('ko', 'KO'),
+        // ],
         theme: ThemeData(
           canvasColor: blackColor,
           primarySwatch: Colors.red,

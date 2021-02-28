@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
 import 'package:sharesales_ver2/constant/size.dart';
-import 'package:sharesales_ver2/widget/date_picker_form.dart';
+import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
 import 'package:sharesales_ver2/widget/expense_create_form.dart';
 import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
@@ -37,7 +37,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                DatePickerForm(),
+                Example(),
                 _tapButton(),
                 _tapIndicator(),
                 SizedBox(
