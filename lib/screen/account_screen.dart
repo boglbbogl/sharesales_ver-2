@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
 import 'package:sharesales_ver2/constant/size.dart';
-import 'package:sharesales_ver2/models/user_model_state.dart';
 import 'package:sharesales_ver2/widget/account_screen_body.dart';
 import 'package:sharesales_ver2/widget/account_screen_side_menu.dart';
 

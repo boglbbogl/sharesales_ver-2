@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/size.dart';
-import 'package:sharesales_ver2/models/firebase_auth_state.dart';
 import 'package:sharesales_ver2/screen/auth_screen.dart';
 
 class AdScreen extends StatelessWidget {

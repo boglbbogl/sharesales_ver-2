@@ -1,6 +1,4 @@
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'firestore/user_model.dart';
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/size.dart';
-import 'package:sharesales_ver2/repository/user_network_repository.dart';
 import 'create_management_screen.dart';
 
 class ManagementScreen extends StatefulWidget {

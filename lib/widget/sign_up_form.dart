@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
-import 'package:sharesales_ver2/main_home_page.dart';
 import 'package:sharesales_ver2/models/firebase_auth_state.dart';
 
 class SignUpForm extends StatefulWidget {
