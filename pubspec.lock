@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  calendar_timeline:
+    dependency: "direct main"
+    description:
+      name: calendar_timeline
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
   characters:
     dependency: transitive
     description:
@@ -113,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.9"
+  date_picker_timeline:
+    dependency: "direct main"
+    description:
+      name: date_picker_timeline
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   fake_async:
     dependency: transitive
     description:
@@ -226,6 +240,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  folding_cell:
+    dependency: "direct main"
+    description:
+      name: folding_cell
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
@@ -343,6 +364,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  scrollable_positioned_list:
+    dependency: transitive
+    description:
+      name: scrollable_positioned_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.10"
   sky_engine:
     dependency: transitive
     description: flutter

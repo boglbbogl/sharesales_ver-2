@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/widget/ManagementListForm.dart';
 import 'create_management_screen.dart';
 
 class ManagementScreen extends StatefulWidget {
@@ -14,30 +15,37 @@ class _ManagementScreenState extends State<ManagementScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: blackColor,
-        centerTitle: true,
-        title: Text(
-          'share sales',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic,
-            fontSize: fontSize,
-            foreground: Paint()..shader = mainColor,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: blackColor,
+          centerTitle: true,
+          title: Text(
+            'share sales',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+              fontSize: fontSize,
+              foreground: Paint()..shader = mainColor,
+            ),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add,
+              color: Colors.amberAccent,), onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateManagementScreen()));
+            },
+            )
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add,
-            color: Colors.amberAccent,), onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateManagementScreen()));
-          },
-          )
-        ],
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ManagementListForm(),
+          ],
+        ),
+        floatingActionButton: _fabMultiButton(),
       ),
-      body: Container(),
-      floatingActionButton: _fabMultiButton(),
     );
   }
 

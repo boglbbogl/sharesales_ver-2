@@ -12,8 +12,8 @@ class UserModel {
   UserModel.fromMap(Map<String, dynamic> map, this.userKey, {this.reference})
       : userName = map[KEY_USERNAME],
         email = map[KEY_EMAIL],
-        storeName = map[STORE_NAME],
-        storeNumber = map[STORE_NUMBER];
+        storeName = map[KEY_STORENAME],
+        storeNumber = map[KEY_STORENUMBER];
 
   UserModel.fromSnapshot(DocumentSnapshot snapshot)
   : this.fromMap(
@@ -26,8 +26,8 @@ class UserModel {
     Map<String, dynamic> map = Map();
     map[KEY_USERNAME] = email.split("@")[0];
     map[KEY_EMAIL] = email;
-    map[STORE_NAME] = '';
-    map[STORE_NUMBER] = '';
+    map[KEY_STORENAME] = '';
+    map[KEY_STORENUMBER] = '';
     return map;
   }
 }

@@ -8,13 +8,14 @@ import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
 import 'package:sharesales_ver2/widget/expense_create_form.dart';
 import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
-
 class CreateManagementScreen extends StatefulWidget {
+
   @override
   _CreateManagementScreenState createState() => _CreateManagementScreenState();
 }
 
 class _CreateManagementScreenState extends State<CreateManagementScreen> {
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   SelectedIndicator _selectedIndicator = SelectedIndicator.left;
@@ -28,7 +29,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus();
+        // FocusScope.of(context).unfocus();
       },
       child: Scaffold(
         appBar: _createScreenAppbar(context),
@@ -37,7 +38,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                Example(),
+                DatePickerCupertino(),
                 _tapButton(),
                 _tapIndicator(),
                 SizedBox(
@@ -57,7 +58,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                         child: ExpenseCreateForm()),
                   ],
                 ),
-
               ],
             ),
           ),
@@ -68,106 +68,111 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
 
   Padding _tapIndicator() {
     return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 57),
-                child: AnimatedContainer(
-                  duration: mainDuration,
-                  alignment: _selectedIndicator == SelectedIndicator.left
-                      ? Alignment.centerLeft
-                      : Alignment.centerRight,
-                  child: Container(
-                    height: 3,
-                    width: size.width / 3,
-                    color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent: Colors.redAccent,
-                  ),
-                  curve: Curves.fastOutSlowIn,
-                ),
-              );
+      padding: const EdgeInsets.symmetric(horizontal: 57),
+      child: AnimatedContainer(
+        duration: mainDuration,
+        alignment: _selectedIndicator == SelectedIndicator.left
+            ? Alignment.centerLeft
+            : Alignment.centerRight,
+        child: Container(
+          height: 3,
+          width: size.width / 3,
+          color: _selectedIndicator == SelectedIndicator.left
+              ? Colors.amberAccent
+              : Colors.redAccent,
+        ),
+        curve: Curves.fastOutSlowIn,
+      ),
+    );
   }
 
   Padding _tapButton() {
     return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50),
-                child: SizedBox(
-                  height: size.width * 0.12,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            Badge(
-                              showBadge: _showTabBarBadge,
-                              position: BadgePosition.bottomEnd(bottom: 9, end: 10),
-                              badgeColor: _selectedIndicator==SelectedIndicator.right ? Colors.amberAccent : Colors.redAccent,
-                              badgeContent: InkWell(
-                                onTap: (){
-                                  setState(() {
-                                    _selectedIndicator = SelectedIndicator.left;
-                                    _salesPos = 0;
-                                    _expensePos = size.width;
-                                  });
-                                },
-                                child: ImageIcon(
-                                  AssetImage('assets/images/exclamation_mark.png'),
-                                  size: 17,),
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    FocusScope.of(context).unfocus();
-                                    print('매출클릭');
-                                    _selectedIndicator = SelectedIndicator.left;
-                                    _salesPos = 0;
-                                    _expensePos = size.width;
-                                  });
-                                },
-                                child: Center(
-                                  child: Text(
-                                    '매출',
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: _selectedIndicator == SelectedIndicator.left
-                                          ? Colors.amberAccent
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: SizedBox(
+        height: size.width * 0.12,
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Stack(
+                children: [
+                  Badge(
+                    showBadge: _showTabBarBadge,
+                    position: BadgePosition.bottomEnd(bottom: 9, end: 10),
+                    badgeColor: _selectedIndicator == SelectedIndicator.right
+                        ? Colors.amberAccent
+                        : Colors.redAccent,
+                    badgeContent: InkWell(
+                      onTap: () {
+                        setState(() {
+                          _selectedIndicator = SelectedIndicator.left;
+                          _salesPos = 0;
+                          _expensePos = size.width;
+                        });
+                      },
+                      child: ImageIcon(
+                        AssetImage('assets/images/exclamation_mark.png'),
+                        size: 17,
                       ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              FocusScope.of(context).unfocus();
-                              print('지출클릭');
-                              _selectedIndicator = SelectedIndicator.right;
-                              _salesPos = -size.width;
-                              _expensePos = 0;
-                            });
-                          },
-                          child: Center(
-                            child: Text(
-                              '지출',
-                              style: TextStyle(
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: _selectedIndicator == SelectedIndicator.left
-                                    ? Colors.white
-                                    : Colors.redAccent,
-                              ),
-                            ),
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          FocusScope.of(context).unfocus();
+                          print('매출클릭');
+                          _selectedIndicator = SelectedIndicator.left;
+                          _salesPos = 0;
+                          _expensePos = size.width;
+                        });
+                      },
+                      child: Center(
+                        child: Text(
+                          '매출',
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: _selectedIndicator == SelectedIndicator.left
+                                ? Colors.amberAccent
+                                : Colors.white,
                           ),
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    FocusScope.of(context).unfocus();
+                    print('지출클릭');
+                    _selectedIndicator = SelectedIndicator.right;
+                    _salesPos = -size.width;
+                    _expensePos = 0;
+                  });
+                },
+                child: Center(
+                  child: Text(
+                    '지출',
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: _selectedIndicator == SelectedIndicator.left
+                          ? Colors.white
+                          : Colors.redAccent,
+                    ),
                   ),
                 ),
-              );
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   AppBar _createScreenAppbar(BuildContext context) {
@@ -176,22 +181,30 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
       title: Text(
         'CREATE',
         style: TextStyle(
-          color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent : Colors.redAccent,
+            color: _selectedIndicator == SelectedIndicator.left
+                ? Colors.amberAccent
+                : Colors.redAccent,
             // foreground:  Paint()..shader = mainColor,
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic),
       ),
       iconTheme: IconThemeData(
-          color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent : Colors.redAccent),
+          color: _selectedIndicator == SelectedIndicator.left
+              ? Colors.amberAccent
+              : Colors.redAccent),
       actionsIconTheme: IconThemeData(
-          color: _selectedIndicator == SelectedIndicator.left ? Colors.amberAccent : Colors.redAccent),
+          color: _selectedIndicator == SelectedIndicator.left
+              ? Colors.amberAccent
+              : Colors.redAccent),
       actions: [
         Stack(
           children: [
             Badge(
               showBadge: _showTabBarBadge,
-              position: BadgePosition.topEnd(end: 5,top: 5),
-              badgeColor: _selectedIndicator==SelectedIndicator.right ? Colors.amberAccent : Colors.redAccent,
+              position: BadgePosition.topEnd(end: 5, top: 5),
+              badgeColor: _selectedIndicator == SelectedIndicator.right
+                  ? Colors.amberAccent
+                  : Colors.redAccent,
               child: IconButton(
                 icon: Icon(Icons.save),
                 onPressed: () {
@@ -199,11 +212,10 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     FocusScope.of(context).unfocus();
                     if (!_formKey.currentState.validate()) {
                       _showTabBarBadge = true;
-                    }  else
+                    } else
                       _showTabBarBadge = false;
                     _formKey.currentState.save();
                   });
-
                 },
               ),
             ),
@@ -224,5 +236,4 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
   }
 }
 
-
-enum SelectedIndicator{left, right}
+enum SelectedIndicator { left, right }

@@ -4,5 +4,7 @@ const COLLECTION_SALES = 'Sales';
 const KEY_USERNAME = 'username';
 const KEY_USERKEY = 'user_key';
 const KEY_EMAIL = 'email';
-const STORE_NAME = 'storename';
-const STORE_NUMBER = 'storenumber';
+const KEY_STORENAME = 'storename';
+const KEY_STORENUMBER = 'storenumber';
+
+const KEY_TOTALSALES = 'totalSales';

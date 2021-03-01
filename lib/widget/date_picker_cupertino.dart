@@ -5,12 +5,12 @@ import 'package:intl/intl.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 
-class Example extends StatefulWidget {
+class DatePickerCupertino extends StatefulWidget {
   @override
-  _ExampleState createState() => _ExampleState();
+  _DatePickerCupertinoState createState() => _DatePickerCupertinoState();
 }
 
-class _ExampleState extends State<Example> {
+class _DatePickerCupertinoState extends State<DatePickerCupertino> {
   // DateTime _selectedDate = DateTime.now();
   //
   // TextEditingController _textEditingController = TextEditingController();
