@@ -8,3 +8,4 @@ const KEY_STORENAME = 'storename';
 const KEY_STORENUMBER = 'storenumber';
 
 const KEY_TOTALSALES = 'totalSales';
+const KEY_ACTUALSALES = 'actualSales';

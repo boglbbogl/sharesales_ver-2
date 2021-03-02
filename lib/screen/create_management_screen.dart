@@ -3,19 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
+import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
 import 'package:sharesales_ver2/widget/expense_create_form.dart';
 import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
 class CreateManagementScreen extends StatefulWidget {
-
   @override
   _CreateManagementScreenState createState() => _CreateManagementScreenState();
 }
 
 class _CreateManagementScreenState extends State<CreateManagementScreen> {
-
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   SelectedIndicator _selectedIndicator = SelectedIndicator.left;
@@ -25,11 +24,28 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
 
   bool _showTabBarBadge = false;
 
+  TextEditingController _totalSalesController = TextEditingController();
+  TextEditingController _actualSalesController = TextEditingController();
+  TextEditingController _foodprovisionController = TextEditingController();
+  TextEditingController _beverageController = TextEditingController();
+  TextEditingController _alcoholController = TextEditingController();
+
+
+  @override
+  void dispose() {
+    _totalSalesController.dispose();
+    _actualSalesController.dispose();
+    _foodprovisionController.dispose();
+    _beverageController.dispose();
+    _alcoholController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // FocusScope.of(context).unfocus();
+        FocusScope.of(context).unfocus();
       },
       child: Scaffold(
         appBar: _createScreenAppbar(context),
@@ -47,15 +63,24 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                 Stack(
                   children: <Widget>[
                     AnimatedContainer(
-                        duration: mainDuration,
-                        transform: Matrix4.translationValues(_salesPos, 0, 0),
-                        curve: Curves.fastOutSlowIn,
-                        child: SalesCreateForm()),
+                      duration: mainDuration,
+                      transform: Matrix4.translationValues(_salesPos, 0, 0),
+                      curve: Curves.fastOutSlowIn,
+                      child: SalesCreateForm(
+                        totalSalesController: _totalSalesController,
+                        actualSalesController: _actualSalesController,
+                      ),
+                    ),
                     AnimatedContainer(
-                        duration: mainDuration,
-                        transform: Matrix4.translationValues(_expensePos, 0, 0),
-                        curve: Curves.fastOutSlowIn,
-                        child: ExpenseCreateForm()),
+                      duration: mainDuration,
+                      transform: Matrix4.translationValues(_expensePos, 0, 0),
+                      curve: Curves.fastOutSlowIn,
+                      child: ExpenseCreateForm(
+                        foodprovisionsController: _foodprovisionController,
+                        beverageController: _beverageController,
+                        alcoholController: _alcoholController,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -215,6 +240,9 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     } else
                       _showTabBarBadge = false;
                     _formKey.currentState.save();
+
+                    print(_totalSalesController.text);
+                    print(_actualSalesController.text);
                   });
                 },
               ),

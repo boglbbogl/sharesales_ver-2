@@ -16,10 +16,11 @@ class SalesModel {
       reference: snapshot.reference
   );
 
-  static Map<String, dynamic> getMapForCreateSales({String userKey, String totalSales}){
+  static Map<String, dynamic> getMapForCreateSales({String userKey, String totalSales, String actualSales}){
     Map<String, dynamic> map = Map();
     map[KEY_USERKEY] = userKey;
     map[KEY_TOTALSALES] = totalSales;
+    map[KEY_ACTUALSALES] = actualSales;
     return map;
   }
 }

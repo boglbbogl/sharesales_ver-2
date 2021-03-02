@@ -27,7 +27,7 @@ class _MainHomePageState extends State<MainHomePage> {
 
   List<Widget> _screenList = [
     AdScreen(),
-    Example(),
+    // Example(),
     // CalendarTimelineDatePicker(),
     ManagementScreen(),
     Container(color: Colors.green,),
