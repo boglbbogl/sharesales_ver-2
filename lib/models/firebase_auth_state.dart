@@ -22,7 +22,6 @@ class FirebaseAuthState extends ChangeNotifier {
 
   void registerUser(BuildContext context,
       {@required String email, @required String password}) async {
-    changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
     UserCredential userCredential = await _firebaseAuth
         .createUserWithEmailAndPassword(
             email: email.trim(), password: password.trim())

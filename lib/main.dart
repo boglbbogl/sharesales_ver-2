@@ -35,10 +35,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         // debugShowCheckedModeBanner: ,
         title: 'share sales',
-        supportedLocales: [
-          const Locale('en', 'US'),
-          const Locale('ko', 'KO'),
-        ],
+        // supportedLocales: [
+        //   const Locale('en', 'US'),
+        //   const Locale('ko', 'KO'),
+        // ],
         theme: ThemeData(
           canvasColor: blackColor,
           primarySwatch: Colors.red,

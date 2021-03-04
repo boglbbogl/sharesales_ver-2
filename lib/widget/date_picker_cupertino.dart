@@ -1,9 +1,16 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
+
+DateTime pickerDate = DateTime.now();
+String format = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
 
 class DatePickerCupertino extends StatefulWidget {
   @override
@@ -11,71 +18,10 @@ class DatePickerCupertino extends StatefulWidget {
 }
 
 class _DatePickerCupertinoState extends State<DatePickerCupertino> {
-  // DateTime _selectedDate = DateTime.now();
-  //
-  // TextEditingController _textEditingController = TextEditingController();
-  //
-  // _selectDate() async {
-  //   DateTime pickedDate = await showModalBottomSheet<DateTime>(
-  //     backgroundColor: Colors.black,
-  //     context: context,
-  //     builder: (context) {
-  //       DateTime tempPickedDate;
-  //       return Container(
-  //         height: size.height*0.3,
-  //         child: Column(
-  //           children: <Widget>[
-  //             Container(
-  //               child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: <Widget>[
-  //                   CupertinoButton(
-  //                     child: Text('취소'),
-  //                     onPressed: () {
-  //                       Navigator.of(context).pop();
-  //                     },
-  //                   ),
-  //                   CupertinoButton(
-  //                     child: Text('확인'),
-  //                     onPressed: () {
-  //                       Navigator.of(context).pop(tempPickedDate);
-  //                     },
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //             Divider(
-  //               height: 0,
-  //               thickness: 1,
-  //             ),
-  //             Expanded(
-  //               child: Container(
-  //                 child: CupertinoDatePicker(
-  //                   mode: CupertinoDatePickerMode.date,
-  //                   onDateTimeChanged: (DateTime dateTime) {
-  //                     tempPickedDate = dateTime;
-  //                   },
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  //   if (pickedDate != null && pickedDate != _selectedDate) {
-  //     setState(() {
-  //       _selectedDate = pickedDate;
-  //       _textEditingController.text = pickedDate.toString();
-  //     });
-  //   }
-  // }
-
-  DateTime pickerDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    var formatDate = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
+    String formatDate = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -116,44 +62,18 @@ class _DatePickerCupertinoState extends State<DatePickerCupertino> {
                       pickerDate = selectedDate;
                     } else
                       return Scaffold.of(context).showSnackBar(pickerSnackBar);
+                    print(selectedDate);
                   });
                 },
-                // if(selectedDate != null || pickerDate != null){
-                //   setState(() {
-                //     pickerDate = selectedDate;
-                //   }); } else
-                //     return Scaffold.of(context).showSnackBar(pickerSnackBar);
-                // },
                 currentTime: pickerDate,
-                locale: LocaleType.ko,
+                locale: LocaleType.en,
               );
             },
         ),
-        // Container(
-        //   child: InkWell(
-        //       onTap: () {
-        //         CupertinoRoundedDatePicker.show(context,
-        //             textColor: Colors.white,
-        //             background: Colors.pinkAccent,
-        //             borderRadius: 20,
-        //             initialDate: pickerDate,
-        //             era: EraMode.CHRIST_YEAR,
-        //             initialDatePickerMode: CupertinoDatePickerMode.date,
-        //             onDateTimeChanged: (selectedDate) {
-        //           setState(() {
-        //             pickerDate = selectedDate;
-        //             print('$selectedDate');
-        //           });
-        //         });
-        //       },
-        //       child: Text(
-        //         '칼라',
-        //         style: TextStyle(color: Colors.amberAccent),
-        //       )),
-        // ),
       ],
     );
   }
+
   SnackBar pickerSnackBar = SnackBar(
     duration: Duration(seconds: 1),
     content: Text(
@@ -163,3 +83,4 @@ class _DatePickerCupertinoState extends State<DatePickerCupertino> {
     backgroundColor: Colors.lightBlueAccent,
   );
 }
+DatePickerCupertino get datePickerCupertino =>DatePickerCupertino();

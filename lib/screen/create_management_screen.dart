@@ -1,15 +1,23 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
-import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/models/firestore/sales_model.dart';
+import 'package:sharesales_ver2/models/firestore/user_model.dart';
+import 'package:sharesales_ver2/models/user_model_state.dart';
+import 'package:sharesales_ver2/repository/sales_network_repository.dart';
 import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
 import 'package:sharesales_ver2/widget/expense_create_form.dart';
 import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
 class CreateManagementScreen extends StatefulWidget {
+  final String userKey;
+
+  const CreateManagementScreen({Key key, this.userKey}) : super(key: key);
+
   @override
   _CreateManagementScreenState createState() => _CreateManagementScreenState();
 }
@@ -29,7 +37,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
   TextEditingController _foodprovisionController = TextEditingController();
   TextEditingController _beverageController = TextEditingController();
   TextEditingController _alcoholController = TextEditingController();
-
 
   @override
   void dispose() {
@@ -237,9 +244,22 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     FocusScope.of(context).unfocus();
                     if (!_formKey.currentState.validate()) {
                       _showTabBarBadge = true;
-                    } else
+                    } else {
                       _showTabBarBadge = false;
-                    _formKey.currentState.save();
+                      _formKey.currentState.save();
+
+                      UserModel userModel =
+                          Provider.of<UserModelState>(context, listen: false)
+                              .userModel;
+
+                      salesNetworkRepository.createSalesAdd(
+                          widget.userKey,
+                          SalesModel.getMapForCreateSales(
+                            totalSales: _totalSalesController.text,
+                            selectedDate: pickerDate.toString().substring(0,10),
+                          ));
+                      Navigator.of(context).pop();
+                    }
 
                     print(_totalSalesController.text);
                     print(_actualSalesController.text);
