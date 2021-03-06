@@ -1,76 +1,115 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/material.dart';
-// import 'package:sharesales_ver2/constant/input_decor.dart';
-// import 'package:sharesales_ver2/constant/size.dart';
+// import 'package:folding_cell/folding_cell/widget.dart';
+// import 'package:provider/provider.dart';
+// import 'package:sharesales_ver2/constant/firestore_keys.dart';
+// import 'package:sharesales_ver2/models/firestore/sales_model.dart';
+// import 'package:sharesales_ver2/repository/sales_network_repository.dart';
+// import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 //
-// class SalesCreateForm extends StatefulWidget {
+// class ManagementListForm extends StatelessWidget {
 //
-//   @override
-//   _SalesCreateFormState createState() => _SalesCreateFormState();
-// }
-//
-// class _SalesCreateFormState extends State<SalesCreateForm> {
 //   @override
 //   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: <Widget>[
-//         _createTextForm(
-//             '총매출', '실제매출', _totalSalesController, _actualSalesController),
-//         // _createTextForm('공급가액','세액'),
-//         // _createTextForm('할인','신용카드'),
-//         // _createTextForm('현금','현금영수증'),
-//         // _createTextForm('Delivery','Gift Card'),
-//       ],
+//     return Flexible(
+//       child: ListView.builder(
+//         scrollDirection: Axis.vertical,
+//         itemCount: 20,
+//         shrinkWrap: true,
+//         itemBuilder: (context, index) {
+//           return SimpleFoldingCell.create(
+//             frontWidget: _buildFrontWidget(index),
+//             innerWidget: _buildInnerWidget(index),
+//             cellSize: Size(MediaQuery.of(context).size.width, 100),
+//             padding: EdgeInsets.all(12),
+//             animationDuration: Duration(milliseconds: 300),
+//             borderRadius: 20,
+//             onOpen: () => print('cell opened'),
+//             onClose: () => print('cell closed'),
+//           );
+//         },
+//       ),
 //     );
 //   }
 //
-//   Row _createTextForm(
-//       String leftText,
-//       String rightText,
-//       TextEditingController startController,
-//       TextEditingController endController) {
-//     return Row(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       mainAxisAlignment: MainAxisAlignment.spaceAround,
-//       children: <Widget>[
-//         Container(
-//           height: salTtfHeightSize,
-//           width: salTtfWidthSize,
-//           child: TextFormField(
-//             controller: startController,
-//             inputFormatters: [wonMaskFormatter],
-//             // validator: _salesInputValidator,
-//             style: blackInputStyle(),
-//             cursorColor: Colors.white,
-//             decoration: blackInputDecor(leftText),
-//             keyboardType: TextInputType.number,
-//             textInputAction: TextInputAction.next,
+//   Widget _buildFrontWidget(int index) {
+//     return Builder(
+//       builder: (BuildContext context) {
+//         return Container(
+//           color: Colors.redAccent,
+//           alignment: Alignment.center,
+//           child: Stack(
+//             children: <Widget>[
+//               Align(
+//                 alignment: Alignment.center,
+//                 child: Text(
+//                   'salesData',
+//                   // salesModel.totalSales,
+//                 ),
+//               ),
+//               Positioned(
+//                 right: 5,
+//                 bottom: 0,
+//                 child: InkWell(
+//                   onTap: () {
+//                     final _foldingCellState = context
+//                         .findRootAncestorStateOfType<SimpleFoldingCellState>();
+//                     _foldingCellState?.toggleFold();
+//                   },
+//                   child: Text(
+//                     "Detail",
+//                   ),
+//                   splashColor: Colors.white.withOpacity(0.5),
+//                 ),
+//               )
+//             ],
 //           ),
-//         ),
-//         Container(
-//           height: salTtfHeightSize,
-//           width: salTtfWidthSize,
-//           child: TextFormField(
-//             controller: endController,
-//             inputFormatters: [wonMaskFormatter],
-//             // validator: _salesInputValidator,
-//             style: blackInputStyle(),
-//             cursorColor: Colors.white,
-//             decoration: blackInputDecor(rightText),
-//             keyboardType: TextInputType.number,
-//             textInputAction: TextInputAction.next,
-//           ),
-//         ),
-//       ],
+//         );
+//       },
 //     );
 //   }
 //
-//   String _salesInputValidator(text) {
-//     if (text.isEmpty) {
-//       return '필수 입력사항  ex)  0';
-//     } else
-//       return null;
+//   Widget _buildInnerWidget(int index) {
+//     return Builder(
+//       builder: (context) {
+//         return Container(
+//           color: Color(0xFFecf2f9),
+//           padding: EdgeInsets.only(top: 10),
+//           child: Stack(
+//             children: [
+//               Align(
+//                 alignment: Alignment.topCenter,
+//                 child: Text(
+//                   "CARD TITLE",
+//                 ),
+//               ),
+//               Align(
+//                 alignment: Alignment.center,
+//                 child: Text(
+//                   "CARD DETAIL",
+//                 ),
+//               ),
+//               Positioned(
+//                 right: 5,
+//                 bottom: 0,
+//                 child: FlatButton(
+//                   onPressed: () {
+//                     final _foldingCellState = context
+//                         .findRootAncestorStateOfType<SimpleFoldingCellState>();
+//                     _foldingCellState?.toggleFold();
+//                   },
+//                   child: Text(
+//                     "Close",
+//                   ),
+//                   textColor: Colors.white,
+//                   color: Colors.indigoAccent,
+//                   splashColor: Colors.white.withOpacity(0.5),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
 //   }
 // }
-//

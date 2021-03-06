@@ -14,6 +14,7 @@ class SalesCreateForm extends StatelessWidget {
   final TextEditingController _totalSalesController;
   final TextEditingController _actualSalesController;
 
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,7 +46,7 @@ class SalesCreateForm extends StatelessWidget {
           child: TextFormField(
             controller: startController,
             inputFormatters: [wonMaskFormatter],
-            validator: _salesInputValidator,
+            // validator: _salesInputValidator,
             style: blackInputStyle(),
             cursorColor: Colors.white,
             decoration: blackInputDecor(leftText),
@@ -59,7 +60,7 @@ class SalesCreateForm extends StatelessWidget {
           child: TextFormField(
             controller: endController,
             inputFormatters: [wonMaskFormatter],
-            validator: _salesInputValidator,
+            // validator: _salesInputValidator,
             style: blackInputStyle(),
             cursorColor: Colors.white,
             decoration: blackInputDecor(rightText),

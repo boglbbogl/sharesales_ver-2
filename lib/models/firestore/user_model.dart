@@ -16,13 +16,10 @@ class UserModel {
         storeNumber = map[KEY_STORENUMBER];
 
   UserModel.fromSnapshot(DocumentSnapshot snapshot)
-  : this.fromMap(
-    snapshot.data(),
-    snapshot.id,
-    reference: snapshot.reference
-  );
+      : this.fromMap(snapshot.data(), snapshot.id,
+            reference: snapshot.reference);
 
-  static Map<String, dynamic> getMapForCreateUser(String email){
+  static Map<String, dynamic> getMapForCreateUser(String email) {
     Map<String, dynamic> map = Map();
     map[KEY_USERNAME] = email.split("@")[0];
     map[KEY_EMAIL] = email;

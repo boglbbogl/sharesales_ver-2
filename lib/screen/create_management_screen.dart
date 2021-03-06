@@ -239,7 +239,19 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                   : Colors.redAccent,
               child: IconButton(
                 icon: Icon(Icons.save),
-                onPressed: () {
+                onPressed: () async{
+                  UserModel userModel =
+                      Provider.of<UserModelState>(context, listen: false)
+                          .userModel;
+                  //
+                  await salesNetworkRepository.createSalesAdd(
+                      widget.userKey,
+                      SalesModel.getMapForCreateSales(
+                        userKey: userModel.userKey,
+                        actualSales: _actualSalesController.text,
+                        totalSales: _totalSalesController.text,
+                        selectedDate: pickerDate.toString().substring(0,10),
+                      ));
                   setState(() {
                     FocusScope.of(context).unfocus();
                     if (!_formKey.currentState.validate()) {
@@ -247,17 +259,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     } else {
                       _showTabBarBadge = false;
                       _formKey.currentState.save();
-
-                      UserModel userModel =
-                          Provider.of<UserModelState>(context, listen: false)
-                              .userModel;
-
-                      salesNetworkRepository.createSalesAdd(
-                          widget.userKey,
-                          SalesModel.getMapForCreateSales(
-                            totalSales: _totalSalesController.text,
-                            selectedDate: pickerDate.toString().substring(0,10),
-                          ));
                       Navigator.of(context).pop();
                     }
 
