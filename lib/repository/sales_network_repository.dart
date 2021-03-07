@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
-import 'package:sharesales_ver2/models/firestore/sales_model.dart';
 import 'package:sharesales_ver2/repository/helper/transformers.dart';
 import 'package:sharesales_ver2/repository/user_network_repository.dart';
 import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
@@ -22,7 +19,6 @@ class SalesNetworkRepository with Transformers{
     final DocumentReference salesReference =
     FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(
         '$pickerDate'.substring(0, 10) + '_$uid');
-    // FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(uid).collection(COLLECTION_SALES).doc('$pickerDate');
 
     final DocumentSnapshot salesSnapshot = await salesReference.get();
     if (!salesSnapshot.exists) {

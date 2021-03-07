@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/constant/test_widget/calendar_timeline_date_picker.dart';
 import 'package:sharesales_ver2/models/firestore/sales_model.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
-import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
-import 'package:sharesales_ver2/widget/example.dart';
 import 'constant/color.dart';
 import 'constant/size.dart';
-import 'models/firestore/user_model.dart';
 import 'screen/account_screen.dart';
 import 'screen/ad_screen.dart';
 import 'widget/my_progress_indicator.dart';
@@ -36,14 +32,7 @@ class _MainHomePageState extends State<MainHomePage> {
 
   List<Widget> _screenList = [
     AdScreen(),
-    // Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget child){
-    //   if(userModelState == null || userModelState.userModel == null)
-    //     return MyProgressIndicator();
-    //   else
-    //     return Example();
-    // }),
-    // Example(),
-    // CalendarTimelineDatePicker(),
+    Container(),
     Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();

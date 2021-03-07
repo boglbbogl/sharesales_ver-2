@@ -44,7 +44,8 @@ dependencies:
   folding_cell: ^1.0.0
   calendar_timeline: ^0.7.0
   date_picker_timeline: ^1.2.1
-  rxdart: ^0.26.0
+  modal_bottom_sheet: ^1.0.0+1
+
 
 
 
@@ -59,7 +60,6 @@ dependencies:
       url: https://github.com/espresso3389/flutter_datetime_picker
 
 
-dependency_overrides:
 
 
 dev_dependencies:

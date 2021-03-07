@@ -34,6 +34,27 @@ OutlineInputBorder _expenseInputDecor() {
   );
 }
 
+InputDecoration expenseChangeInputDecor(String hint){
+  return InputDecoration(
+    enabledBorder: _expenseInputDecor(),
+    focusedBorder: _expenseInputDecor(),
+    labelText: hint,
+    labelStyle: TextStyle(color: Colors.redAccent,),
+  );
+}
+
+InputDecoration salesChangeInputDecor(String hint) {
+  return InputDecoration(
+    enabledBorder: _blackActiveInputBorder(),
+    focusedBorder: _blackActiveInputBorder(),
+    errorBorder: _blackErrorInputBorder(),
+    focusedErrorBorder: _blackErrorInputBorder(),
+    labelText: hint,
+    labelStyle: TextStyle(color: Colors.amberAccent),
+
+  );
+}
+
 
 InputDecoration blackInputDecor(String hint) {
   return InputDecoration(

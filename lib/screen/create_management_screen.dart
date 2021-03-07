@@ -251,6 +251,9 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                         actualSales: _actualSalesController.text,
                         totalSales: _totalSalesController.text,
                         selectedDate: pickerDate.toString().substring(0,10),
+                        foodProvisionExpense: _foodprovisionController.text,
+                        beverageExpense: _beverageController.text,
+                        alcoholExpense: _alcoholController.text,
                       ));
                   setState(() {
                     FocusScope.of(context).unfocus();
