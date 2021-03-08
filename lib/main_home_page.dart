@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/models/firestore/sales_model.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
 import 'constant/color.dart';
@@ -10,10 +9,6 @@ import 'screen/ad_screen.dart';
 import 'widget/my_progress_indicator.dart';
 
 class MainHomePage extends StatefulWidget {
-  final SalesModel salesModel;
-
-  const MainHomePage({Key key, this.salesModel}) : super(key: key);
-
   @override
   _MainHomePageState createState() => _MainHomePageState();
 }
@@ -33,6 +28,7 @@ class _MainHomePageState extends State<MainHomePage> {
   List<Widget> _screenList = [
     AdScreen(),
     Container(),
+    // ManagementScreen(),
     Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();

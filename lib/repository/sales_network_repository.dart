@@ -6,8 +6,6 @@ import 'package:sharesales_ver2/repository/user_network_repository.dart';
 import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
 
 
-UserNetworkRepository userNetworkRepository;
-
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final User user =  _auth.currentUser;
 final uid = user.uid;

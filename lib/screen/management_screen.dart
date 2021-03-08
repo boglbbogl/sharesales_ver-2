@@ -3,14 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:folding_cell/folding_cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/models/firestore/user_model.dart';
+import 'package:sharesales_ver2/models/user_model_state.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'create_management_screen.dart';
 
 class ManagementScreen extends StatefulWidget {
+
   @override
   _ManagementScreenState createState() => _ManagementScreenState();
 }
@@ -42,12 +46,19 @@ class _ManagementScreenState extends State<ManagementScreen> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            StreamBuilder<QuerySnapshot>(
+            StreamBuilder<QuerySnapshot> (
               stream: FirebaseFirestore.instance
                   .collection(COLLECTION_SALES)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
+                //
+                UserModel userModel =
+                    Provider.of<UserModelState>(context, listen: false)
+                        .userModel;
+                // final FirebaseAuth _auth = FirebaseAuth.instance;
+                // final User user =  _auth.currentUser;
+                // final uid = user.uid;
                 if (!snapshot.hasData) {
                   return MyProgressIndicator();
                 }
@@ -55,6 +66,10 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   child: ListView(
                     shrinkWrap: true,
                     children: snapshot.data.docs.map((snapshotData) {
+                      if( userModel.userKey != snapshotData['user_key']){
+                        return Center();
+                        // return Center(child: Text('${userModel.userName}', style: TextStyle(color: Colors.white),));
+                      }
                       return SimpleFoldingCell.create(
                         // frontWidget: _buildFrontWidget(),
                         frontWidget: GestureDetector(

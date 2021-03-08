@@ -78,10 +78,11 @@ class _AccountScreenBodyState extends State<AccountScreenBody>
               height: 100,
               width: 100,
               color: Colors.red,
-            child: Text(
-              userModelState == null || userModelState.userModel == null ?
-              "":userModelState.userModel.userName,
-            ),),
+            // child: Text(
+            //   userModelState == null || userModelState.userModel == null ?
+            //   "":userModelState.userModel.userName,
+            // ),
+            ),
           ],
         ),
       ),

@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  void _initUserModel(FirebaseAuthState firebaseAuthState, BuildContext context) {
+  void _initUserModel(FirebaseAuthState firebaseAuthState, BuildContext context) async {
 
     UserModelState userModelState = Provider.of<UserModelState>(context, listen: false);
 
