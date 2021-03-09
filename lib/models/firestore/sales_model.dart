@@ -5,14 +5,17 @@ class SalesModel {
   final String userKey;
   final String totalSales;
   final String actualSales;
-  final DateTime selectedDate;
+  final DateTime stdDate;
+  final String selectedDate;
   final String foodProvisionExpense;
   final String beverageExpense;
   final String alcoholExpense;
   final DocumentReference reference;
 
   SalesModel.fromMap(Map<String, dynamic> map, this.userKey, {this.reference})
-      : selectedDate = map[KEY_SELECTEDDATE],
+      // : selectedDate = (map[KEY_SELECTEDDATE] as Timestamp).toDate(),
+      : stdDate = (map[KEY_STDDATE] as DateTime).toUtc(),
+        selectedDate = map[KEY_SELECTEDDATE],
         totalSales = map[KEY_TOTALSALES],
         actualSales = map[KEY_ACTUALSALES],
         foodProvisionExpense = map[KEY_FOODPROVISION],
@@ -26,6 +29,7 @@ class SalesModel {
   static Map<String, dynamic> getMapForCreateSales({
     String userKey,
     String selectedDate,
+    DateTime stdDate,
     String totalSales,
     String actualSales,
     String foodProvisionExpense,
@@ -36,6 +40,7 @@ class SalesModel {
     map[KEY_USERKEY] = userKey;
     map[KEY_ACTUALSALES] = actualSales;
     map[KEY_SELECTEDDATE] = selectedDate;
+    map[KEY_STDDATE] = stdDate;
     map[KEY_TOTALSALES] = totalSales;
     map[KEY_FOODPROVISION] = foodProvisionExpense;
     map[KEY_BEVERAGE] = beverageExpense;

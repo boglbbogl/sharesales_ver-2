@@ -46,9 +46,14 @@ class _ManagementScreenState extends State<ManagementScreen> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Container(
+              width: size.width,
+              height: size.height*0.1,
+              color: Colors.indigoAccent,
+            ),
             StreamBuilder<QuerySnapshot> (
               stream: FirebaseFirestore.instance
-                  .collection(COLLECTION_SALES)
+                  .collection(COLLECTION_SALES).doc().collection('subSales')
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -56,9 +61,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 UserModel userModel =
                     Provider.of<UserModelState>(context, listen: false)
                         .userModel;
-                // final FirebaseAuth _auth = FirebaseAuth.instance;
-                // final User user =  _auth.currentUser;
-                // final uid = user.uid;
+
                 if (!snapshot.hasData) {
                   return MyProgressIndicator();
                 }
@@ -66,10 +69,10 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   child: ListView(
                     shrinkWrap: true,
                     children: snapshot.data.docs.map((snapshotData) {
-                      if( userModel.userKey != snapshotData['user_key']){
-                        return Center();
-                        // return Center(child: Text('${userModel.userName}', style: TextStyle(color: Colors.white),));
-                      }
+                      // if( userModel.userKey != snapshotData['user_key']){
+                      //   return Center();
+                      //   return Center(child: Text('${userModel.userName}', style: TextStyle(color: Colors.white),));
+                      // }
                       return SimpleFoldingCell.create(
                         // frontWidget: _buildFrontWidget(),
                         frontWidget: GestureDetector(
@@ -98,8 +101,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
     );
   }
 
+
   Future _deleteAndUpDateBottomSheet(
       BuildContext context, QueryDocumentSnapshot snapshotData) {
+
+
     return showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -109,7 +115,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
         context: context,
         builder: (BuildContext context) {
           return Container(
-            height: size.height * 0.10,
+            height: size.height * 0.13,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -143,9 +149,9 @@ class _ManagementScreenState extends State<ManagementScreen> {
                               height: size.height*0.07,
                               child: Row(
                                 children: <Widget>[
-                                  Text(' '+snapshotData['selectedDate'] + ' 기록을 삭제 하시겠습니까 ?',
-                                    style: TextStyle(
-                                      color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),),
+                                  // Text(' ' + snapshotData['selectedDate'] +  ' 기록을 삭제 하시겠습니까 ?',
+                                  //   style: TextStyle(
+                                  //     color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),),
                                   Container(
                                     width: size.width*0.2,
                                     child: InkWell(
@@ -231,7 +237,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                           context: context,
                           builder: (BuildContext context) {
                             return Container(
-                              height: size.height * 0.07,
+                              height: size.height * 0.08,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment:
@@ -299,7 +305,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                       ),
                                                       Container(
                                                         height: salTtfHeightSize,
-                                                        child: Text(snapshotData['selectedDate'],style: TextStyle(
+                                                        child: Text(snapshotData['selectedDate'],
+                                                          style: TextStyle(
                                                           color: Colors.indigo,fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
                                                         ),),
                                                       ),
@@ -428,7 +435,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                       ),
                                                       Container(
                                                         height: salTtfHeightSize,
-                                                        child: Text(snapshotData['selectedDate'],style: TextStyle(
+                                                        child: Text(snapshotData['selectedDate'],
+                                                          style: TextStyle(
                                                           color: Colors.indigo,fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
                                                         ),),
                                                       ),
@@ -561,15 +569,15 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      snapshotData['selectedDate'],
-                      style: TextStyle(
-                        color: Colors.indigo,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 19,
-                      ),
-                    ),
+                    // child: Text(
+                    //   snapshotData['selectedDate'],
+                    //   style: TextStyle(
+                    //     color: Colors.indigo,
+                    //     fontWeight: FontWeight.bold,
+                    //     fontStyle: FontStyle.italic,
+                    //     fontSize: 19,
+                    //   ),
+                    // ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -578,16 +586,16 @@ class _ManagementScreenState extends State<ManagementScreen> {
                       children: <Widget>[
                         Container(
                           width: size.width * 0.45,
-                          child: Text(
-                            '실제 매출 : ' + snapshotData['actualSales'],
-                            style: _frontWidgetTextStyle(),
-                          ),
+                          // child: Text(
+                          //   '실제 매출 : ' + snapshotData['actualSales'],
+                          //   style: _frontWidgetTextStyle(),
+                          // ),
                         ),
                         Container(
-                          child: Text(
-                            '식자재 : ' + snapshotData['foodProvisionExpense'],
-                            style: _frontWidgetTextStyle(),
-                          ),
+                          // child: Text(
+                          //   '식자재 : ' + snapshotData['foodProvisionExpense'],
+                          //   style: _frontWidgetTextStyle(),
+                          // ),
                         ),
                       ],
                     ),
@@ -599,16 +607,16 @@ class _ManagementScreenState extends State<ManagementScreen> {
                       children: <Widget>[
                         Container(
                           width: size.width * 0.45,
-                          child: Text(
-                            '총 매출 : ' + snapshotData['totalSales'],
-                            style: _frontWidgetTextStyle(),
-                          ),
+                          // child: Text(
+                          //   '총 매출 : ' + snapshotData['totalSales'],
+                          //   style: _frontWidgetTextStyle(),
+                          // ),
                         ),
                         Container(
-                          child: Text(
-                            '기타지출 : ' + snapshotData['alcoholExpense'],
-                            style: _frontWidgetTextStyle(),
-                          ),
+                          // child: Text(
+                          //   '기타지출 : ' + snapshotData['alcoholExpense'],
+                          //   style: _frontWidgetTextStyle(),
+                          // ),
                         ),
                       ],
                     ),

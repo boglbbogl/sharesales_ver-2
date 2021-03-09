@@ -21,7 +21,7 @@ class UserModel {
 
   static Map<String, dynamic> getMapForCreateUser(String email) {
     Map<String, dynamic> map = Map();
-    map[KEY_USERNAME] = email.split("@")[0];
+    map[KEY_USERNAME] = email;
     map[KEY_EMAIL] = email;
     map[KEY_STORENAME] = '';
     map[KEY_STORENUMBER] = '';

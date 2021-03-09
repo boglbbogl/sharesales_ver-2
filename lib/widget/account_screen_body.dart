@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
+import 'package:sharesales_ver2/repository/sales_network_repository.dart';
 
 class AccountScreenBody extends StatefulWidget {
   final Function onPageChanged;
@@ -78,10 +79,33 @@ class _AccountScreenBodyState extends State<AccountScreenBody>
               height: 100,
               width: 100,
               color: Colors.red,
-            // child: Text(
-            //   userModelState == null || userModelState.userModel == null ?
-            //   "":userModelState.userModel.userName,
+            child: Text(
+              userModelState == null || userModelState.userModel == null ?
+              "":userModelState.userModel.userName,
+            ),
+            ),
+        Container(
+          height: 100,
+          width: 100,
+          color: Colors.red,
+          child: Text(
+            userModelState == null || userModelState.userModel == null ?
+            "":userModelState.userModel.userKey,
+          ),
+        ),
+            // Container(
+            //   height: 100,
+            //   width: 100,
+            //   color: Colors.red,
+            //   child: Text('$uid'
+            //   ),
             // ),
+            Container(
+              height: 100,
+              width: 100,
+              color: Colors.red,
+              child: Text(''
+              ),
             ),
           ],
         ),

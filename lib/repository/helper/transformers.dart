@@ -9,16 +9,11 @@ class Transformers {
      sink.add(UserModel.fromSnapshot(snapshot));
   });
 
-  // final toSales =
-  //     StreamTransformer<QuerySnapshot, List<SalesModel>>.fromHandlers(
-  //         handleData: (snapshot, sink) async {
-  //   List<SalesModel> sales = [];
-  //
-  //   snapshot.docs.forEach((documentSnapshot) {
-  //     sales.add(SalesModel.fromSnapshot(documentSnapshot));
-  //   });
-  //   sink.add(sales);
-  // });
+  final toSales =
+      StreamTransformer<DocumentSnapshot, SalesModel>.fromHandlers(
+          handleData: (snapshot, sink) async {
+            sink.add(SalesModel.fromSnapshot(snapshot));
+  });
   //
   // final combineListOfPosts =
   // StreamTransformer<List<List<SalesModel>>, List<SalesModel>>.fromHandlers(

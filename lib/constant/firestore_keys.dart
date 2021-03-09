@@ -7,6 +7,8 @@ const KEY_EMAIL = 'email';
 const KEY_STORENAME = 'storename';
 const KEY_STORENUMBER = 'storenumber';
 
+const KEY_UNIQUEKEY = 'uniqueKey';
+const KEY_STDDATE = 'stdDate';
 const KEY_SELECTEDDATE = 'selectedDate';
 const KEY_TOTALSALES = 'totalSales';
 const KEY_ACTUALSALES = 'actualSales';

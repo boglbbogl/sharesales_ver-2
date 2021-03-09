@@ -28,47 +28,47 @@ class _DatePickerCupertinoState extends State<DatePickerCupertino> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
-            child: SizedBox(
-              width: size.width * 0.9,
-              height: size.height * 0.05,
-              child: Center(
-                child: Text(
-                  '$formatDate',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 20,
-                  ),
+          child: SizedBox(
+            width: size.width * 0.9,
+            height: size.height * 0.05,
+            child: Center(
+              child: Text(
+                '$formatDate',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 20,
                 ),
               ),
             ),
-            onTap: () {
-              DatePicker.showDatePicker(context,
-                theme: DatePickerTheme(
-                  itemStyle: TextStyle(color: Colors.white),
-                  backgroundColor: Colors.black,
-                  headerColor: Colors.black,
-                  doneStyle: TextStyle(color: Colors.redAccent),
-                  cancelStyle: TextStyle(color: Colors.redAccent),
-                  containerHeight: size.height * 0.3,
-                ),
-                showTitleActions: true,
-                minTime: DateTime(2000, 1, 1),
-                maxTime: DateTime(2100, 12, 31),
-                onChanged: (selectedDate) {
-                  setState(() {
-                    if (selectedDate != null || pickerDate != null) {
-                      pickerDate = selectedDate;
-                    } else
-                      return Scaffold.of(context).showSnackBar(pickerSnackBar);
-                    print(selectedDate);
-                  });
-                },
-                currentTime: pickerDate,
-                locale: LocaleType.en,
-              );
-            },
+          ),
+          onTap: () {
+            DatePicker.showDatePicker(context,
+              theme: DatePickerTheme(
+                itemStyle: TextStyle(color: Colors.white),
+                backgroundColor: Colors.black,
+                headerColor: Colors.black,
+                doneStyle: TextStyle(color: Colors.redAccent),
+                cancelStyle: TextStyle(color: Colors.redAccent),
+                containerHeight: size.height * 0.3,
+              ),
+              showTitleActions: true,
+              minTime: DateTime(2000, 1, 1),
+              maxTime: DateTime(2100, 12, 31),
+              onChanged: (selectedDate) {
+                setState(() {
+                  if (selectedDate != null || pickerDate != null) {
+                    pickerDate = selectedDate;
+                  } else
+                    return Scaffold.of(context).showSnackBar(pickerSnackBar);
+                  print(selectedDate);
+                });
+              },
+              currentTime: pickerDate,
+              locale: LocaleType.en,
+            );
+          },
         ),
       ],
     );
