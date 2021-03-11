@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
-import 'package:sharesales_ver2/repository/user_network_repository.dart';
+import 'package:sharesales_ver2/repository/firestore_user_repository.dart';
 
 class FirebaseAuthState extends ChangeNotifier {
   FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.logout;

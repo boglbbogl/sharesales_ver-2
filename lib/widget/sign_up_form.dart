@@ -68,7 +68,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     controller: _pwController,
                     decoration: amberInputDecor('Password'),
                     validator: (text){
-                      if(text.isNotEmpty && text.length > 3){
+                      if(text.isNotEmpty && text.length > 5){
                         return null;
                       } else {
                         return '3자리 이상으로 해';

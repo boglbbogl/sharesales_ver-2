@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
-import 'package:sharesales_ver2/repository/sales_network_repository.dart';
+import 'package:sharesales_ver2/repository/firestore_management_repository.dart';
 
 class AccountScreenBody extends StatefulWidget {
   final Function onPageChanged;

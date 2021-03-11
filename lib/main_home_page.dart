@@ -29,7 +29,7 @@ class _MainHomePageState extends State<MainHomePage> {
   List<Widget> _screenList = [
     AdScreen(),
     // Container(),
-    ManagementScreen(),
+    Container(),
     Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();

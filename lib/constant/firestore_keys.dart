@@ -13,6 +13,7 @@ const KEY_SELECTEDDATE = 'selectedDate';
 const KEY_TOTALSALES = 'totalSales';
 const KEY_ACTUALSALES = 'actualSales';
 
+const KEY_EXPENSEADDLIST = 'expenseAddList';
 const KEY_FOODPROVISION = 'foodProvisionExpense';
 const KEY_BEVERAGE = 'beverageExpense';
 const KEY_ALCOHOL = 'alcoholExpense';

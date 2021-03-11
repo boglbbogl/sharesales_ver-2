@@ -7,6 +7,7 @@ class SalesModel {
   final String actualSales;
   final DateTime stdDate;
   final String selectedDate;
+  final List<dynamic> expenseAddList;
   final String foodProvisionExpense;
   final String beverageExpense;
   final String alcoholExpense;
@@ -18,6 +19,7 @@ class SalesModel {
         selectedDate = map[KEY_SELECTEDDATE],
         totalSales = map[KEY_TOTALSALES],
         actualSales = map[KEY_ACTUALSALES],
+  expenseAddList = map[KEY_EXPENSEADDLIST],
         foodProvisionExpense = map[KEY_FOODPROVISION],
         beverageExpense = map[KEY_BEVERAGE],
         alcoholExpense = map[KEY_ALCOHOL];
@@ -26,12 +28,13 @@ class SalesModel {
       : this.fromMap(snapshot.data(), snapshot.id,
             reference: snapshot.reference);
 
-  static Map<String, dynamic> getMapForCreateSales({
-    String userKey,
+  static Map<String, dynamic> createMapForManagementList({
     String selectedDate,
+    String userKey,
     DateTime stdDate,
     String totalSales,
     String actualSales,
+    List<dynamic> expenseAddList,
     String foodProvisionExpense,
     String beverageExpense,
     String alcoholExpense,
@@ -42,6 +45,7 @@ class SalesModel {
     map[KEY_SELECTEDDATE] = selectedDate;
     map[KEY_STDDATE] = stdDate;
     map[KEY_TOTALSALES] = totalSales;
+    map[KEY_EXPENSEADDLIST] = expenseAddList;
     map[KEY_FOODPROVISION] = foodProvisionExpense;
     map[KEY_BEVERAGE] = beverageExpense;
     map[KEY_ALCOHOL] = alcoholExpense;

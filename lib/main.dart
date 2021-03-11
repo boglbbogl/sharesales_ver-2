@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/models/firebase_auth_state.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
-import 'package:sharesales_ver2/repository/user_network_repository.dart';
+import 'package:sharesales_ver2/repository/firestore_user_repository.dart';
 import 'package:sharesales_ver2/screen/auth_screen.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'constant/color.dart';

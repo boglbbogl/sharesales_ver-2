@@ -157,7 +157,7 @@ class _TextAddFormState extends State<TextAddForm> {
             child: Text(
               '추가하기',
               style: TextStyle(
-                fontStyle: FontStyle.italic,
+                  fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.bold),
             ),
             shape: RoundedRectangleBorder(
@@ -210,14 +210,14 @@ class _TextAddFormState extends State<TextAddForm> {
               addText.expenseTitle,
               style: addText.isDone
                   ? TextStyle(
-                      color: Colors.redAccent,
-                      decoration: TextDecoration.lineThrough,
-                      fontStyle: FontStyle.italic,
-                    )
+                color: Colors.redAccent,
+                decoration: TextDecoration.lineThrough,
+                fontStyle: FontStyle.italic,
+              )
                   : TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                    ),
+                color: Colors.white,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
         ),
@@ -237,14 +237,14 @@ class _TextAddFormState extends State<TextAddForm> {
               addText.expenseAmount,
               style: addText.isDone
                   ? TextStyle(
-                      color: Colors.redAccent,
-                      decoration: TextDecoration.lineThrough,
-                      fontStyle: FontStyle.italic,
-                    )
+                color: Colors.redAccent,
+                decoration: TextDecoration.lineThrough,
+                fontStyle: FontStyle.italic,
+              )
                   : TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                    ),
+                color: Colors.white,
+                fontStyle: FontStyle.italic,
+              ),
             ),
             trailing: SizedBox(
               width: 35,
