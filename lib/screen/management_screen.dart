@@ -10,6 +10,7 @@ import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
+import 'package:sharesales_ver2/widget/expense_text_add_create_form.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'create_management_screen.dart';
 
@@ -72,7 +73,9 @@ class _ManagementScreenState extends State<ManagementScreen> {
                           // frontWidget: _buildFrontWidget(),
                           frontWidget: GestureDetector(
                               onTap: () => print('short click'),
-                              onLongPress: () {
+                              onLongPress: () async{
+                                print(snapshot.data.docs);
+
                                 _managementBottomSheet(
                                     context, snapshotData, userModel);
                               },
@@ -96,6 +99,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
   }
 
   Future _managementBottomSheet(BuildContext context, QueryDocumentSnapshot snapshotData, UserModel userModel) {
+
     return showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -205,302 +209,483 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   height: size.height * 0.075,
                   width: size.width * 0.01,
                 ),
-                Container(
-                  width: size.width * 0.4,
-                  child: ListTile(
-                    horizontalTitleGap: 0.2,
-                    leading: Icon(
-                      Icons.add_circle,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                    title: Text('추가하기',
-                      style: TextStyle(
+            Flexible(
+              child: StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+                    .doc(snapshotData.id).snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> expenseSnapshot) {
+                  if(expenseSnapshot.connectionState == ConnectionState.active) {
+                    var expenseAdd = expenseSnapshot.data['expenseAddList'];
+                    var expensAddSnapshotData = snapshotData.data()['expenseAddList'];
+                    // var expense1 = testDoc['expenseAddList'];
+                    // var expense2 = testDoc['expenseAddList']['expenseAmount'];
+
+                    return Container(
+                      width: size.width * 0.4,
+                      child: ListTile(
+                        horizontalTitleGap: 0.2,
+                        leading: Icon(
+                          Icons.add_circle,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    ),
-                    onTap: () {
-                      _totalSalesController.text = snapshotData['totalSales'];
-                      _actualSalesController.text = snapshotData['actualSales'];
-                      _foodprovisionController.text = snapshotData['foodProvisionExpense'];
-                      _beverageController.text = snapshotData['beverageExpense'];
-                      _alcoholController.text = snapshotData['alcoholExpense'];
+                          size: 25,
+                        ),
+                        title: Text('추가하기',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
+                        onTap: () {
+                          print(expenseSnapshot.data['expenseAddList']);
+                          print(snapshotData.data()['expenseAddList']);
 
-                      showModalBottomSheet(
-                          backgroundColor: Colors.redAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30)),
-                          ),
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              height: size.height * 0.08,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Container(
-                                    width: size.width * 0.4,
-                                    child: ListTile(
-                                      horizontalTitleGap: 0.01,
-                                      leading: Icon(
-                                        Icons.add_outlined,
-                                        color: Colors.white,
-                                        size: 25,
-                                      ),
-                                      title: Text('매출',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        print('매출 click');
-                                        setState(() {
-                                          showMaterialModalBottomSheet(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(30),
-                                            ),
-                                            closeProgressThreshold: 5.0,
-                                            animationCurve: Curves.fastOutSlowIn,
-                                            duration: Duration(milliseconds: 1500),
-                                            barrierColor: Colors.black87,
-                                            backgroundColor: Colors.black,
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                Container(
-                                                  height: size.height * 0.8,
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 15, top: 30,
-                                                        child: InkWell(
-                                                          child: Text('Cancel', style: TextStyle(
-                                                          color: Colors.amberAccent,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontStyle: FontStyle.italic,
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      SizedBox(height: 30,),
-                                                      Container(
-                                                        height: salTtfHeightSize,
-                                                        child: Text(snapshotData['selectedDate'],
-                                                          style: TextStyle(
-                                                            color: Colors.indigo,
-                                                            fontSize: 22,
-                                                            fontWeight: FontWeight.bold,
-                                                            fontStyle: FontStyle.italic,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                        children: <Widget>[
-                                                          Container(
-                                                              width: salTtfWidthSize,
-                                                              height: salTtfHeightSize,
-                                                              child: TextFormField(
-                                                                controller: _totalSalesController,
-                                                                style: blackInputStyle(),
-                                                                decoration: salesChangeInputDecor('총매출'),
-                                                                inputFormatters: [wonMaskFormatter],
-                                                              )),
-                                                          Container(
-                                                              width: salTtfWidthSize,
-                                                              height: salTtfHeightSize,
-                                                              child: TextFormField(
-                                                                controller: _actualSalesController,
-                                                                style: blackInputStyle(),
-                                                                decoration: salesChangeInputDecor('실제매출'),
-                                                                inputFormatters: [wonMaskFormatter],
-                                                              )),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Positioned(right: 15, top: 30,
-                                                    child: InkWell(
-                                                      child: Text('Save',
-                                                        style: TextStyle(
-                                                          color: Colors.amberAccent,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontStyle: FontStyle.italic,
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
-                                                            .doc(snapshotData.id).update({
-                                                          'totalSales': _totalSalesController.text,
-                                                          'actualSales': _actualSalesController.text,
-                                                        });
-                                                        Navigator.of(context).pop();
-                                                        _totalSalesController.clear();
-                                                        _actualSalesController.clear();
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Container(color: Colors.red, height: size.height * 0.04, width: size.width * 0.01,),
-                                  Container(
-                                    width: size.width * 0.4,
-                                    child: ListTile(
-                                      horizontalTitleGap: 0.01,
-                                      leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,),
-                                      title: Text('지출',
-                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        print('지출 click');
-                                        setState(() {
-                                          showMaterialModalBottomSheet(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(30),),
-                                            closeProgressThreshold: 5.0,
-                                            animationCurve: Curves.fastOutSlowIn,
-                                            duration: Duration(milliseconds: 1500),
-                                            barrierColor: Colors.black87,
-                                            backgroundColor: Colors.black,
-                                            context: context,
-                                            builder: (BuildContext context) => Container(
-                                              height: size.height * 0.8,
-                                              child: Stack(
-                                                children: [
-                                                  Positioned(left: 15, top: 30,
-                                                    child: InkWell(
-                                                      child: Text('Cancel',
-                                                        style: TextStyle(
-                                                          color: Colors.redAccent,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontStyle: FontStyle.italic,
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      SizedBox(height: 30,),
-                                                      Container(
-                                                        height: salTtfHeightSize,
-                                                        child: Text(snapshotData['selectedDate'],
-                                                          style: TextStyle(
-                                                            color: Colors.indigo,
-                                                            fontSize: 22,
-                                                            fontWeight: FontWeight.bold,
-                                                            fontStyle: FontStyle.italic,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                        children: <Widget>[
-                                                          Container(
-                                                              width: expTtfWidthSize,
-                                                              height: expTtfHeightSize,
-                                                              child: TextFormField(
-                                                                controller: _foodprovisionController,
-                                                                style: blackInputStyle(),
-                                                                decoration: expenseChangeInputDecor('식자재'),
-                                                                inputFormatters: [wonMaskFormatter],
-                                                              )),
-                                                          Container(
-                                                              width: expTtfWidthSize,
-                                                              height: expTtfHeightSize,
-                                                              child: TextFormField(
-                                                                controller: _beverageController,
-                                                                // initialValue: snapshotData['actualSales'],
-                                                                style: blackInputStyle(),
-                                                                decoration: expenseChangeInputDecor('음료'),
-                                                                inputFormatters: [wonMaskFormatter],
-                                                              )),
-                                                          Container(
-                                                              width: expTtfWidthSize,
-                                                              height: expTtfHeightSize,
-                                                              child: TextFormField(
-                                                                controller: _alcoholController,
-                                                                style: blackInputStyle(),
-                                                                decoration: expenseChangeInputDecor('주류'),
-                                                                inputFormatters: [wonMaskFormatter],
-                                                              )),
-                                                        ],
-                                                      ),
 
-                                                      Container(height: 2, width: size.width*0.85, color: Colors.white,),
-                                                      // Text(snapshotData['expenseAddList']['title'], style: TextStyle(color: Colors.white),),
-                                                    ],
-                                                  ),
-                                                  Positioned(right: 15, top: 30,
-                                                    child: InkWell(
-                                                      child: Text('Save',
-                                                        style: TextStyle(
-                                                          color: Colors.redAccent,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontStyle: FontStyle.italic,
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        FirebaseFirestore.instance
-                                                            .collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
-                                                            .doc(snapshotData.id).update({
-                                                          'foodProvisionExpense': _foodprovisionController.text,
-                                                          'beverageExpense': _beverageController.text,
-                                                          'alcoholExpense': _alcoholController.text,
-                                                        });
-                                                        Navigator.of(context).pop();
-                                                        _foodprovisionController.clear();
-                                                        _beverageController.clear();
-                                                        _alcoholController.clear();
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                          _totalSalesController.text = snapshotData['totalSales'];
+                          _actualSalesController.text = snapshotData['actualSales'];
+                          _foodprovisionController.text = snapshotData['foodProvisionExpense'];
+                          _beverageController.text = snapshotData['beverageExpense'];
+                          _alcoholController.text = snapshotData['alcoholExpense'];
+
+                          showModalBottomSheet(
+                              backgroundColor: Colors.redAccent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30)),
                               ),
-                            );
-                          });
-                    },
-                  ),
-                ),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height: size.height * 0.08,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .center,
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceEvenly,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Container(
+                                        width: size.width * 0.4,
+                                        child: ListTile(
+                                          horizontalTitleGap: 0.01,
+                                          leading: Icon(
+                                            Icons.add_outlined,
+                                            color: Colors.white,
+                                            size: 25,
+                                          ),
+                                          title: Text('매출',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            print('매출 click');
+                                            setState(() {
+                                              showMaterialModalBottomSheet(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius
+                                                      .circular(30),
+                                                ),
+                                                closeProgressThreshold: 5.0,
+                                                animationCurve: Curves
+                                                    .fastOutSlowIn,
+                                                duration: Duration(
+                                                    milliseconds: 1500),
+                                                barrierColor: Colors.black87,
+                                                backgroundColor: Colors.black,
+                                                context: context,
+                                                builder: (
+                                                    BuildContext context) =>
+                                                    Container(
+                                                      height: size.height * 0.8,
+                                                      child: Stack(
+                                                        children: [
+                                                          Positioned(
+                                                            left: 15, top: 30,
+                                                            child: InkWell(
+                                                              child: Text(
+                                                                'Cancel',
+                                                                style: TextStyle(
+                                                                  color: Colors
+                                                                      .amberAccent,
+                                                                  fontSize: 20,
+                                                                  fontWeight: FontWeight
+                                                                      .bold,
+                                                                  fontStyle: FontStyle
+                                                                      .italic,
+                                                                ),
+                                                              ),
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                    context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment: CrossAxisAlignment
+                                                                .center,
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .start,
+                                                            children: <Widget>[
+                                                              SizedBox(
+                                                                height: 30,),
+                                                              Container(
+                                                                height: salTtfHeightSize,
+                                                                child: Text(
+                                                                  snapshotData['selectedDate'],
+                                                                  style: TextStyle(
+                                                                    color: Colors
+                                                                        .indigo,
+                                                                    fontSize: 22,
+                                                                    fontWeight: FontWeight
+                                                                        .bold,
+                                                                    fontStyle: FontStyle
+                                                                        .italic,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Row(
+                                                                crossAxisAlignment: CrossAxisAlignment
+                                                                    .center,
+                                                                mainAxisAlignment: MainAxisAlignment
+                                                                    .spaceAround,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Container(
+                                                                      width: salTtfWidthSize,
+                                                                      height: salTtfHeightSize,
+                                                                      child: TextFormField(
+                                                                        controller: _totalSalesController,
+                                                                        style: blackInputStyle(),
+                                                                        decoration: salesChangeInputDecor(
+                                                                            '총매출'),
+                                                                        inputFormatters: [
+                                                                          wonMaskFormatter
+                                                                        ],
+                                                                      )),
+                                                                  Container(
+                                                                      width: salTtfWidthSize,
+                                                                      height: salTtfHeightSize,
+                                                                      child: TextFormField(
+                                                                        controller: _actualSalesController,
+                                                                        style: blackInputStyle(),
+                                                                        decoration: salesChangeInputDecor(
+                                                                            '실제매출'),
+                                                                        inputFormatters: [
+                                                                          wonMaskFormatter
+                                                                        ],
+                                                                      )),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Positioned(
+                                                            right: 15, top: 30,
+                                                            child: InkWell(
+                                                              child: Text(
+                                                                'Save',
+                                                                style: TextStyle(
+                                                                  color: Colors
+                                                                      .amberAccent,
+                                                                  fontSize: 20,
+                                                                  fontWeight: FontWeight
+                                                                      .bold,
+                                                                  fontStyle: FontStyle
+                                                                      .italic,
+                                                                ),
+                                                              ),
+                                                              onTap: () {
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                    COLLECTION_SALES)
+                                                                    .doc(
+                                                                    userModel
+                                                                        .userKey)
+                                                                    .collection(
+                                                                    userModel
+                                                                        .userName)
+                                                                    .doc(
+                                                                    snapshotData
+                                                                        .id)
+                                                                    .update({
+                                                                  'totalSales': _totalSalesController
+                                                                      .text,
+                                                                  'actualSales': _actualSalesController
+                                                                      .text,
+                                                                });
+                                                                Navigator.of(
+                                                                    context)
+                                                                    .pop();
+                                                                _totalSalesController
+                                                                    .clear();
+                                                                _actualSalesController
+                                                                    .clear();
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      Container(color: Colors.red,
+                                        height: size.height * 0.04,
+                                        width: size.width * 0.01,),
+                                      Container(
+                                        width: size.width * 0.4,
+                                        child: ListTile(
+                                          horizontalTitleGap: 0.01,
+                                          leading: Icon(Icons.add_outlined,
+                                            color: Colors.white, size: 25,),
+                                          title: Text('지출',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            print('지출 click');
+
+                                            setState(() {
+                                              showMaterialModalBottomSheet(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius
+                                                      .circular(30),),
+                                                closeProgressThreshold: 5.0,
+                                                animationCurve: Curves
+                                                    .fastOutSlowIn,
+                                                duration: Duration(
+                                                    milliseconds: 1500),
+                                                barrierColor: Colors.black87,
+                                                backgroundColor: Colors.black,
+                                                context: context,
+                                                builder: (
+                                                    BuildContext context) =>
+                                                    Container(
+                                                      height: size.height * 0.8,
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize
+                                                            .min,
+                                                        children: [
+                                                          Stack(
+                                                            children: [
+                                                              Positioned(
+                                                                left: 15,
+                                                                top: 30,
+                                                                child: InkWell(
+                                                                  child: Text(
+                                                                    'Cancel',
+                                                                    style: TextStyle(
+                                                                      color: Colors
+                                                                          .redAccent,
+                                                                      fontSize: 20,
+                                                                      fontWeight: FontWeight
+                                                                          .bold,
+                                                                      fontStyle: FontStyle
+                                                                          .italic,
+                                                                    ),
+                                                                  ),
+                                                                  onTap: () {
+                                                                    Navigator
+                                                                        .of(
+                                                                        context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                right: 15,
+                                                                top: 30,
+                                                                child: InkWell(
+                                                                  child: Text(
+                                                                    'Save',
+                                                                    style: TextStyle(
+                                                                      color: Colors
+                                                                          .redAccent,
+                                                                      fontSize: 20,
+                                                                      fontWeight: FontWeight
+                                                                          .bold,
+                                                                      fontStyle: FontStyle
+                                                                          .italic,
+                                                                    ),
+                                                                  ),
+                                                                  onTap: () {
+                                                                    FirebaseFirestore
+                                                                        .instance
+                                                                        .collection(
+                                                                        COLLECTION_SALES)
+                                                                        .doc(
+                                                                        userModel
+                                                                            .userKey)
+                                                                        .collection(
+                                                                        userModel
+                                                                            .userName)
+                                                                        .doc(
+                                                                        snapshotData
+                                                                            .id)
+                                                                        .update(
+                                                                        {
+                                                                          'foodProvisionExpense': _foodprovisionController
+                                                                              .text,
+                                                                          'beverageExpense': _beverageController
+                                                                              .text,
+                                                                          'alcoholExpense': _alcoholController
+                                                                              .text,
+                                                                        });
+                                                                    Navigator
+                                                                        .of(
+                                                                        context)
+                                                                        .pop();
+                                                                    _foodprovisionController
+                                                                        .clear();
+                                                                    _beverageController
+                                                                        .clear();
+                                                                    _alcoholController
+                                                                        .clear();
+                                                                  },
+                                                                ),
+                                                              ),
+
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment
+                                                                    .center,
+                                                                mainAxisAlignment: MainAxisAlignment
+                                                                    .start,
+                                                                children: <
+                                                                    Widget>[
+                                                                  SizedBox(
+                                                                    height: 30,),
+                                                                  Container(
+                                                                    height: salTtfHeightSize,
+                                                                    child: Text(
+                                                                      snapshotData['selectedDate'],
+                                                                      style: TextStyle(
+                                                                        color: Colors
+                                                                            .indigo,
+                                                                        fontSize: 22,
+                                                                        fontWeight: FontWeight
+                                                                            .bold,
+                                                                        fontStyle: FontStyle
+                                                                            .italic,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Row(
+                                                                    crossAxisAlignment: CrossAxisAlignment
+                                                                        .center,
+                                                                    mainAxisAlignment: MainAxisAlignment
+                                                                        .spaceAround,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Container(
+                                                                          width: expTtfWidthSize,
+                                                                          height: expTtfHeightSize,
+                                                                          child: TextFormField(
+                                                                            controller: _foodprovisionController,
+                                                                            style: blackInputStyle(),
+                                                                            decoration: expenseChangeInputDecor(
+                                                                                '식자재'),
+                                                                            inputFormatters: [
+                                                                              wonMaskFormatter
+                                                                            ],
+                                                                          )),
+                                                                      Container(
+                                                                          width: expTtfWidthSize,
+                                                                          height: expTtfHeightSize,
+                                                                          child: TextFormField(
+                                                                            controller: _beverageController,
+                                                                            // initialValue: snapshotData['actualSales'],
+                                                                            style: blackInputStyle(),
+                                                                            decoration: expenseChangeInputDecor(
+                                                                                '음료'),
+                                                                            inputFormatters: [
+                                                                              wonMaskFormatter
+                                                                            ],
+                                                                          )),
+                                                                      Container(
+                                                                          width: expTtfWidthSize,
+                                                                          height: expTtfHeightSize,
+                                                                          child: TextFormField(
+                                                                            controller: _alcoholController,
+                                                                            style: blackInputStyle(),
+                                                                            decoration: expenseChangeInputDecor(
+                                                                                '주류'),
+                                                                            inputFormatters: [
+                                                                              wonMaskFormatter
+                                                                            ],
+                                                                          )),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Container(
+                                                            height: 3,
+                                                            width: size.width *
+                                                                0.9,
+                                                            color: Colors.grey,
+                                                          ),
+                                                          Container(
+                                                            height: size
+                                                                .height * 0.4,
+                                                            child: ListView
+                                                                .builder(
+                                                                itemCount: expenseAdd
+                                                                    .length,
+                                                                itemBuilder: (_,
+                                                                    int index) {
+                                                                  return Column(
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Text(
+                                                                          expenseAdd[index]['title']
+                                                                              .toString(),
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white),),
+                                                                        Text(
+                                                                          expensAddSnapshotData[index]['expenseAmount']
+                                                                              .toString(),
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white),),
+                                                                      ]
+                                                                  );
+                                                                }
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                        },
+                      ),
+                    );
+                  } else {
+                    return MyProgressIndicator();
+                  }
+                  }
+              ),
+            ),
+
               ],
             ),
           );
@@ -605,7 +790,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 child: RaisedButton(
                   color: Colors.redAccent,
                   onPressed: () {
-                    // print(snapshotData['expenseAddList']['title'] == null ? null : snapshotData['expenseAddList']['title']);
+                    // print(snapshotData['expenseAddList'][0]['title']);
                     final _foldingCellState = context
                         .findRootAncestorStateOfType<SimpleFoldingCellState>();
                     _foldingCellState?.toggleFold();

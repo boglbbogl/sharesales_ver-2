@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
-import 'package:sharesales_ver2/widget/test.dart';
 import 'constant/color.dart';
 import 'constant/size.dart';
-import 'widget/expense_text_add_create_form.dart';
 import 'screen/account_screen.dart';
 import 'screen/ad_screen.dart';
 import 'widget/my_progress_indicator.dart';
@@ -37,7 +35,7 @@ class _MainHomePageState extends State<MainHomePage> {
       else
         return ManagementScreen();
     }),
-    test(),
+    Container(),
     AccountScreen(),
   ];
 

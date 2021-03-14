@@ -14,8 +14,6 @@ class ManagementRepository {
 
     if (!managementSnapshot.exists) {
       managementReference.set(managementData);
-    } else {
-      managementReference.update(managementData);
     }
   }
 }
