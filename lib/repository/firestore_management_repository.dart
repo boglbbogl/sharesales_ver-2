@@ -5,7 +5,7 @@ import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
 
 class ManagementRepository {
-  Future<void> createManagement(String userKey, UserModel userModel,
+  Future<void> createManagement(UserModel userModel,
       Map<String, dynamic> managementData) async {
 
     final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
@@ -14,7 +14,8 @@ class ManagementRepository {
 
     if (!managementSnapshot.exists) {
       managementReference.set(managementData);
-      // managementKeyReference.set(userData);
+    } else {
+      managementReference.update(managementData);
     }
   }
 }

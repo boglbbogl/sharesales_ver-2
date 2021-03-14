@@ -1,12 +1,10 @@
 import 'dart:ui';
 import 'package:badges/badges.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
-import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/models/firestore/sales_model.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
@@ -14,16 +12,16 @@ import 'package:sharesales_ver2/models/user_model_state.dart';
 import 'package:sharesales_ver2/repository/firestore_management_repository.dart';
 import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
 import 'package:sharesales_ver2/widget/expense_create_form.dart';
+import 'package:sharesales_ver2/widget/expense_text_add_create_form.dart';
 import 'package:sharesales_ver2/widget/sales_create_form.dart';
-import 'package:sharesales_ver2/widget/text_add_form.dart';
 
 
 class CreateManagementScreen extends StatefulWidget {
 
-
+  // final List expenseAddMapList;
   final String userKey;
 
-  const CreateManagementScreen({Key key, this.userKey}) : super(key: key);
+  const CreateManagementScreen( {Key key, this.userKey,}) : super(key: key);
 
 
   @override
@@ -31,7 +29,6 @@ class CreateManagementScreen extends StatefulWidget {
 }
 
 class _CreateManagementScreenState extends State<CreateManagementScreen> {
-
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   SelectedIndicator _selectedIndicator = SelectedIndicator.left;
@@ -46,8 +43,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
   TextEditingController _foodprovisionController = TextEditingController();
   TextEditingController _beverageController = TextEditingController();
   TextEditingController _alcoholController = TextEditingController();
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _subController = TextEditingController();
 
 
   @override
@@ -262,27 +257,27 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                 icon: Icon(Icons.save),
                 onPressed: () async{
 
+                  print(expenseAddMapList);
+
+
+
                   UserModel userModel =
                       Provider.of<UserModelState>(context, listen: false)
                           .userModel;
 
                   await managementRepository.createManagement(
-                    widget.userKey, userModel,
+                     userModel,
                   SalesModel.createMapForManagementList(
                     userKey: userModel.userKey,
                         actualSales: _actualSalesController.text,
                         totalSales: _totalSalesController.text,
                         selectedDate: pickerDate.toString().substring(0,10),
+                        expenseAddList: expenseAddMapList,
                         stdDate: pickerDate.toUtc(),
                         foodProvisionExpense: _foodprovisionController.text,
                         beverageExpense: _beverageController.text,
                         alcoholExpense: _alcoholController.text,
                       ));
-
-                  FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
-                  .doc(pickerDate.toUtc().toString().substring(0,10)).update({
-                    'test' : userModel.email,
-                  });
 
                   setState(() {
                     FocusScope.of(context).unfocus();
@@ -291,6 +286,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     } else {
                       _showTabBarBadge = false;
                       _formKey.currentState.save();
+                      expenseAddMapList.clear();
                       Navigator.of(context).pop();
                     }
                     print(_totalSalesController.text);
@@ -304,7 +300,9 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 18, top: 18),
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              print(expenseAddMapList);
+            },
             child: Text(
               'save',
               style: TextStyle(fontSize: 18, color: Colors.white),

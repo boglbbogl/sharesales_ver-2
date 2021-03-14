@@ -1,8 +1,15 @@
 import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
+import 'package:sharesales_ver2/models/firestore/user_model.dart';
+import 'package:sharesales_ver2/models/user_model_state.dart';
+
+import '../../widget/date_picker_cupertino.dart';
 
 
 class AddText {
@@ -19,7 +26,6 @@ class TextAddForm extends StatefulWidget {
 }
 
 class _TextAddFormState extends State<TextAddForm> {
-  final _expenseList = <AddText>[];
 
   bool _titleBadge = false;
   bool _amountBadge = false;
@@ -27,6 +33,11 @@ class _TextAddFormState extends State<TextAddForm> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   ScrollController _scrollController = ScrollController();
+  final List _expenseList = <AddText>[
+  ];
+
+
+
 
   @override
   void dispose() {
@@ -150,6 +161,22 @@ class _TextAddFormState extends State<TextAddForm> {
                 _addExpense(
                     AddText(_titleController.text, _amountController.text));
               });
+
+
+              UserModel userModel = Provider.of<UserModelState>(context, listen: false).userModel;
+              // managementRepository.createManagement( userModel,SalesModel.createMapForManagementList(
+              //   expenseAddList:FieldValue.arrayUnion([
+              //     {'sdfkl':_titleController.text, 'sdfsdf':_amountController.text}
+              //       ]),
+              // ));
+
+            //   FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+            //       .doc(pickerDate.toUtc().toString().substring(0,10)).set({
+            //     'expenseAddList' : FieldValue.arrayUnion([{
+            //       '내용' : _titleController.text,
+            //       '금액' : _amountController.text,
+            //     }]),
+            //   },SetOptions(merge: true));
             },
             elevation: 0,
             color: Colors.grey,
@@ -252,8 +279,15 @@ class _TextAddFormState extends State<TextAddForm> {
                 color: Colors.white,
                 icon: Icon(Icons.delete_forever),
                 onPressed: () {
-                  _deleteExpense(addText);
-                },
+                  String expense = addText.expenseAmount;
+                  setState(() {
+                    _expenseList.remove(addText);
+                    _titleController.text = addText.expenseTitle;
+                    _amountController.text = addText.expenseAmount;
+                    String expenseAmount = addText.expenseAmount;
+                  });
+                  print(expense);
+                  },
               ),
             ),
           ),
@@ -265,8 +299,27 @@ class _TextAddFormState extends State<TextAddForm> {
   void _addExpense(AddText addText) {
     setState(() {
       _expenseList.add(addText);
-      _titleController.text = '';
-      _amountController.text = '';
+      _titleController.text = addText.expenseTitle;
+      _amountController.text = addText.expenseAmount;
+      // print(addText.expenseAmount);
+      // print(addText.expenseTitle);
+      String expenseTitle = addText.expenseTitle;
+      String expenseAmount = addText.expenseAmount;
+      // print(expenseAmount);
+      // Map<String, dynamic> list = [{
+      //   'dsfds': expenseTitle,
+      //   'sdfsdf': expenseAmount,
+      // }];
+      // print(list);
+    UserModel userModel = Provider.of<UserModelState>(context, listen: false).userModel;
+
+    FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+          .doc(pickerDate.toUtc().toString().substring(0,10)).set({
+        'expenseAdd' : FieldValue.arrayUnion([{
+          // list,
+        }]),
+      },SetOptions(merge: true));
+
     });
   }
 
