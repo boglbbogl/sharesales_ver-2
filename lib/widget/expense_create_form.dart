@@ -33,45 +33,6 @@ class ExpenseCreateForm extends StatelessWidget {
         children: <Widget>[
           _expenseTextForm('식자재', '음료', '주류', _foodprovisionsController,
               _beverageController, _alcoholController),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    '추가하기',
-                    // textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 16,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        Container(
-                          color: Colors.white,
-                          height: 1,
-                          width: size.width * 0.9,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Container(
-                            color: Colors.white,
-                            height: 1,
-                            width: size.width * 0.9,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
           ExpenseTextAddCreateForm(),
         ]);
   }

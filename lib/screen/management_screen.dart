@@ -10,7 +10,6 @@ import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
-import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'create_management_screen.dart';
 
@@ -42,60 +41,58 @@ class _ManagementScreenState extends State<ManagementScreen> {
   @override
   Widget build(BuildContext context) {
     UserModel userModel =
-        Provider.of<UserModelState>(context, listen: false)
-            .userModel;
-    return SafeArea(
-      child: Scaffold(
-        appBar: _managementScreenAppBar(context),
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: size.width,
-              height: size.height*0.1,
-              color: Colors.indigoAccent,
-            ),
-            StreamBuilder<QuerySnapshot> (
-              stream: FirebaseFirestore.instance
-                  .collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                //
+        Provider.of<UserModelState>(context, listen: false).userModel;
 
-
-                if (!snapshot.hasData) {
-                  return MyProgressIndicator();
-                }
-                return Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: snapshot.data.docs.map((snapshotData) {
-                      return SimpleFoldingCell.create(
-                        // frontWidget: _buildFrontWidget(),
-                        frontWidget: GestureDetector(
-                            onTap: () => print('short click'),
-                            onLongPress: () {
-                              _managementBottomSheet(context, snapshotData, userModel);
-                            },
-                            child: _foldingFrontWidget(snapshotData)),
-                        innerWidget: _foldingInnerWidget(snapshotData),
-                        cellSize: Size(MediaQuery.of(context).size.width, 90),
-                        padding: EdgeInsets.all(12),
-                        animationDuration: Duration(milliseconds: 300),
-                        borderRadius: 20,
-                        onOpen: () => print('cell opened'),
-                        onClose: () => print('cell closed'),
-                      );
-                    }).toList(),
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection(COLLECTION_SALES)
+            .doc(userModel.userKey)
+            .collection(userModel.userName)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return MyProgressIndicator();
+          }
+          return SafeArea(
+            child: Scaffold(
+              appBar: _managementScreenAppBar(context),
+              body: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: size.width,
+                    height: size.height * 0.1,
+                    color: Colors.indigoAccent,
                   ),
-                );
-              },
-            )
-          ],
-        ),
-      ),
-    );
+                  Flexible(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: snapshot.data.docs.map((snapshotData) {
+                        return SimpleFoldingCell.create(
+                          // frontWidget: _buildFrontWidget(),
+                          frontWidget: GestureDetector(
+                              onTap: () => print('short click'),
+                              onLongPress: () {
+                                _managementBottomSheet(
+                                    context, snapshotData, userModel);
+                              },
+                              child: _foldingFrontWidget(snapshotData)),
+                          innerWidget: _foldingInnerWidget(snapshotData),
+                          cellSize: Size(MediaQuery.of(context).size.width, 90),
+                          padding: EdgeInsets.all(12),
+                          animationDuration: Duration(milliseconds: 300),
+                          borderRadius: 20,
+                          onOpen: () => print('cell opened'),
+                          onClose: () => print('cell closed'),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Future _managementBottomSheet(BuildContext context, QueryDocumentSnapshot snapshotData, UserModel userModel) {
@@ -123,8 +120,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                       color: Colors.white,
                       size: 25,
                     ),
-                    title: Text(
-                      '삭제하기',
+                    title: Text('삭제하기',
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -146,9 +142,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      ' ' +
-                                          snapshotData['selectedDate'] +
-                                          '  삭제 하시겠습니까 ?',
+                                      ' ' + snapshotData['selectedDate'] + '  삭제 하시겠습니까 ?',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -159,8 +153,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                     width: size.width * 0.2,
                                     child: InkWell(
                                       child: Center(
-                                        child: Text(
-                                          'Ok',
+                                        child: Text('Ok',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -168,12 +161,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                         ),
                                       ),
                                       onTap: () {
-                                        FirebaseFirestore.instance
-                                            .collection(COLLECTION_SALES)
-                                            .doc(userModel.userKey)
-                                            .collection(userModel.userName)
-                                            .doc(snapshotData.id)
-                                            .delete();
+                                        FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+                                            .doc(snapshotData.id).delete();
                                         Navigator.pop(context);
                                         Navigator.pop(context);
                                       },
@@ -188,8 +177,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                     width: size.width * 0.2,
                                     child: InkWell(
                                       child: Center(
-                                        child: Text(
-                                          'Cancel',
+                                        child: Text('Cancel',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -226,8 +214,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                       color: Colors.white,
                       size: 25,
                     ),
-                    title: Text(
-                      '추가하기',
+                    title: Text('추가하기',
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -236,11 +223,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                     onTap: () {
                       _totalSalesController.text = snapshotData['totalSales'];
                       _actualSalesController.text = snapshotData['actualSales'];
-
-                      _foodprovisionController.text =
-                          snapshotData['foodProvisionExpense'];
-                      _beverageController.text =
-                          snapshotData['beverageExpense'];
+                      _foodprovisionController.text = snapshotData['foodProvisionExpense'];
+                      _beverageController.text = snapshotData['beverageExpense'];
                       _alcoholController.text = snapshotData['alcoholExpense'];
 
                       showModalBottomSheet(
@@ -256,8 +240,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                               height: size.height * 0.08,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   Container(
@@ -269,8 +252,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                         color: Colors.white,
                                         size: 25,
                                       ),
-                                      title: Text(
-                                        '매출',
+                                      title: Text('매출',
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -283,156 +265,95 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                         setState(() {
                                           showMaterialModalBottomSheet(
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
+                                              borderRadius: BorderRadius.circular(30),
                                             ),
                                             closeProgressThreshold: 5.0,
-                                            animationCurve:
-                                                Curves.fastOutSlowIn,
-                                            duration:
-                                                Duration(milliseconds: 1500),
+                                            animationCurve: Curves.fastOutSlowIn,
+                                            duration: Duration(milliseconds: 1500),
                                             barrierColor: Colors.black87,
                                             backgroundColor: Colors.black,
                                             context: context,
                                             builder: (BuildContext context) =>
                                                 Container(
-                                              height: size.height * 0.8,
-                                              child: Stack(
-                                                children: [
-                                                  Positioned(
-                                                    left: 15,
-                                                    top: 30,
-                                                    child: InkWell(
-                                                      child: Text(
-                                                        'Cancel',
-                                                        style: TextStyle(
-                                                          color: Colors
-                                                              .amberAccent,
+                                                  height: size.height * 0.8,
+                                                  child: Stack(
+                                                    children: [
+                                                      Positioned(
+                                                        left: 15, top: 30,
+                                                        child: InkWell(
+                                                          child: Text('Cancel', style: TextStyle(
+                                                          color: Colors.amberAccent,
                                                           fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FontStyle.italic,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontStyle: FontStyle.italic,
                                                         ),
                                                       ),
                                                       onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
+                                                        Navigator.of(context).pop();
                                                       },
                                                     ),
                                                   ),
                                                   Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.start,
                                                     children: <Widget>[
-                                                      SizedBox(
-                                                        height: 30,
-                                                      ),
+                                                      SizedBox(height: 30,),
                                                       Container(
-                                                        height:
-                                                            salTtfHeightSize,
-                                                        child: Text(
-                                                          snapshotData[
-                                                              'selectedDate'],
+                                                        height: salTtfHeightSize,
+                                                        child: Text(snapshotData['selectedDate'],
                                                           style: TextStyle(
-                                                            color:
-                                                                Colors.indigo,
+                                                            color: Colors.indigo,
                                                             fontSize: 22,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle: FontStyle
-                                                                .italic,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontStyle: FontStyle.italic,
                                                           ),
                                                         ),
                                                       ),
                                                       Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                         children: <Widget>[
                                                           Container(
-                                                              width:
-                                                                  salTtfWidthSize,
-                                                              height:
-                                                                  salTtfHeightSize,
-                                                              child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    _totalSalesController,
-                                                                // initialValue: snapshotData['totalSales'],
-                                                                style:
-                                                                    blackInputStyle(),
-                                                                decoration:
-                                                                    salesChangeInputDecor(
-                                                                        '총매출'),
-                                                                inputFormatters: [
-                                                                  wonMaskFormatter
-                                                                ],
+                                                              width: salTtfWidthSize,
+                                                              height: salTtfHeightSize,
+                                                              child: TextFormField(
+                                                                controller: _totalSalesController,
+                                                                style: blackInputStyle(),
+                                                                decoration: salesChangeInputDecor('총매출'),
+                                                                inputFormatters: [wonMaskFormatter],
                                                               )),
                                                           Container(
-                                                              width:
-                                                                  salTtfWidthSize,
-                                                              height:
-                                                                  salTtfHeightSize,
-                                                              child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    _actualSalesController,
-                                                                // initialValue: snapshotData['actualSales'],
-                                                                style:
-                                                                    blackInputStyle(),
-                                                                decoration:
-                                                                    salesChangeInputDecor(
-                                                                        '실제매출'),
-                                                                inputFormatters: [
-                                                                  wonMaskFormatter
-                                                                ],
+                                                              width: salTtfWidthSize,
+                                                              height: salTtfHeightSize,
+                                                              child: TextFormField(
+                                                                controller: _actualSalesController,
+                                                                style: blackInputStyle(),
+                                                                decoration: salesChangeInputDecor('실제매출'),
+                                                                inputFormatters: [wonMaskFormatter],
                                                               )),
                                                         ],
                                                       ),
                                                     ],
                                                   ),
-                                                  Positioned(
-                                                    right: 15,
-                                                    top: 30,
+                                                  Positioned(right: 15, top: 30,
                                                     child: InkWell(
-                                                      child: Text(
-                                                        'Save',
+                                                      child: Text('Save',
                                                         style: TextStyle(
-                                                          color: Colors
-                                                              .amberAccent,
+                                                          color: Colors.amberAccent,
                                                           fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FontStyle.italic,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontStyle: FontStyle.italic,
                                                         ),
                                                       ),
                                                       onTap: () {
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
-                                                            .doc(snapshotData.id)
-                                                            .update({
-                                                          'totalSales':
-                                                              _totalSalesController
-                                                                  .text,
-                                                          'actualSales':
-                                                              _actualSalesController
-                                                                  .text,
+                                                        FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+                                                            .doc(snapshotData.id).update({
+                                                          'totalSales': _totalSalesController.text,
+                                                          'actualSales': _actualSalesController.text,
                                                         });
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        _totalSalesController
-                                                            .clear();
-                                                        _actualSalesController
-                                                            .clear();
+                                                        Navigator.of(context).pop();
+                                                        _totalSalesController.clear();
+                                                        _actualSalesController.clear();
                                                       },
                                                     ),
                                                   ),
@@ -444,27 +365,14 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                       },
                                     ),
                                   ),
-                                  Container(
-                                    color: Colors.red,
-                                    height: size.height * 0.04,
-                                    width: size.width * 0.01,
-                                  ),
+                                  Container(color: Colors.red, height: size.height * 0.04, width: size.width * 0.01,),
                                   Container(
                                     width: size.width * 0.4,
                                     child: ListTile(
                                       horizontalTitleGap: 0.01,
-                                      leading: Icon(
-                                        Icons.add_outlined,
-                                        color: Colors.white,
-                                        size: 25,
-                                      ),
-                                      title: Text(
-                                        '지출',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
+                                      leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,),
+                                      title: Text('지출',
+                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),),
                                       onTap: () {
                                         Navigator.pop(context);
                                         Navigator.pop(context);
@@ -472,180 +380,109 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                         setState(() {
                                           showMaterialModalBottomSheet(
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                            ),
+                                              borderRadius: BorderRadius.circular(30),),
                                             closeProgressThreshold: 5.0,
-                                            animationCurve:
-                                                Curves.fastOutSlowIn,
-                                            duration:
-                                                Duration(milliseconds: 1500),
+                                            animationCurve: Curves.fastOutSlowIn,
+                                            duration: Duration(milliseconds: 1500),
                                             barrierColor: Colors.black87,
                                             backgroundColor: Colors.black,
                                             context: context,
-                                            builder: (BuildContext context) =>
-                                                Container(
+                                            builder: (BuildContext context) => Container(
                                               height: size.height * 0.8,
                                               child: Stack(
                                                 children: [
-                                                  Positioned(
-                                                    left: 15,
-                                                    top: 30,
+                                                  Positioned(left: 15, top: 30,
                                                     child: InkWell(
-                                                      child: Text(
-                                                        'Cancel',
+                                                      child: Text('Cancel',
                                                         style: TextStyle(
-                                                          color:
-                                                              Colors.redAccent,
+                                                          color: Colors.redAccent,
                                                           fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FontStyle.italic,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontStyle: FontStyle.italic,
                                                         ),
                                                       ),
                                                       onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
+                                                        Navigator.of(context).pop();
                                                       },
                                                     ),
                                                   ),
                                                   Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.start,
                                                     children: <Widget>[
-                                                      SizedBox(
-                                                        height: 30,
-                                                      ),
+                                                      SizedBox(height: 30,),
                                                       Container(
-                                                        height:
-                                                            salTtfHeightSize,
-                                                        child: Text(
-                                                          snapshotData[
-                                                              'selectedDate'],
+                                                        height: salTtfHeightSize,
+                                                        child: Text(snapshotData['selectedDate'],
                                                           style: TextStyle(
-                                                            color:
-                                                                Colors.indigo,
+                                                            color: Colors.indigo,
                                                             fontSize: 22,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle: FontStyle
-                                                                .italic,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontStyle: FontStyle.italic,
                                                           ),
                                                         ),
                                                       ),
                                                       Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                         children: <Widget>[
                                                           Container(
-                                                              width:
-                                                                  expTtfWidthSize,
-                                                              height:
-                                                                  expTtfHeightSize,
-                                                              child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    _foodprovisionController,
-                                                                // initialValue: snapshotData['totalSales'],
-                                                                style:
-                                                                    blackInputStyle(),
-                                                                decoration:
-                                                                    expenseChangeInputDecor(
-                                                                        '식자재'),
-                                                                inputFormatters: [
-                                                                  wonMaskFormatter
-                                                                ],
+                                                              width: expTtfWidthSize,
+                                                              height: expTtfHeightSize,
+                                                              child: TextFormField(
+                                                                controller: _foodprovisionController,
+                                                                style: blackInputStyle(),
+                                                                decoration: expenseChangeInputDecor('식자재'),
+                                                                inputFormatters: [wonMaskFormatter],
                                                               )),
                                                           Container(
-                                                              width:
-                                                                  expTtfWidthSize,
-                                                              height:
-                                                                  expTtfHeightSize,
-                                                              child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    _beverageController,
+                                                              width: expTtfWidthSize,
+                                                              height: expTtfHeightSize,
+                                                              child: TextFormField(
+                                                                controller: _beverageController,
                                                                 // initialValue: snapshotData['actualSales'],
-                                                                style:
-                                                                    blackInputStyle(),
-                                                                decoration:
-                                                                    expenseChangeInputDecor(
-                                                                        '음료'),
-                                                                inputFormatters: [
-                                                                  wonMaskFormatter
-                                                                ],
+                                                                style: blackInputStyle(),
+                                                                decoration: expenseChangeInputDecor('음료'),
+                                                                inputFormatters: [wonMaskFormatter],
                                                               )),
                                                           Container(
-                                                              width:
-                                                                  expTtfWidthSize,
-                                                              height:
-                                                                  expTtfHeightSize,
-                                                              child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    _alcoholController,
-                                                                // initialValue: snapshotData['actualSales'],
-                                                                style:
-                                                                    blackInputStyle(),
-                                                                decoration:
-                                                                    expenseChangeInputDecor(
-                                                                        '주류'),
-                                                                inputFormatters: [
-                                                                  wonMaskFormatter
-                                                                ],
+                                                              width: expTtfWidthSize,
+                                                              height: expTtfHeightSize,
+                                                              child: TextFormField(
+                                                                controller: _alcoholController,
+                                                                style: blackInputStyle(),
+                                                                decoration: expenseChangeInputDecor('주류'),
+                                                                inputFormatters: [wonMaskFormatter],
                                                               )),
                                                         ],
                                                       ),
+
+                                                      Container(height: 2, width: size.width*0.85, color: Colors.white,),
+                                                      // Text(snapshotData['expenseAddList']['title'], style: TextStyle(color: Colors.white),),
                                                     ],
                                                   ),
-                                                  Positioned(
-                                                    right: 15,
-                                                    top: 30,
+                                                  Positioned(right: 15, top: 30,
                                                     child: InkWell(
-                                                      child: Text(
-                                                        'Save',
+                                                      child: Text('Save',
                                                         style: TextStyle(
-                                                          color:
-                                                              Colors.redAccent,
+                                                          color: Colors.redAccent,
                                                           fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FontStyle.italic,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontStyle: FontStyle.italic,
                                                         ),
                                                       ),
                                                       onTap: () {
-                                                        FirebaseFirestore
-                                                            .instance
+                                                        FirebaseFirestore.instance
                                                             .collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
-                                                            .doc(snapshotData.id)
-                                                            .update({
-                                                          'foodProvisionExpense':
-                                                              _foodprovisionController
-                                                                  .text,
-                                                          'beverageExpense':
-                                                              _beverageController
-                                                                  .text,
-                                                          'alcoholExpense':
-                                                              _alcoholController
-                                                                  .text,
+                                                            .doc(snapshotData.id).update({
+                                                          'foodProvisionExpense': _foodprovisionController.text,
+                                                          'beverageExpense': _beverageController.text,
+                                                          'alcoholExpense': _alcoholController.text,
                                                         });
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        _foodprovisionController
-                                                            .clear();
-                                                        _beverageController
-                                                            .clear();
-                                                        _alcoholController
-                                                            .clear();
+                                                        Navigator.of(context).pop();
+                                                        _foodprovisionController.clear();
+                                                        _beverageController.clear();
+                                                        _alcoholController.clear();
                                                       },
                                                     ),
                                                   ),
@@ -674,8 +511,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
     return AppBar(
       backgroundColor: blackColor,
       centerTitle: true,
-      title: Text(
-        'share sales',
+      title: Text('share sales',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontStyle: FontStyle.italic,
@@ -685,16 +521,10 @@ class _ManagementScreenState extends State<ManagementScreen> {
       ),
       actions: [
         IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.amberAccent,
-            size: 30,
-          ),
+          icon: Icon(Icons.add, color: Colors.amberAccent, size: 30,),
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CreateManagementScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CreateManagementScreen()));
           },
         )
       ],
@@ -775,13 +605,12 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 child: RaisedButton(
                   color: Colors.redAccent,
                   onPressed: () {
+                    // print(snapshotData['expenseAddList']['title'] == null ? null : snapshotData['expenseAddList']['title']);
                     final _foldingCellState = context
                         .findRootAncestorStateOfType<SimpleFoldingCellState>();
                     _foldingCellState?.toggleFold();
                   },
-                  child: Text(
-                    "OPEN",
-                  ),
+                  child: Text("OPEN",),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   textColor: Colors.white,
@@ -808,18 +637,9 @@ class _ManagementScreenState extends State<ManagementScreen> {
           padding: EdgeInsets.only(top: 10),
           child: Stack(
             children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  snapshotData['totalSales'],
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "CARD DETAIL",
-                ),
-              ),
+              Align(alignment: Alignment.topCenter,
+                child: Text(snapshotData['totalSales'],),),
+              Align(alignment: Alignment.center, child: Text("CARD DETAIL",),),
               Positioned(
                 right: 5,
                 bottom: 0,
