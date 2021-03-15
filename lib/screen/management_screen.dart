@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -98,6 +99,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
     // var expenseAdd = expenseSnapshot.data['expenseAddList'];
     var addListToExpense = snapshotData.data()['expenseAddList'];
+
 
     return showModalBottomSheet(
       shape: RoundedRectangleBorder(
@@ -231,6 +233,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                     Navigator.pop(context);
                                     print('매출 click');
                                     setState(() {
+
                                       showMaterialModalBottomSheet(
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(30),
@@ -349,119 +352,154 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                         barrierColor: Colors.black87,
                                         backgroundColor: Colors.black,
                                         context: context,
-                                        builder: (BuildContext context) => Container(
-                                          height: size.height * 0.8,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Stack(
-                                                children: [
-                                                  Positioned(left: 15, top: 30,
-                                                    child: InkWell(
-                                                      child: Text('Cancel',
-                                                        style: TextStyle(color: Colors.redAccent, fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontStyle: FontStyle.italic,
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Positioned(right: 15, top: 30,
-                                                    child: InkWell(
-                                                      child: Text('Save',
-                                                        style: TextStyle(
-                                                          color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-                                                            .collection(userModel.userName).doc(snapshotData.id).update({
-                                                          'foodProvisionExpense': _foodprovisionController.text,
-                                                          'beverageExpense': _beverageController.text,
-                                                          'alcoholExpense': _alcoholController.text,
-                                                        });
-                                                        Navigator.of(context).pop();
-                                                        _foodprovisionController.clear();
-                                                        _beverageController.clear();
-                                                        _alcoholController.clear();
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      SizedBox(height: 30,),
-                                                      Container(
-                                                        height: salTtfHeightSize,
-                                                        child: Text(
-                                                          snapshotData['selectedDate'],
-                                                          style: TextStyle(
-                                                            color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                        builder: (BuildContext context) {
+                                          return StatefulBuilder(
+                                            builder: (BuildContext context, StateSetter stateSetter) {
+                                              return Container(
+                                                height: size.height * 0.95,
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        Positioned(left: 15, top: 30,
+                                                          child: InkWell(
+                                                            child: Text('Cancel',
+                                                              style: TextStyle(color: Colors.redAccent, fontSize: 20,
+                                                                fontWeight: FontWeight.bold,
+                                                                fontStyle: FontStyle.italic,
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              Navigator.of(context).pop();
+                                                            },
                                                           ),
                                                         ),
-                                                      ),
-                                                      Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                        children: <Widget>[
-                                                          Container(width: expTtfWidthSize,
-                                                              height: expTtfHeightSize,
-                                                              child: TextFormField(
-                                                                controller: _foodprovisionController,
-                                                                style: blackInputStyle(),
-                                                                decoration: expenseChangeInputDecor('식자재'),
-                                                                inputFormatters: [wonMaskFormatter],
-                                                              )),
-                                                          Container(width: expTtfWidthSize,
-                                                              height: expTtfHeightSize,
-                                                              child: TextFormField(
-                                                                controller: _beverageController,
-                                                                style: blackInputStyle(),
-                                                                decoration: expenseChangeInputDecor('음료'),
-                                                                inputFormatters: [wonMaskFormatter],
-                                                              )),
-                                                          Container(
-                                                              width: expTtfWidthSize,
-                                                              height: expTtfHeightSize,
-                                                              child: TextFormField(
-                                                                controller: _alcoholController,
-                                                                style: blackInputStyle(),
-                                                                decoration: expenseChangeInputDecor('주류'),
-                                                                inputFormatters: [wonMaskFormatter],
-                                                              )),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(height: 3, width: size.width * 0.9,
-                                                color: Colors.grey,
-                                              ),
-                                              Container(height: size.height * 0.4,
-                                                child: ListView.builder(
-                                                  itemCount: addListToExpense.length,
-                                                  itemBuilder: (_, int index) {
-                                                    return Column(
-                                                      children: <Widget>[
-                                                        Text(addListToExpense[index]['title'].toString(),
-                                                          style: TextStyle(color: Colors.white),
+                                                        Positioned(right: 15, top: 30,
+                                                          child: InkWell(
+                                                            child: Text('Save',
+                                                              style: TextStyle(
+                                                                color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                  .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                'foodProvisionExpense': _foodprovisionController.text,
+                                                                'beverageExpense': _beverageController.text,
+                                                                'alcoholExpense': _alcoholController.text,
+                                                              });
+                                                              Navigator.of(context).pop();
+                                                              _foodprovisionController.clear();
+                                                              _beverageController.clear();
+                                                              _alcoholController.clear();
+                                                            },
+                                                          ),
                                                         ),
-                                                        Text(addListToExpense[index]['expenseAmount'].toString(),
-                                                          style: TextStyle(color: Colors.white),
+                                                        Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            SizedBox(height: 30,),
+                                                            Container(
+                                                              height: salTtfHeightSize,
+                                                              child: Text(
+                                                                snapshotData['selectedDate'],
+                                                                style: TextStyle(
+                                                                  color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                              children: <Widget>[
+                                                                Container(width: expTtfWidthSize,
+                                                                    height: expTtfHeightSize,
+                                                                    child: TextFormField(
+                                                                      controller: _foodprovisionController,
+                                                                      style: blackInputStyle(),
+                                                                      decoration: expenseChangeInputDecor('식자재'),
+                                                                      inputFormatters: [wonMaskFormatter],
+                                                                    )),
+                                                                Container(width: expTtfWidthSize,
+                                                                    height: expTtfHeightSize,
+                                                                    child: TextFormField(
+                                                                      controller: _beverageController,
+                                                                      style: blackInputStyle(),
+                                                                      decoration: expenseChangeInputDecor('음료'),
+                                                                      inputFormatters: [wonMaskFormatter],
+                                                                    )),
+                                                                Container(
+                                                                    width: expTtfWidthSize,
+                                                                    height: expTtfHeightSize,
+                                                                    child: TextFormField(
+                                                                      controller: _alcoholController,
+                                                                      style: blackInputStyle(),
+                                                                      decoration: expenseChangeInputDecor('주류'),
+                                                                      inputFormatters: [wonMaskFormatter],
+                                                                    )),
+                                                              ],
+                                                            ),
+                                                          ],
                                                         ),
                                                       ],
-                                                    );
-                                                  },
+                                                    ),
+                                                    Container(height: 3, width: size.width * 0.9,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    Container(
+                                                      height: size.height * 0.5,
+                                                      width: size.width*0.9,
+                                                      child: ListView.separated(
+                                                        itemCount: addListToExpense.length,
+                                                        itemBuilder: (BuildContext context, int index) {
+
+                                                          Map<String, dynamic> removeList = snapshotData['expenseAddList'][index];
+
+                                                          return Row(
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                width: size.width*0.4,
+                                                                child: Text(
+                                                                  addListToExpense[index]['title'].toString(), style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                child: Container(
+                                                                  width: size.width*0.2,
+                                                                  child: Text(
+                                                                    addListToExpense[index]['expenseAmount'].toString(), style: TextStyle(color: Colors.white),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              InkWell(
+                                                                child: Text('delete', style: TextStyle(color: Colors.amberAccent),),
+                                                                onTap: (){
+                                                                  stateSetter((){
+                                                                    FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                        .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                      'expenseAddList': FieldValue.arrayRemove([
+                                                                        removeList ]),
+                                                                    });
+                                                                  });
+
+                                                                },
+                                                              ),
+                                                            ],
+                                                          );
+                                                        }, separatorBuilder: (BuildContext context, int index) {
+                                                        return SizedBox(height: 10,);
+                                                      },
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                              );
+                                            },
+                                          );
+                                        }
                                       );
                                     });
                                   },

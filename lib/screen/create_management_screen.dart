@@ -44,6 +44,12 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
   TextEditingController _beverageController = TextEditingController();
   TextEditingController _alcoholController = TextEditingController();
 
+  @override
+  void initState() {
+    expenseAddMapList.clear();
+    super.initState();
+  }
+
 
   @override
   void dispose() {
@@ -259,8 +265,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
 
                   print(expenseAddMapList);
 
-
-
                   UserModel userModel =
                       Provider.of<UserModelState>(context, listen: false)
                           .userModel;
@@ -271,7 +275,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     userKey: userModel.userKey,
                         actualSales: _actualSalesController.text,
                         totalSales: _totalSalesController.text,
-                        selectedDate: pickerDate.toString().substring(0,10),
+                        selectedDate: pickerDate.toUtc().toString().substring(0,10),
                         expenseAddList: expenseAddMapList,
                         stdDate: pickerDate.toUtc(),
                         foodProvisionExpense: _foodprovisionController.text,
