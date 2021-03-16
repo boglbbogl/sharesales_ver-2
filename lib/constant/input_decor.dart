@@ -16,6 +16,24 @@ TextStyle blackInputStyle(){
   );
 }
 
+InputDecoration editAddExpenseInputDecor(String hint){
+  return InputDecoration(
+    enabledBorder: _editAddExpenseInputDecor(),
+    focusedBorder: _editAddExpenseInputDecor(),
+    labelText: hint,
+    labelStyle: TextStyle(color: Colors.white,),
+  );
+}
+UnderlineInputBorder _editAddExpenseInputDecor() {
+  return UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.white,
+    ),
+  );
+}
+
+
+
 InputDecoration expenseInputDecor(String hint){
   return InputDecoration(
     enabledBorder: _expenseInputDecor(),
@@ -54,7 +72,6 @@ InputDecoration salesChangeInputDecor(String hint) {
 
   );
 }
-
 
 InputDecoration blackInputDecor(String hint) {
   return InputDecoration(

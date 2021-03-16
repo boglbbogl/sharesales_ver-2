@@ -1,4 +1,5 @@
 
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
+import 'package:sharesales_ver2/widget/expense_text_add_create_form.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'create_management_screen.dart';
 
@@ -25,6 +27,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
   TextEditingController _foodprovisionController = TextEditingController();
   TextEditingController _beverageController = TextEditingController();
   TextEditingController _alcoholController = TextEditingController();
+  TextEditingController _editAddExpenseTitleController = TextEditingController();
+  TextEditingController _editAddExpenseAmountController = TextEditingController();
 
   @override
   void dispose() {
@@ -33,6 +37,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
     _foodprovisionController.dispose();
     _beverageController.dispose();
     _alcoholController.dispose();
+    _editAddExpenseTitleController.dispose();
+    _editAddExpenseAmountController.dispose();
     super.dispose();
   }
 
@@ -69,10 +75,14 @@ class _ManagementScreenState extends State<ManagementScreen> {
                         return SimpleFoldingCell.create(
                           // frontWidget: _buildFrontWidget(),
                           frontWidget: GestureDetector(
-                              onTap: () => print('short click'),
+                              onTap: () {
+                                  print('short click');
+                              },
                               onLongPress: () async {
-                                _managementBottomSheet(
-                                    context, snapshotData, userModel);
+                                setState(() {
+                                  _managementBottomSheet(
+                                      context, snapshotData, userModel, snapshot);
+                                });
                               },
                               child: _foldingFrontWidget(snapshotData)),
                           innerWidget: _foldingInnerWidget(snapshotData),
@@ -94,12 +104,9 @@ class _ManagementScreenState extends State<ManagementScreen> {
     );
   }
 
+
   Future _managementBottomSheet(BuildContext context,
-      QueryDocumentSnapshot snapshotData, UserModel userModel) {
-
-    // var expenseAdd = expenseSnapshot.data['expenseAddList'];
-    var addListToExpense = snapshotData.data()['expenseAddList'];
-
+      QueryDocumentSnapshot snapshotData, UserModel userModel, AsyncSnapshot<QuerySnapshot> snapshot) {
 
     return showModalBottomSheet(
       shape: RoundedRectangleBorder(
@@ -109,412 +116,691 @@ class _ManagementScreenState extends State<ManagementScreen> {
       backgroundColor: Colors.indigo,
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          height: size.height * 0.13,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Container(
-                width: size.width * 0.4,
-                child: ListTile(
-                  horizontalTitleGap: 0.01,
-                  leading: Icon(
-                    Icons.delete_outline,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                  title: Text('삭제하기',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  onTap: () {
-                    showModalBottomSheet(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),),
-                        backgroundColor: Colors.redAccent,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Container(height: size.height * 0.07,
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(child: Text(' ' + snapshotData['selectedDate'] + '  삭제 하시겠습니까 ?',
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                                Container(width: size.width * 0.2,
-                                  child: InkWell(
-                                    child: Center(
-                                      child: Text('Ok',
-                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
-                                          .doc(snapshotData.id).delete();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ),
-                                Container(color: Colors.red, height: size.height * 0.1, width: size.width * 0.005,),
-                                Container(width: size.width * 0.2,
-                                  child: InkWell(
-                                    child: Center(
-                                      child: Text('Cancel',
-                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ),
-                                // SizedBox(
-                                //   width: size.width*0.01,
-                                // ),
-                              ],
-                            ),
-                          );
-                        });
-                  },
-                ),
-              ),
-              Container(color: Colors.indigoAccent,
-                height: size.height * 0.075,
-                width: size.width * 0.01,
-              ),
-              Container(
-                width: size.width * 0.4,
-                child: ListTile(horizontalTitleGap: 0.2,
-                  leading: Icon(Icons.add_circle,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                  title: Text('추가하기',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  onTap: () {
-                    _totalSalesController.text = snapshotData['totalSales'];
-                    _actualSalesController.text = snapshotData['actualSales'];
-                    _foodprovisionController.text = snapshotData['foodProvisionExpense'];
-                    _beverageController.text = snapshotData['beverageExpense'];
-                    _alcoholController.text = snapshotData['alcoholExpense'];
-
-                    showModalBottomSheet(
-                      backgroundColor: Colors.redAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: size.height * 0.13,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Container(
+                    width: size.width * 0.4,
+                    child: ListTile(
+                      horizontalTitleGap: 0.01,
+                      leading: Icon(
+                        Icons.delete_outline,
+                        color: Colors.white,
+                        size: 25,
                       ),
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          height: size.height * 0.08,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Container(
-                                width: size.width * 0.4,
-                                child: ListTile(horizontalTitleGap: 0.01,
-                                  leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
-                                  ),
-                                  title: Text('매출',
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-                                  ),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    print('매출 click');
-                                    setState(() {
+                      title: Text('삭제하기',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      onTap: () {
+                        setState((){
 
-                                      showMaterialModalBottomSheet(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30),
-                                        ),
-                                        closeProgressThreshold: 5.0,
-                                        animationCurve: Curves.fastOutSlowIn,
-                                        duration: Duration(milliseconds: 1500),
-                                        barrierColor: Colors.black87,
-                                        backgroundColor: Colors.black,
-                                        context: context,
-                                        builder: (BuildContext context) => Container(
-                                          height: size.height * 0.8,
-                                          child: Stack(
-                                            children: [
-                                              Positioned(left: 15, top: 30,
-                                                child: InkWell(
-                                                  child: Text('Cancel',
-                                                    style: TextStyle(color: Colors.amberAccent, fontSize: 20, fontWeight: FontWeight.bold,
-                                                      fontStyle: FontStyle.italic,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ),
-                                              Column(crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: <Widget>[
-                                                  SizedBox(height: 30,),
-                                                  Container(height: salTtfHeightSize,
-                                                    child: Text(snapshotData['selectedDate'],
-                                                      style: TextStyle(color: Colors.indigo, fontSize: 22,
-                                                        fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                    children: <Widget>[
-                                                      Container(width: salTtfWidthSize,
-                                                          height: salTtfHeightSize,
-                                                          child: TextFormField(
-                                                            controller: _totalSalesController,
-                                                            style: blackInputStyle(),
-                                                            decoration: salesChangeInputDecor('총매출'),
-                                                            inputFormatters: [wonMaskFormatter],
-                                                          )),
-                                                      Container(width: salTtfWidthSize,
-                                                          height: salTtfHeightSize,
-                                                          child: TextFormField(
-                                                            controller: _actualSalesController,
-                                                            style: blackInputStyle(),
-                                                            decoration: salesChangeInputDecor('실제매출'),
-                                                            inputFormatters: [wonMaskFormatter],
-                                                          )),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Positioned(right: 15, top: 30,
-                                                child: InkWell(
-                                                  child: Text('Save',
-                                                    style: TextStyle(
-                                                      color: Colors.amberAccent, fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontStyle: FontStyle.italic,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-                                                        .collection(userModel.userName).doc(snapshotData.id).update({
-                                                      'totalSales': _totalSalesController.text,
-                                                      'actualSales': _actualSalesController.text,
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                    _totalSalesController.clear();
-                                                    _actualSalesController.clear();
-                                                  },
-                                                ),
-                                              ),
-                                            ],
+
+                          showModalBottomSheet(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),),
+                              backgroundColor: Colors.redAccent,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                  builder: (BuildContext context, StateSetter setState) {
+                                    return Container(height: size.height * 0.07,
+                                      child: Row(
+                                        children: <Widget>[
+                                          Expanded(child: Text(' ' + snapshotData['selectedDate'] + '  삭제 하시겠습니까 ?',
+                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
                                           ),
-                                        ),
-                                      );
-                                    });
+                                          ),
+                                          Container(width: size.width * 0.2,
+                                            child: InkWell(
+                                              child: Center(
+                                                child: Text('Ok',
+                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+                                                    .doc(snapshotData.id).delete();
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ),
+                                          Container(color: Colors.red, height: size.height * 0.1, width: size.width * 0.005,),
+                                          Container(width: size.width * 0.2,
+                                            child: InkWell(
+                                              child: Center(
+                                                child: Text('Cancel',
+                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ),
+                                          // SizedBox(
+                                          //   width: size.width*0.01,
+                                          // ),
+                                        ],
+                                      ),
+                                    );
                                   },
-                                ),
-                              ),
-                              Container(color: Colors.red,
-                                height: size.height * 0.04,
-                                width: size.width * 0.01,
-                              ),
-                              Container(
-                                width: size.width * 0.4,
-                                child: ListTile(horizontalTitleGap: 0.01,
-                                  leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
-                                  ),
-                                  title: Text('지출',
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-                                  ),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    print('지출 click');
+                                );
+                              });
+                        });
 
-                                    setState(() {
-                                      showMaterialModalBottomSheet(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30),
-                                        ),
-                                        closeProgressThreshold: 5.0,
-                                        animationCurve: Curves.fastOutSlowIn,
-                                        duration: Duration(milliseconds: 1500),
-                                        barrierColor: Colors.black87,
-                                        backgroundColor: Colors.black,
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return StatefulBuilder(
-                                            builder: (BuildContext context, StateSetter stateSetter) {
-                                              return Container(
-                                                height: size.height * 0.95,
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    Stack(
-                                                      children: [
-                                                        Positioned(left: 15, top: 30,
-                                                          child: InkWell(
-                                                            child: Text('Cancel',
-                                                              style: TextStyle(color: Colors.redAccent, fontSize: 20,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontStyle: FontStyle.italic,
-                                                              ),
-                                                            ),
-                                                            onTap: () {
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                          ),
-                                                        ),
-                                                        Positioned(right: 15, top: 30,
-                                                          child: InkWell(
-                                                            child: Text('Save',
-                                                              style: TextStyle(
-                                                                color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
-                                                              ),
-                                                            ),
-                                                            onTap: () {
-                                                              FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-                                                                  .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                'foodProvisionExpense': _foodprovisionController.text,
-                                                                'beverageExpense': _beverageController.text,
-                                                                'alcoholExpense': _alcoholController.text,
-                                                              });
-                                                              Navigator.of(context).pop();
-                                                              _foodprovisionController.clear();
-                                                              _beverageController.clear();
-                                                              _alcoholController.clear();
-                                                            },
-                                                          ),
-                                                        ),
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            SizedBox(height: 30,),
-                                                            Container(
-                                                              height: salTtfHeightSize,
-                                                              child: Text(
-                                                                snapshotData['selectedDate'],
-                                                                style: TextStyle(
-                                                                  color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Row(
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                              children: <Widget>[
-                                                                Container(width: expTtfWidthSize,
-                                                                    height: expTtfHeightSize,
-                                                                    child: TextFormField(
-                                                                      controller: _foodprovisionController,
-                                                                      style: blackInputStyle(),
-                                                                      decoration: expenseChangeInputDecor('식자재'),
-                                                                      inputFormatters: [wonMaskFormatter],
-                                                                    )),
-                                                                Container(width: expTtfWidthSize,
-                                                                    height: expTtfHeightSize,
-                                                                    child: TextFormField(
-                                                                      controller: _beverageController,
-                                                                      style: blackInputStyle(),
-                                                                      decoration: expenseChangeInputDecor('음료'),
-                                                                      inputFormatters: [wonMaskFormatter],
-                                                                    )),
-                                                                Container(
-                                                                    width: expTtfWidthSize,
-                                                                    height: expTtfHeightSize,
-                                                                    child: TextFormField(
-                                                                      controller: _alcoholController,
-                                                                      style: blackInputStyle(),
-                                                                      decoration: expenseChangeInputDecor('주류'),
-                                                                      inputFormatters: [wonMaskFormatter],
-                                                                    )),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Container(height: 3, width: size.width * 0.9,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    Container(
-                                                      height: size.height * 0.5,
-                                                      width: size.width*0.9,
-                                                      child: ListView.separated(
-                                                        itemCount: addListToExpense.length,
-                                                        itemBuilder: (BuildContext context, int index) {
+                      },
+                    ),
+                  ),
+                  Container(color: Colors.indigoAccent,
+                    height: size.height * 0.075,
+                    width: size.width * 0.01,
+                  ),
+                  Container(
+                    width: size.width * 0.4,
+                    child: ListTile(horizontalTitleGap: 0.2,
+                      leading: Icon(Icons.add_circle,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                      title: Text('추가하기',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      onTap: () {
+                        _totalSalesController.text = snapshotData['totalSales'];
+                        _actualSalesController.text = snapshotData['actualSales'];
+                        _foodprovisionController.text = snapshotData['foodProvisionExpense'];
+                        _beverageController.text = snapshotData['beverageExpense'];
+                        _alcoholController.text = snapshotData['alcoholExpense'];
 
-                                                          Map<String, dynamic> removeList = snapshotData['expenseAddList'][index];
+                        setState((){
+                        showModalBottomSheet(
+                          backgroundColor: Colors.redAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30)),
+                          ),
+                          context: context,
+                          builder: (BuildContext context) {
+                            return StatefulBuilder(
+                              builder: (BuildContext context, StateSetter setState) {
+                                return Container(
+                                  height: size.height * 0.08,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Container(
+                                        width: size.width * 0.4,
+                                        child: ListTile(horizontalTitleGap: 0.01,
+                                          leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
+                                          ),
+                                          title: Text('매출',
+                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            print('매출 click');
+                                            setState(() {
 
-                                                          return Row(
-                                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                                            children: <Widget>[
-                                                              Container(
-                                                                width: size.width*0.4,
-                                                                child: Text(
-                                                                  addListToExpense[index]['title'].toString(), style: TextStyle(color: Colors.white),
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child: Container(
-                                                                  width: size.width*0.2,
-                                                                  child: Text(
-                                                                    addListToExpense[index]['expenseAmount'].toString(), style: TextStyle(color: Colors.white),
+                                              showMaterialModalBottomSheet(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                  ),
+                                                  closeProgressThreshold: 5.0,
+                                                  enableDrag: false,
+                                                  animationCurve: Curves.fastOutSlowIn,
+                                                  duration: Duration(milliseconds: 1500),
+                                                  barrierColor: Colors.black87,
+                                                  backgroundColor: Colors.black,
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+
+                                                    return StatefulBuilder(
+                                                      builder: (BuildContext context, StateSetter setState){
+
+                                                        return Padding(
+                                                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                          child: Container(
+                                                            height: size.height * 0.5,
+                                                            child: Stack(
+                                                              children: [
+                                                                Positioned(left: 15, top: 30,
+                                                                  child: InkWell(
+                                                                    child: Text('Cancel',
+                                                                      style: TextStyle(color: Colors.amberAccent, fontSize: 20, fontWeight: FontWeight.bold,
+                                                                        fontStyle: FontStyle.italic,
+                                                                      ),
+                                                                    ),
+                                                                    onTap: () {
+                                                                      Navigator.of(context).pop();
+                                                                    },
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              InkWell(
-                                                                child: Text('delete', style: TextStyle(color: Colors.amberAccent),),
-                                                                onTap: (){
-                                                                  stateSetter((){
-                                                                    FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-                                                                        .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                      'expenseAddList': FieldValue.arrayRemove([
-                                                                        removeList ]),
-                                                                    });
-                                                                  });
-
-                                                                },
-                                                              ),
-                                                            ],
-                                                          );
-                                                        }, separatorBuilder: (BuildContext context, int index) {
-                                                        return SizedBox(height: 10,);
+                                                                Column(
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  children: <Widget>[
+                                                                    SizedBox(height: 30,),
+                                                                    Container(height: salTtfHeightSize,
+                                                                      child: Text(snapshotData['selectedDate'],
+                                                                        style: TextStyle(color: Colors.indigo, fontSize: 22,
+                                                                          fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Row(
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                      children: <Widget>[
+                                                                        Container(width: salTtfWidthSize,
+                                                                            height: salTtfHeightSize,
+                                                                            child: TextFormField(
+                                                                              controller: _totalSalesController,
+                                                                              style: blackInputStyle(),
+                                                                              decoration: salesChangeInputDecor('총매출'),
+                                                                              inputFormatters: [wonMaskFormatter],
+                                                                            )),
+                                                                        Container(width: salTtfWidthSize,
+                                                                            height: salTtfHeightSize,
+                                                                            child: TextFormField(
+                                                                              controller: _actualSalesController,
+                                                                              style: blackInputStyle(),
+                                                                              decoration: salesChangeInputDecor('실제매출'),
+                                                                              inputFormatters: [wonMaskFormatter],
+                                                                            )),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Positioned(right: 15, top: 30,
+                                                                  child: InkWell(
+                                                                    child: Text('Save',
+                                                                      style: TextStyle(
+                                                                        color: Colors.amberAccent, fontSize: 20,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontStyle: FontStyle.italic,
+                                                                      ),
+                                                                    ),
+                                                                    onTap: () {
+                                                                      FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                          .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                        'totalSales': _totalSalesController.text,
+                                                                        'actualSales': _actualSalesController.text,
+                                                                      });
+                                                                      Navigator.of(context).pop();
+                                                                      _totalSalesController.clear();
+                                                                      _actualSalesController.clear();
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
                                                       },
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                    );
+                                                  }
                                               );
-                                            },
-                                          );
-                                        }
-                                      );
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      Container(color: Colors.red,
+                                        height: size.height * 0.04,
+                                        width: size.width * 0.01,
+                                      ),
+                                      Container(
+                                        width: size.width * 0.4,
+                                        child: ListTile(horizontalTitleGap: 0.01,
+                                          leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
+                                          ),
+                                          title: Text('지출',
+                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            print('지출 click');
+
+
+                                            setState(() {
+
+
+                                              showMaterialModalBottomSheet(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                  ),
+                                                  closeProgressThreshold: 5.0,
+                                                  enableDrag: false,
+                                                  elevation: 90.0,
+                                                  animationCurve: Curves.fastOutSlowIn,
+                                                  duration: Duration(milliseconds: 1500),
+                                                  barrierColor: Colors.black87,
+                                                  backgroundColor: Colors.black,
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+
+                                                    var upDateExpenseAddList = [];
+                                                    upDateExpenseAddList.addAll(snapshotData.data()['expenseAddList'],);
+
+                                                    bool _titleBadge = false;
+                                                    bool _amountBadge = false;
+
+
+                                                    return StatefulBuilder(
+                                                      builder: (BuildContext context, StateSetter setState) {
+
+                                                        var addListToExpense = snapshotData.data()['expenseAddList'];
+
+                                                        return Padding(
+                                                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                          child: Container(
+                                                            height: size.height * 0.5,
+                                                            child: Column(
+                                                              mainAxisSize: MainAxisSize.min,
+                                                              children: [
+                                                                Stack(
+                                                                  children: [
+                                                                    Positioned(left: 15, top: 30,
+                                                                      child: InkWell(
+                                                                        child: Text('Cancel',
+                                                                          style: TextStyle(color: Colors.redAccent, fontSize: 20,
+                                                                            fontWeight: FontWeight.bold,
+                                                                            fontStyle: FontStyle.italic,
+                                                                          ),
+                                                                        ),
+                                                                        onTap: () {
+                                                                          Navigator.of(context).pop();
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                    Positioned(right: 15, top: 30,
+                                                                      child: InkWell(
+                                                                        child: Text('Save',
+                                                                          style: TextStyle(
+                                                                            color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                          ),
+                                                                        ),
+                                                                        onTap: () {
+                                                                          FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                              .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                            'foodProvisionExpense': _foodprovisionController.text,
+                                                                            'beverageExpense': _beverageController.text,
+                                                                            'alcoholExpense': _alcoholController.text,
+                                                                            // 'expenseAddList': FieldValue.arrayUnion([{
+                                                                            //   upDateExpenseAddList.first, upDateExpenseAddList.last}]),
+                                                                          });
+                                                                          Navigator.of(context).pop();
+                                                                          _foodprovisionController.clear();
+                                                                          _beverageController.clear();
+                                                                          _alcoholController.clear();
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                      children: <Widget>[
+                                                                        SizedBox(height: 30,),
+                                                                        Container(
+                                                                          height: salTtfHeightSize,
+                                                                          child: Text(
+                                                                            snapshotData['selectedDate'],
+                                                                            style: TextStyle(
+                                                                              color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Row(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                          children: <Widget>[
+                                                                            Container(width: expTtfWidthSize,
+                                                                                height: expTtfHeightSize,
+                                                                                child: TextFormField(
+                                                                                  controller: _foodprovisionController,
+                                                                                  style: blackInputStyle(),
+                                                                                  decoration: expenseChangeInputDecor('식자재'),
+                                                                                  inputFormatters: [wonMaskFormatter],
+                                                                                )),
+                                                                            Container(width: expTtfWidthSize,
+                                                                                height: expTtfHeightSize,
+                                                                                child: TextFormField(
+                                                                                  controller: _beverageController,
+                                                                                  style: blackInputStyle(),
+                                                                                  decoration: expenseChangeInputDecor('음료'),
+                                                                                  inputFormatters: [wonMaskFormatter],
+                                                                                )),
+                                                                            Container(
+                                                                                width: expTtfWidthSize,
+                                                                                height: expTtfHeightSize,
+                                                                                child: TextFormField(
+                                                                                  controller: _alcoholController,
+                                                                                  style: blackInputStyle(),
+                                                                                  decoration: expenseChangeInputDecor('주류'),
+                                                                                  inputFormatters: [wonMaskFormatter],
+                                                                                )),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Container(height: 3, width: size.width * 0.9,
+                                                                  color: Colors.grey,
+                                                                ),
+                                                                SizedBox(height: 20,),
+                                                                Container(
+                                                                  height: size.height*0.04,
+                                                                  width: size.width*0.8,
+                                                                  child: RaisedButton(
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(30),
+                                                                    ),
+                                                                      color: Colors.deepOrange,
+                                                                      child: Text('추가 지출 수정하기',style:  TextStyle(
+                                                                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15,
+                                                                      fontStyle: FontStyle.italic),),
+                                                                      onPressed: (){
+                                                                      setState((){
+                                                                        showMaterialModalBottomSheet(
+                                                                            shape: RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(30),
+                                                                            ),
+                                                                            closeProgressThreshold: 5.0,
+                                                                            enableDrag: false,
+                                                                            elevation: 90.0,
+                                                                            animationCurve: Curves.fastOutSlowIn,
+                                                                            duration: Duration(milliseconds: 1500),
+                                                                            barrierColor: Colors.black87,
+                                                                            backgroundColor: Colors.deepOrangeAccent,
+                                                                            context: context,
+                                                                            builder: (BuildContext context){
+                                                                              return StatefulBuilder(
+                                                                                  builder: (BuildContext context, StateSetter setState){
+
+                                                                                    return Padding(
+                                                                                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                                      child: Container(
+                                                                                        height: size.height * 0.5,
+                                                                                        child: Column(
+                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                          children: <Widget>[
+                                                                                            Stack(
+                                                                                              children: [
+                                                                                                Positioned(left: 15, top: 30,
+                                                                                                  child: InkWell(
+                                                                                                    child: Text('Cancel',
+                                                                                                      style: TextStyle(color: Colors.pink, fontSize: 20,
+                                                                                                        fontWeight: FontWeight.bold,
+                                                                                                        fontStyle: FontStyle.italic,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    onTap: () {
+                                                                                                      Navigator.of(context).pop();
+                                                                                                    },
+                                                                                                  ),
+                                                                                                ),
+                                                                                                Positioned(right: 15, top: 30,
+                                                                                                  child: InkWell(
+                                                                                                    child: Text('Save',
+                                                                                                      style: TextStyle(
+                                                                                                        color: Colors.pink, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    onTap: () {
+                                                                                                      FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                                          .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                        'foodProvisionExpense': _foodprovisionController.text,
+                                                                                                        'beverageExpense': _beverageController.text,
+                                                                                                        'alcoholExpense': _alcoholController.text,
+                                                                                                        'expenseAddList': FieldValue.arrayUnion([
+                                                                                                            upDateExpenseAddList.first, upDateExpenseAddList.last])
+                                                                                                      });
+                                                                                                      Navigator.of(context).pop();
+                                                                                                      _foodprovisionController.clear();
+                                                                                                      _beverageController.clear();
+                                                                                                      _alcoholController.clear();
+                                                                                                    },
+                                                                                                  ),
+                                                                                                ),
+                                                                                                Column(
+                                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                  children: <Widget>[
+                                                                                                    SizedBox(height: 30,),
+                                                                                                    Container(
+                                                                                                      height: salTtfHeightSize,
+                                                                                                      child: Text(
+                                                                                                        snapshotData['selectedDate'],
+                                                                                                        style: TextStyle(
+                                                                                                          color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    Row(
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                                      children: <Widget>[
+                                                                                                        Container(
+                                                                                                            width: size.width*0.5,
+                                                                                                            height: expTtfHeightSize,
+                                                                                                            child: Badge(
+                                                                                                              showBadge: _titleBadge,
+                                                                                                              position: BadgePosition.topEnd(end: 10, top: 30),
+                                                                                                              badgeColor: Colors.red,
+                                                                                                              child: TextFormField(
+                                                                                                                controller: _editAddExpenseTitleController,
+                                                                                                                style: blackInputStyle(),
+                                                                                                                decoration: editAddExpenseInputDecor('내용'),
+                                                                                                              ),
+                                                                                                            )),
+                                                                                                        Container(
+                                                                                                            width: size.width*0.3,
+                                                                                                            height: expTtfHeightSize,
+                                                                                                            child: Badge(
+                                                                                                              showBadge: _amountBadge,
+                                                                                                              position: BadgePosition.topEnd(end: 10, top: 30),
+                                                                                                              badgeColor: Colors.red,
+                                                                                                              child: TextFormField(
+                                                                                                                controller: _editAddExpenseAmountController,
+                                                                                                                style: blackInputStyle(),
+                                                                                                                decoration: editAddExpenseInputDecor('지출금액'),
+                                                                                                                inputFormatters: [wonMaskFormatter],
+                                                                                                              ),
+                                                                                                            )),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                            Container(
+                                                                                              height: 30,
+                                                                                              width: size.width * 0.6,
+                                                                                              child: RaisedButton(
+                                                                                                onPressed: () {
+                                                                                                  setState(() {
+                                                                                                    FocusScope.of(context).unfocus();
+                                                                                                    if (_editAddExpenseTitleController.text.isEmpty) {
+                                                                                                      _titleBadge = true;
+                                                                                                      return print('title 없어');
+                                                                                                    } else if (_editAddExpenseAmountController.text.isEmpty) {
+                                                                                                      _titleBadge = false;
+                                                                                                      _amountBadge = true;
+                                                                                                      return print('금액 없어');
+                                                                                                    }
+                                                                                                    _amountBadge = false;
+                                                                                                    upDateExpenseAddList.addAll([{
+                                                                                                      'title': _editAddExpenseTitleController.text.trim(),
+                                                                                                      'expenseAmount': _editAddExpenseAmountController.text.trim(),
+                                                                                                    }]);
+                                                                                                    // print(expenseAddMapList);
+                                                                                                  });
+                                                                                                  if(_titleBadge == false && _amountBadge == false)
+                                                                                                    _editAddExpenseTitleController.clear();
+                                                                                                  _editAddExpenseAmountController.clear();
+                                                                                                },
+                                                                                                elevation: 1,
+                                                                                                color: Colors.pink,
+                                                                                                splashColor: Colors.white,
+                                                                                                child: Text(
+                                                                                                  '추가하기',
+                                                                                                  style: TextStyle(
+                                                                                                      fontStyle: FontStyle.italic,
+                                                                                                      fontWeight: FontWeight.bold),
+                                                                                                ),
+                                                                                                shape: RoundedRectangleBorder(
+                                                                                                  borderRadius: BorderRadius.circular(30),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                            StatefulBuilder(
+                                                                                              builder: (BuildContext context, StateSetter mySetState) {
+                                                                                                return Container(
+                                                                                                  height: size.height * 0.2,
+                                                                                                  width: size.width*0.9,
+                                                                                                  child: ListView.separated(
+                                                                                                    itemCount: upDateExpenseAddList.length,
+                                                                                                    itemBuilder: (BuildContext context, int index) {
+                                                                                                      return Column(
+                                                                                                        children: [
+                                                                                                          Row(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                            children: <Widget>[
+                                                                                                              Container(
+                                                                                                                width: size.width*0.5,
+                                                                                                                child: Text(
+                                                                                                                  upDateExpenseAddList[index]['title'].toString(), style: TextStyle(
+                                                                                                                    color: Colors.white),
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                              Expanded(
+                                                                                                                child: Container(
+                                                                                                                  width: size.width*0.2,
+                                                                                                                  child: Text(
+                                                                                                                    upDateExpenseAddList[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                                                                      color: Colors.white),),
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                              InkWell(
+                                                                                                                child: Icon(Icons.delete_forever, color: Colors.pink,size: 20,),
+                                                                                                                onTap: (){
+                                                                                                                  FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                                                      .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                                    'expenseAddList': FieldValue.arrayRemove([
+                                                                                                                      upDateExpenseAddList[index]]),
+                                                                                                                  });
+                                                                                                                  mySetState((){
+                                                                                                                    print(upDateExpenseAddList);
+                                                                                                                    upDateExpenseAddList.removeAt(index);
+                                                                                                                    print(upDateExpenseAddList);
+                                                                                                                  });
+                                                                                                                },
+                                                                                                              ),
+                                                                                                            ],
+                                                                                                          ),
+                                                                                                        ],
+                                                                                                      );
+                                                                                                    }, separatorBuilder: (BuildContext context, int index) {
+                                                                                                    return Container(height: 15,);
+                                                                                                  },
+                                                                                                  ),
+                                                                                                );
+                                                                                              },
+                                                                                            ),
+                                                                                          ],
+
+                                                                                        ),
+                                                                                      ),
+                                                                                    );
+                                                                                  });
+                                                                            });
+                                                                      });
+                                                                      }),
+                                                                ),
+                                                                StatefulBuilder(
+                                                                  builder: (BuildContext context, StateSetter mySetState) {
+
+
+                                                                    return Container(
+                                                                      height: size.height * 0.2,
+                                                                      width: size.width*0.9,
+                                                                      child: ListView.separated(
+                                                                        itemCount: addListToExpense.length,
+                                                                        itemBuilder: (BuildContext context, int index) {
+                                                                          return Column(
+                                                                            children: [
+                                                                              Row(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: <Widget>[
+                                                                                  Container(
+                                                                                    width: size.width*0.5,
+                                                                                    child: Text(
+                                                                                      addListToExpense[index]['title'].toString(), style: TextStyle(
+                                                                                        color: Colors.white),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Expanded(
+                                                                                    child: Container(
+                                                                                      width: size.width*0.2,
+                                                                                      child: Text(
+                                                                                        addListToExpense[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                                          color: Colors.white),),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        }, separatorBuilder: (BuildContext context, int index) {
+                                                                        return Container(height: 15,);
+                                                                      },
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         );
+                        });
+
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

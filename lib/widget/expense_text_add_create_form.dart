@@ -249,7 +249,9 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                 icon: Icon(Icons.delete_forever),
                 onPressed: () {
                   setState(() {
+                    print(expenseAddMapList);
                     expenseAddMapList.remove(expense);
+                    print(expenseAddMapList);
                   });
                   print(expense);
                 },
