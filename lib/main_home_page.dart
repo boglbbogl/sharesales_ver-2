@@ -37,7 +37,7 @@ class _MainHomePageState extends State<MainHomePage> {
       else
         return ManagementScreen();
     }),
-    Container(),
+    Example(),
     AccountScreen(),
   ];
 

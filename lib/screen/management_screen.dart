@@ -1,6 +1,6 @@
-
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:folding_cell/folding_cell.dart';
@@ -48,59 +48,759 @@ class _ManagementScreenState extends State<ManagementScreen> {
         Provider.of<UserModelState>(context, listen: false).userModel;
 
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection(COLLECTION_SALES)
-            .doc(userModel.userKey)
-            .collection(userModel.userName)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return MyProgressIndicator();
-          }
-          return SafeArea(
-            child: Scaffold(
-              appBar: _managementScreenAppBar(context),
-              body: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: size.width,
-                    height: size.height * 0.1,
-                    color: Colors.indigoAccent,
+      stream: FirebaseFirestore.instance
+          .collection(COLLECTION_SALES)
+          .doc(userModel.userKey)
+          .collection(userModel.userName)
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return MyProgressIndicator();
+        }
+        return SafeArea(
+          child: Scaffold(
+            appBar: _managementScreenAppBar(context),
+            body: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: size.width,
+                  height: size.height * 0.1,
+                  color: Colors.indigoAccent,
+                ),
+                Flexible(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: snapshot.data.docs.map((snapshotData) {
+                      return SimpleFoldingCell.create(
+                        // frontWidget: _buildFrontWidget(),
+                        frontWidget: GestureDetector(
+                            onTap: () {
+                              print('short click');
+                            },
+                            onLongPress: () async {
+                              setState(() {
+                                showModalBottomSheet(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                                  ),
+                                  backgroundColor: Colors.indigo,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(
+                                      builder: (BuildContext context, StateSetter setState) {
+                                        return Container(
+                                          height: size.height * 0.13,
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              Container(
+                                                width: size.width * 0.4,
+                                                child: ListTile(
+                                                  horizontalTitleGap: 0.01,
+                                                  leading: Icon(
+                                                    Icons.delete_outline,
+                                                    color: Colors.white,
+                                                    size: 25,
+                                                  ),
+                                                  title: Text('삭제하기',
+                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                                  ),
+                                                  onTap: () {
+                                                    setState((){
+
+
+                                                      showModalBottomSheet(
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),),
+                                                          backgroundColor: Colors.redAccent,
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            return StatefulBuilder(
+                                                              builder: (BuildContext context, StateSetter setState) {
+                                                                return Container(height: size.height * 0.07,
+                                                                  child: Row(
+                                                                    children: <Widget>[
+                                                                      Expanded(child: Text(' ' + snapshotData['selectedDate'] + '  삭제 하시겠습니까 ?',
+                                                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+                                                                      ),
+                                                                      ),
+                                                                      Container(width: size.width * 0.2,
+                                                                        child: InkWell(
+                                                                          child: Center(
+                                                                            child: Text('Ok',
+                                                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          onTap: () {
+                                                                            FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+                                                                                .doc(snapshotData.id).delete();
+                                                                            Navigator.pop(context);
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                      Container(color: Colors.red, height: size.height * 0.1, width: size.width * 0.005,),
+                                                                      Container(width: size.width * 0.2,
+                                                                        child: InkWell(
+                                                                          child: Center(
+                                                                            child: Text('Cancel',
+                                                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          onTap: () {
+                                                                            Navigator.of(context).pop();
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                      // SizedBox(
+                                                                      //   width: size.width*0.01,
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              },
+                                                            );
+                                                          });
+                                                    });
+
+                                                  },
+                                                ),
+                                              ),
+                                              Container(color: Colors.indigoAccent,
+                                                height: size.height * 0.075,
+                                                width: size.width * 0.01,
+                                              ),
+                                              Container(
+                                                width: size.width * 0.4,
+                                                child: ListTile(horizontalTitleGap: 0.2,
+                                                  leading: Icon(Icons.add_circle,
+                                                    color: Colors.white,
+                                                    size: 25,
+                                                  ),
+                                                  title: Text('추가하기',
+                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                                  ),
+                                                  onTap: () {
+                                                    _totalSalesController.text = snapshotData['totalSales'];
+                                                    _actualSalesController.text = snapshotData['actualSales'];
+                                                    _foodprovisionController.text = snapshotData['foodProvisionExpense'];
+                                                    _beverageController.text = snapshotData['beverageExpense'];
+                                                    _alcoholController.text = snapshotData['alcoholExpense'];
+
+                                                    setState((){
+                                                      showModalBottomSheet(
+                                                        backgroundColor: Colors.redAccent,
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.only(
+                                                              topLeft: Radius.circular(30),
+                                                              topRight: Radius.circular(30)),
+                                                        ),
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return StatefulBuilder(
+                                                            builder: (BuildContext context, StateSetter setState) {
+                                                              return Container(
+                                                                height: size.height * 0.08,
+                                                                child: Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                  mainAxisSize: MainAxisSize.max,
+                                                                  children: <Widget>[
+                                                                    Container(
+                                                                      width: size.width * 0.4,
+                                                                      child: ListTile(horizontalTitleGap: 0.01,
+                                                                        leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
+                                                                        ),
+                                                                        title: Text('매출',
+                                                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                                                        ),
+                                                                        onTap: () {
+                                                                          Navigator.pop(context);
+                                                                          Navigator.pop(context);
+                                                                          print('매출 click');
+                                                                          setState(() {
+
+                                                                            showMaterialModalBottomSheet(
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(30),
+                                                                                ),
+                                                                                closeProgressThreshold: 5.0,
+                                                                                enableDrag: false,
+                                                                                animationCurve: Curves.fastOutSlowIn,
+                                                                                duration: Duration(milliseconds: 1500),
+                                                                                barrierColor: Colors.black87,
+                                                                                backgroundColor: Colors.black,
+                                                                                context: context,
+                                                                                builder: (BuildContext context) {
+
+                                                                                  return StatefulBuilder(
+                                                                                    builder: (BuildContext context, StateSetter setState){
+
+                                                                                      return Padding(
+                                                                                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                                        child: Container(
+                                                                                          height: size.height * 0.5,
+                                                                                          child: Stack(
+                                                                                            children: [
+                                                                                              Positioned(left: 15, top: 30,
+                                                                                                child: InkWell(
+                                                                                                  child: Text('Cancel',
+                                                                                                    style: TextStyle(color: Colors.amberAccent, fontSize: 20, fontWeight: FontWeight.bold,
+                                                                                                      fontStyle: FontStyle.italic,
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  onTap: () {
+                                                                                                    Navigator.of(context).pop();
+                                                                                                  },
+                                                                                                ),
+                                                                                              ),
+                                                                                              Column(
+                                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                children: <Widget>[
+                                                                                                  SizedBox(height: 30,),
+                                                                                                  Container(height: salTtfHeightSize,
+                                                                                                    child: Text(snapshotData['selectedDate'],
+                                                                                                      style: TextStyle(color: Colors.indigo, fontSize: 22,
+                                                                                                        fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  Row(
+                                                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                                    children: <Widget>[
+                                                                                                      Container(width: salTtfWidthSize,
+                                                                                                          height: salTtfHeightSize,
+                                                                                                          child: TextFormField(
+                                                                                                            controller: _totalSalesController,
+                                                                                                            style: blackInputStyle(),
+                                                                                                            decoration: salesChangeInputDecor('총매출'),
+                                                                                                            inputFormatters: [wonMaskFormatter],
+                                                                                                          )),
+                                                                                                      Container(width: salTtfWidthSize,
+                                                                                                          height: salTtfHeightSize,
+                                                                                                          child: TextFormField(
+                                                                                                            controller: _actualSalesController,
+                                                                                                            style: blackInputStyle(),
+                                                                                                            decoration: salesChangeInputDecor('실제매출'),
+                                                                                                            inputFormatters: [wonMaskFormatter],
+                                                                                                          )),
+                                                                                                    ],
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                              Positioned(right: 15, top: 30,
+                                                                                                child: InkWell(
+                                                                                                  child: Text('Save',
+                                                                                                    style: TextStyle(
+                                                                                                      color: Colors.amberAccent, fontSize: 20,
+                                                                                                      fontWeight: FontWeight.bold,
+                                                                                                      fontStyle: FontStyle.italic,
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  onTap: () {
+                                                                                                    FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                                        .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                      'totalSales': _totalSalesController.text,
+                                                                                                      'actualSales': _actualSalesController.text,
+                                                                                                    });
+                                                                                                    Navigator.of(context).pop();
+                                                                                                    _totalSalesController.clear();
+                                                                                                    _actualSalesController.clear();
+                                                                                                  },
+                                                                                                ),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  );
+                                                                                }
+                                                                            );
+                                                                          });
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                    Container(color: Colors.red,
+                                                                      height: size.height * 0.04,
+                                                                      width: size.width * 0.01,
+                                                                    ),
+                                                                    Container(
+                                                                      width: size.width * 0.4,
+                                                                      child: ListTile(horizontalTitleGap: 0.01,
+                                                                        leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
+                                                                        ),
+                                                                        title: Text('지출',
+                                                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                                                        ),
+                                                                        onTap: () {
+                                                                          Navigator.pop(context);
+                                                                          Navigator.pop(context);
+                                                                          print('지출 click');
+
+
+                                                                          setState(() {
+
+
+                                                                            showMaterialModalBottomSheet(
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(30),
+                                                                                ),
+                                                                                closeProgressThreshold: 5.0,
+                                                                                enableDrag: false,
+                                                                                elevation: 90.0,
+                                                                                animationCurve: Curves.fastOutSlowIn,
+                                                                                duration: Duration(milliseconds: 1500),
+                                                                                barrierColor: Colors.black87,
+                                                                                backgroundColor: Colors.black,
+                                                                                context: context,
+                                                                                builder: (BuildContext context) {
+
+                                                                                  var upDateExpenseAddList = [];
+                                                                                  upDateExpenseAddList.addAll(snapshotData.data()['expenseAddList'],);
+
+                                                                                  bool _titleBadge = false;
+                                                                                  bool _amountBadge = false;
+
+
+                                                                                  return StatefulBuilder(
+                                                                                    builder: (BuildContext context, StateSetter setState) {
+
+                                                                                      var addListToExpense = snapshotData.data()['expenseAddList'];
+
+                                                                                      return Padding(
+                                                                                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                                        child: Container(
+                                                                                          height: size.height * 0.5,
+                                                                                          child: Column(
+                                                                                            mainAxisSize: MainAxisSize.min,
+                                                                                            children: [
+                                                                                              Stack(
+                                                                                                children: [
+                                                                                                  Positioned(left: 15, top: 30,
+                                                                                                    child: InkWell(
+                                                                                                      child: Text('Cancel',
+                                                                                                        style: TextStyle(color: Colors.redAccent, fontSize: 20,
+                                                                                                          fontWeight: FontWeight.bold,
+                                                                                                          fontStyle: FontStyle.italic,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      onTap: () {
+                                                                                                        Navigator.of(context).pop();
+                                                                                                      },
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  Positioned(right: 15, top: 30,
+                                                                                                    child: InkWell(
+                                                                                                      child: Text('Save',
+                                                                                                        style: TextStyle(
+                                                                                                          color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      onTap: () {
+                                                                                                        FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                                            .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                          'foodProvisionExpense': _foodprovisionController.text,
+                                                                                                          'beverageExpense': _beverageController.text,
+                                                                                                          'alcoholExpense': _alcoholController.text,
+                                                                                                          // 'expenseAddList': FieldValue.arrayUnion([{
+                                                                                                          //   upDateExpenseAddList.first, upDateExpenseAddList.last}]),
+                                                                                                        });
+                                                                                                        Navigator.of(context).pop();
+                                                                                                        _foodprovisionController.clear();
+                                                                                                        _beverageController.clear();
+                                                                                                        _alcoholController.clear();
+                                                                                                      },
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  Column(
+                                                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                    children: <Widget>[
+                                                                                                      SizedBox(height: 30,),
+                                                                                                      Container(
+                                                                                                        height: salTtfHeightSize,
+                                                                                                        child: Text(
+                                                                                                          snapshotData['selectedDate'],
+                                                                                                          style: TextStyle(
+                                                                                                            color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      Row(
+                                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                                        children: <Widget>[
+                                                                                                          Container(width: expTtfWidthSize,
+                                                                                                              height: expTtfHeightSize,
+                                                                                                              child: TextFormField(
+                                                                                                                controller: _foodprovisionController,
+                                                                                                                style: blackInputStyle(),
+                                                                                                                decoration: expenseChangeInputDecor('식자재'),
+                                                                                                                inputFormatters: [wonMaskFormatter],
+                                                                                                              )),
+                                                                                                          Container(width: expTtfWidthSize,
+                                                                                                              height: expTtfHeightSize,
+                                                                                                              child: TextFormField(
+                                                                                                                controller: _beverageController,
+                                                                                                                style: blackInputStyle(),
+                                                                                                                decoration: expenseChangeInputDecor('음료'),
+                                                                                                                inputFormatters: [wonMaskFormatter],
+                                                                                                              )),
+                                                                                                          Container(
+                                                                                                              width: expTtfWidthSize,
+                                                                                                              height: expTtfHeightSize,
+                                                                                                              child: TextFormField(
+                                                                                                                controller: _alcoholController,
+                                                                                                                style: blackInputStyle(),
+                                                                                                                decoration: expenseChangeInputDecor('주류'),
+                                                                                                                inputFormatters: [wonMaskFormatter],
+                                                                                                              )),
+                                                                                                        ],
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                              Container(height: 3, width: size.width * 0.9,
+                                                                                                color: Colors.grey,
+                                                                                              ),
+                                                                                              SizedBox(height: 20,),
+                                                                                              Container(
+                                                                                                height: size.height*0.04,
+                                                                                                width: size.width*0.8,
+                                                                                                child: RaisedButton(
+                                                                                                    shape: RoundedRectangleBorder(
+                                                                                                      borderRadius: BorderRadius.circular(30),
+                                                                                                    ),
+                                                                                                    color: Colors.deepOrange,
+                                                                                                    child: Text('추가 지출 수정하기',style:  TextStyle(
+                                                                                                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15,
+                                                                                                        fontStyle: FontStyle.italic),),
+                                                                                                    onPressed: (){
+                                                                                                      Navigator.of(context).pop();
+                                                                                                      _editAddExpenseTitleController.clear();
+                                                                                                      _editAddExpenseAmountController.clear();
+
+                                                                                                      setState((){
+                                                                                                        showMaterialModalBottomSheet(
+                                                                                                            shape: RoundedRectangleBorder(
+                                                                                                              borderRadius: BorderRadius.circular(30),
+                                                                                                            ),
+                                                                                                            closeProgressThreshold: 5.0,
+                                                                                                            enableDrag: false,
+                                                                                                            elevation: 90.0,
+                                                                                                            animationCurve: Curves.fastOutSlowIn,
+                                                                                                            duration: Duration(milliseconds: 1500),
+                                                                                                            barrierColor: Colors.black87,
+                                                                                                            backgroundColor: Colors.deepOrangeAccent,
+                                                                                                            context: context,
+                                                                                                            builder: (BuildContext context){
+                                                                                                              return StatefulBuilder(
+                                                                                                                  builder: (BuildContext context, StateSetter setState){
+
+                                                                                                                    return Padding(
+                                                                                                                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                                                                      child: Container(
+                                                                                                                        height: size.height * 0.5,
+                                                                                                                        child: Column(
+                                                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                                                          children: <Widget>[
+                                                                                                                            Stack(
+                                                                                                                              children: [
+                                                                                                                                Positioned(left: 15, top: 15,
+                                                                                                                                  child: InkWell(
+                                                                                                                                    child: IconButton(
+                                                                                                                                      icon: Icon(Icons.arrow_downward_outlined, color: Colors.pink, size: 30,),
+                                                                                                                                      onPressed: () {
+                                                                                                                                        Navigator.of(context).pop();
+                                                                                                                                      },
+                                                                                                                                    ),
+                                                                                                                                  ),
+                                                                                                                                ),
+                                                                                                                                Positioned(right: 15, top: 30,
+                                                                                                                                  child: InkWell(
+                                                                                                                                    child: Text('Save',
+                                                                                                                                      style: TextStyle(
+                                                                                                                                        color: Colors.pink, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                                                      ),
+                                                                                                                                    ),
+                                                                                                                                    onTap: () {
+                                                                                                                                      FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                                                                          .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                                                        'foodProvisionExpense': _foodprovisionController.text,
+                                                                                                                                        'beverageExpense': _beverageController.text,
+                                                                                                                                        'alcoholExpense': _alcoholController.text,
+                                                                                                                                        'expenseAddList': FieldValue.arrayUnion(
+                                                                                                                                            upDateExpenseAddList)
+                                                                                                                                      });
+                                                                                                                                      Navigator.of(context).pop();
+                                                                                                                                      _foodprovisionController.clear();
+                                                                                                                                      _beverageController.clear();
+                                                                                                                                      _alcoholController.clear();
+                                                                                                                                    },
+                                                                                                                                  ),
+                                                                                                                                ),
+                                                                                                                                Column(
+                                                                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                                                  children: <Widget>[
+                                                                                                                                    SizedBox(height: 30,),
+                                                                                                                                    Container(
+                                                                                                                                      height: salTtfHeightSize,
+                                                                                                                                      child: Text(
+                                                                                                                                        snapshotData['selectedDate'],
+                                                                                                                                        style: TextStyle(
+                                                                                                                                          color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                                                        ),
+                                                                                                                                      ),
+                                                                                                                                    ),
+                                                                                                                                    Row(
+                                                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                                                                      children: <Widget>[
+                                                                                                                                        Container(
+                                                                                                                                            width: size.width*0.5,
+                                                                                                                                            height: expTtfHeightSize,
+                                                                                                                                            child: Badge(
+                                                                                                                                              showBadge: _titleBadge,
+                                                                                                                                              position: BadgePosition.topEnd(end: 10, top: 30),
+                                                                                                                                              badgeColor: Colors.red,
+                                                                                                                                              child: TextFormField(
+                                                                                                                                                keyboardType: TextInputType.text,
+                                                                                                                                                textInputAction: TextInputAction.next,
+                                                                                                                                                controller: _editAddExpenseTitleController,
+                                                                                                                                                style: blackInputStyle(),
+                                                                                                                                                decoration: editAddExpenseInputDecor('내용'),
+                                                                                                                                              ),
+                                                                                                                                            )),
+                                                                                                                                        Container(
+                                                                                                                                            width: size.width*0.3,
+                                                                                                                                            height: expTtfHeightSize,
+                                                                                                                                            child: Badge(
+                                                                                                                                              showBadge: _amountBadge,
+                                                                                                                                              position: BadgePosition.topEnd(end: 10, top: 30),
+                                                                                                                                              badgeColor: Colors.red,
+                                                                                                                                              child: TextFormField(
+                                                                                                                                                keyboardType: TextInputType.number,
+                                                                                                                                                textInputAction: TextInputAction.done,
+                                                                                                                                                controller: _editAddExpenseAmountController,
+                                                                                                                                                style: blackInputStyle(),
+                                                                                                                                                decoration: editAddExpenseInputDecor('지출금액'),
+                                                                                                                                                inputFormatters: [wonMaskFormatter],
+                                                                                                                                              ),
+                                                                                                                                            )),
+                                                                                                                                      ],
+                                                                                                                                    ),
+                                                                                                                                  ],
+                                                                                                                                ),
+                                                                                                                              ],
+                                                                                                                            ),
+                                                                                                                            Container(
+                                                                                                                              height: 30,
+                                                                                                                              width: size.width * 0.6,
+                                                                                                                              child: RaisedButton(
+                                                                                                                                onPressed: () {
+                                                                                                                                  setState(() {
+                                                                                                                                    FocusScope.of(context).unfocus();
+                                                                                                                                    if (_editAddExpenseTitleController.text.isEmpty) {
+                                                                                                                                      _titleBadge = true;
+                                                                                                                                      return snackBarManagementScreenTopFlushBar(context, '내용을 입력해 주세요');
+                                                                                                                                    } else if (_editAddExpenseAmountController.text.isEmpty) {
+                                                                                                                                      _titleBadge = false;
+                                                                                                                                      _amountBadge = true;
+                                                                                                                                      return snackBarManagementScreenTopFlushBar(context, '지출금액을 입력해 주세요');
+                                                                                                                                    }
+                                                                                                                                    _amountBadge = false;
+                                                                                                                                    _titleBadge = false;
+                                                                                                                                    upDateExpenseAddList.addAll([{
+                                                                                                                                      'title': _editAddExpenseTitleController.text.trim(),
+                                                                                                                                      'expenseAmount': _editAddExpenseAmountController.text.trim(),
+                                                                                                                                    }]);
+                                                                                                                                    // print(expenseAddMapList);
+                                                                                                                                  });
+                                                                                                                                  if(_titleBadge == false && _amountBadge == false)
+                                                                                                                                    _editAddExpenseTitleController.clear();
+                                                                                                                                  _editAddExpenseAmountController.clear();
+                                                                                                                                },
+                                                                                                                                elevation: 1,
+                                                                                                                                color: Colors.pink,
+                                                                                                                                splashColor: Colors.white,
+                                                                                                                                child: Text(
+                                                                                                                                  '추가하기',
+                                                                                                                                  style: TextStyle(
+                                                                                                                                      fontStyle: FontStyle.italic,
+                                                                                                                                      fontWeight: FontWeight.bold),
+                                                                                                                                ),
+                                                                                                                                shape: RoundedRectangleBorder(
+                                                                                                                                  borderRadius: BorderRadius.circular(30),
+                                                                                                                                ),
+                                                                                                                              ),
+                                                                                                                            ),
+                                                                                                                            StatefulBuilder(
+                                                                                                                              builder: (BuildContext context, StateSetter mySetState) {
+                                                                                                                                return Container(
+                                                                                                                                  height: size.height * 0.2,
+                                                                                                                                  width: size.width*0.9,
+                                                                                                                                  child: ListView.separated(
+                                                                                                                                    itemCount: upDateExpenseAddList.length,
+                                                                                                                                    itemBuilder: (BuildContext context, int index) {
+                                                                                                                                      return Column(
+                                                                                                                                        children: [
+                                                                                                                                          Row(
+                                                                                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                                                            children: <Widget>[
+                                                                                                                                              Container(
+                                                                                                                                                width: size.width*0.5,
+                                                                                                                                                child: Text(
+                                                                                                                                                  upDateExpenseAddList[index]['title'].toString(), style: TextStyle(
+                                                                                                                                                    color: Colors.white),
+                                                                                                                                                ),
+                                                                                                                                              ),
+                                                                                                                                              Expanded(
+                                                                                                                                                child: Container(
+                                                                                                                                                  width: size.width*0.2,
+                                                                                                                                                  child: Text(
+                                                                                                                                                    upDateExpenseAddList[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                                                                                                      color: Colors.white),),
+                                                                                                                                                ),
+                                                                                                                                              ),
+                                                                                                                                              InkWell(
+                                                                                                                                                child: Icon(Icons.delete_forever, color: Colors.pink,size: 20,),
+                                                                                                                                                onTap: (){
+                                                                                                                                                  FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                                                                                      .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                                                                    'expenseAddList': FieldValue.arrayRemove([
+                                                                                                                                                      upDateExpenseAddList[index]]),
+                                                                                                                                                  });
+                                                                                                                                                  mySetState((){
+                                                                                                                                                    print(upDateExpenseAddList);
+                                                                                                                                                    upDateExpenseAddList.removeAt(index);
+                                                                                                                                                    print(upDateExpenseAddList);
+                                                                                                                                                  });
+                                                                                                                                                },
+                                                                                                                                              ),
+                                                                                                                                            ],
+                                                                                                                                          ),
+                                                                                                                                        ],
+                                                                                                                                      );
+                                                                                                                                    }, separatorBuilder: (BuildContext context, int index) {
+                                                                                                                                    return Container(height: 15,);
+                                                                                                                                  },
+                                                                                                                                  ),
+                                                                                                                                );
+                                                                                                                              },
+                                                                                                                            ),
+                                                                                                                          ],
+
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                    );
+                                                                                                                  });
+                                                                                                            });
+                                                                                                      });
+                                                                                                    }),
+                                                                                              ),
+                                                                                              StatefulBuilder(
+                                                                                                builder: (BuildContext context, StateSetter mySetState) {
+
+
+                                                                                                  return Container(
+                                                                                                    height: size.height * 0.17,
+                                                                                                    width: size.width*0.9,
+                                                                                                    child: ListView.separated(
+                                                                                                      itemCount: addListToExpense.length,
+                                                                                                      itemBuilder: (BuildContext context, int index) {
+                                                                                                        return Column(
+                                                                                                          children: [
+                                                                                                            Row(
+                                                                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                              children: <Widget>[
+                                                                                                                Container(
+                                                                                                                  width: size.width*0.5,
+                                                                                                                  child: Text(
+                                                                                                                    addListToExpense[index]['title'].toString(), style: TextStyle(
+                                                                                                                      color: Colors.white),
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                                Expanded(
+                                                                                                                  child: Container(
+                                                                                                                    width: size.width*0.2,
+                                                                                                                    child: Text(
+                                                                                                                      addListToExpense[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                                                                        color: Colors.white),),
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                              ],
+                                                                                                            ),
+                                                                                                          ],
+                                                                                                        );
+                                                                                                      }, separatorBuilder: (BuildContext context, int index) {
+                                                                                                      return Container(height: 15,);
+                                                                                                    },
+                                                                                                    ),
+                                                                                                  );
+                                                                                                },
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  );
+                                                                                }
+                                                                            );
+                                                                          });
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                      );
+                                                    });
+
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              });
+                            },
+                            child: _foldingFrontWidget(snapshotData)),
+                        innerWidget: _foldingInnerWidget(snapshotData),
+                        cellSize: Size(MediaQuery.of(context).size.width, 90),
+                        padding: EdgeInsets.all(12),
+                        animationDuration: Duration(milliseconds: 300),
+                        borderRadius: 20,
+                        onOpen: () => print('cell opened'),
+                        onClose: () => print('cell closed'),
+                      );
+                    }).toList(),
                   ),
-                  Flexible(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: snapshot.data.docs.map((snapshotData) {
-                        return SimpleFoldingCell.create(
-                          // frontWidget: _buildFrontWidget(),
-                          frontWidget: GestureDetector(
-                              onTap: () {
-                                  print('short click');
-                              },
-                              onLongPress: () async {
-                                setState(() {
-                                  _managementBottomSheet(
-                                      context, snapshotData, userModel, snapshot);
-                                });
-                              },
-                              child: _foldingFrontWidget(snapshotData)),
-                          innerWidget: _foldingInnerWidget(snapshotData),
-                          cellSize: Size(MediaQuery.of(context).size.width, 90),
-                          padding: EdgeInsets.all(12),
-                          animationDuration: Duration(milliseconds: 300),
-                          borderRadius: 20,
-                          onOpen: () => print('cell opened'),
-                          onClose: () => print('cell closed'),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        },
+          ),
+        );
+      },
     );
   }
 
@@ -223,575 +923,581 @@ class _ManagementScreenState extends State<ManagementScreen> {
                         _alcoholController.text = snapshotData['alcoholExpense'];
 
                         setState((){
-                        showModalBottomSheet(
-                          backgroundColor: Colors.redAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30)),
-                          ),
-                          context: context,
-                          builder: (BuildContext context) {
-                            return StatefulBuilder(
-                              builder: (BuildContext context, StateSetter setState) {
-                                return Container(
-                                  height: size.height * 0.08,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Container(
-                                        width: size.width * 0.4,
-                                        child: ListTile(horizontalTitleGap: 0.01,
-                                          leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
-                                          ),
-                                          title: Text('매출',
-                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-                                          ),
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                            print('매출 click');
-                                            setState(() {
+                          showModalBottomSheet(
+                            backgroundColor: Colors.redAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30)),
+                            ),
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(
+                                builder: (BuildContext context, StateSetter setState) {
+                                  return Container(
+                                    height: size.height * 0.08,
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        Container(
+                                          width: size.width * 0.4,
+                                          child: ListTile(horizontalTitleGap: 0.01,
+                                            leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
+                                            ),
+                                            title: Text('매출',
+                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                            ),
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              print('매출 click');
+                                              setState(() {
 
-                                              showMaterialModalBottomSheet(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(30),
-                                                  ),
-                                                  closeProgressThreshold: 5.0,
-                                                  enableDrag: false,
-                                                  animationCurve: Curves.fastOutSlowIn,
-                                                  duration: Duration(milliseconds: 1500),
-                                                  barrierColor: Colors.black87,
-                                                  backgroundColor: Colors.black,
-                                                  context: context,
-                                                  builder: (BuildContext context) {
+                                                showMaterialModalBottomSheet(
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(30),
+                                                    ),
+                                                    closeProgressThreshold: 5.0,
+                                                    enableDrag: false,
+                                                    animationCurve: Curves.fastOutSlowIn,
+                                                    duration: Duration(milliseconds: 1500),
+                                                    barrierColor: Colors.black87,
+                                                    backgroundColor: Colors.black,
+                                                    context: context,
+                                                    builder: (BuildContext context) {
 
-                                                    return StatefulBuilder(
-                                                      builder: (BuildContext context, StateSetter setState){
+                                                      return StatefulBuilder(
+                                                        builder: (BuildContext context, StateSetter setState){
 
-                                                        return Padding(
-                                                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                                          child: Container(
-                                                            height: size.height * 0.5,
-                                                            child: Stack(
-                                                              children: [
-                                                                Positioned(left: 15, top: 30,
-                                                                  child: InkWell(
-                                                                    child: Text('Cancel',
-                                                                      style: TextStyle(color: Colors.amberAccent, fontSize: 20, fontWeight: FontWeight.bold,
-                                                                        fontStyle: FontStyle.italic,
-                                                                      ),
-                                                                    ),
-                                                                    onTap: () {
-                                                                      Navigator.of(context).pop();
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                                Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: <Widget>[
-                                                                    SizedBox(height: 30,),
-                                                                    Container(height: salTtfHeightSize,
-                                                                      child: Text(snapshotData['selectedDate'],
-                                                                        style: TextStyle(color: Colors.indigo, fontSize: 22,
-                                                                          fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                          return Padding(
+                                                            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                            child: Container(
+                                                              height: size.height * 0.5,
+                                                              child: Stack(
+                                                                children: [
+                                                                  Positioned(left: 15, top: 30,
+                                                                    child: InkWell(
+                                                                      child: Text('Cancel',
+                                                                        style: TextStyle(color: Colors.amberAccent, fontSize: 20, fontWeight: FontWeight.bold,
+                                                                          fontStyle: FontStyle.italic,
                                                                         ),
                                                                       ),
+                                                                      onTap: () {
+                                                                        Navigator.of(context).pop();
+                                                                      },
                                                                     ),
-                                                                    Row(
-                                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                      children: <Widget>[
-                                                                        Container(width: salTtfWidthSize,
-                                                                            height: salTtfHeightSize,
-                                                                            child: TextFormField(
-                                                                              controller: _totalSalesController,
-                                                                              style: blackInputStyle(),
-                                                                              decoration: salesChangeInputDecor('총매출'),
-                                                                              inputFormatters: [wonMaskFormatter],
-                                                                            )),
-                                                                        Container(width: salTtfWidthSize,
-                                                                            height: salTtfHeightSize,
-                                                                            child: TextFormField(
-                                                                              controller: _actualSalesController,
-                                                                              style: blackInputStyle(),
-                                                                              decoration: salesChangeInputDecor('실제매출'),
-                                                                              inputFormatters: [wonMaskFormatter],
-                                                                            )),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Positioned(right: 15, top: 30,
-                                                                  child: InkWell(
-                                                                    child: Text('Save',
-                                                                      style: TextStyle(
-                                                                        color: Colors.amberAccent, fontSize: 20,
-                                                                        fontWeight: FontWeight.bold,
-                                                                        fontStyle: FontStyle.italic,
-                                                                      ),
-                                                                    ),
-                                                                    onTap: () {
-                                                                      FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-                                                                          .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                        'totalSales': _totalSalesController.text,
-                                                                        'actualSales': _actualSalesController.text,
-                                                                      });
-                                                                      Navigator.of(context).pop();
-                                                                      _totalSalesController.clear();
-                                                                      _actualSalesController.clear();
-                                                                    },
                                                                   ),
-                                                                ),
-                                                              ],
+                                                                  Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                    children: <Widget>[
+                                                                      SizedBox(height: 30,),
+                                                                      Container(height: salTtfHeightSize,
+                                                                        child: Text(snapshotData['selectedDate'],
+                                                                          style: TextStyle(color: Colors.indigo, fontSize: 22,
+                                                                            fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Row(
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                        children: <Widget>[
+                                                                          Container(width: salTtfWidthSize,
+                                                                              height: salTtfHeightSize,
+                                                                              child: TextFormField(
+                                                                                controller: _totalSalesController,
+                                                                                style: blackInputStyle(),
+                                                                                decoration: salesChangeInputDecor('총매출'),
+                                                                                inputFormatters: [wonMaskFormatter],
+                                                                              )),
+                                                                          Container(width: salTtfWidthSize,
+                                                                              height: salTtfHeightSize,
+                                                                              child: TextFormField(
+                                                                                controller: _actualSalesController,
+                                                                                style: blackInputStyle(),
+                                                                                decoration: salesChangeInputDecor('실제매출'),
+                                                                                inputFormatters: [wonMaskFormatter],
+                                                                              )),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Positioned(right: 15, top: 30,
+                                                                    child: InkWell(
+                                                                      child: Text('Save',
+                                                                        style: TextStyle(
+                                                                          color: Colors.amberAccent, fontSize: 20,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          fontStyle: FontStyle.italic,
+                                                                        ),
+                                                                      ),
+                                                                      onTap: () {
+                                                                        FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                            .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                          'totalSales': _totalSalesController.text,
+                                                                          'actualSales': _actualSalesController.text,
+                                                                        });
+                                                                        Navigator.of(context).pop();
+                                                                        _totalSalesController.clear();
+                                                                        _actualSalesController.clear();
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  }
-                                              );
-                                            });
-                                          },
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                );
+                                              });
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      Container(color: Colors.red,
-                                        height: size.height * 0.04,
-                                        width: size.width * 0.01,
-                                      ),
-                                      Container(
-                                        width: size.width * 0.4,
-                                        child: ListTile(horizontalTitleGap: 0.01,
-                                          leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
-                                          ),
-                                          title: Text('지출',
-                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-                                          ),
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                            print('지출 click');
+                                        Container(color: Colors.red,
+                                          height: size.height * 0.04,
+                                          width: size.width * 0.01,
+                                        ),
+                                        Container(
+                                          width: size.width * 0.4,
+                                          child: ListTile(horizontalTitleGap: 0.01,
+                                            leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
+                                            ),
+                                            title: Text('지출',
+                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                            ),
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              print('지출 click');
 
 
-                                            setState(() {
+                                              setState(() {
 
 
-                                              showMaterialModalBottomSheet(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(30),
-                                                  ),
-                                                  closeProgressThreshold: 5.0,
-                                                  enableDrag: false,
-                                                  elevation: 90.0,
-                                                  animationCurve: Curves.fastOutSlowIn,
-                                                  duration: Duration(milliseconds: 1500),
-                                                  barrierColor: Colors.black87,
-                                                  backgroundColor: Colors.black,
-                                                  context: context,
-                                                  builder: (BuildContext context) {
+                                                showMaterialModalBottomSheet(
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(30),
+                                                    ),
+                                                    closeProgressThreshold: 5.0,
+                                                    enableDrag: false,
+                                                    elevation: 90.0,
+                                                    animationCurve: Curves.fastOutSlowIn,
+                                                    duration: Duration(milliseconds: 1500),
+                                                    barrierColor: Colors.black87,
+                                                    backgroundColor: Colors.black,
+                                                    context: context,
+                                                    builder: (BuildContext context) {
 
-                                                    var upDateExpenseAddList = [];
-                                                    upDateExpenseAddList.addAll(snapshotData.data()['expenseAddList'],);
+                                                      var upDateExpenseAddList = [];
+                                                      upDateExpenseAddList.addAll(snapshotData.data()['expenseAddList'],);
 
-                                                    bool _titleBadge = false;
-                                                    bool _amountBadge = false;
+                                                      bool _titleBadge = false;
+                                                      bool _amountBadge = false;
 
 
-                                                    return StatefulBuilder(
-                                                      builder: (BuildContext context, StateSetter setState) {
+                                                      return StatefulBuilder(
+                                                        builder: (BuildContext context, StateSetter setState) {
 
-                                                        var addListToExpense = snapshotData.data()['expenseAddList'];
+                                                          var addListToExpense = snapshotData.data()['expenseAddList'];
 
-                                                        return Padding(
-                                                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                                          child: Container(
-                                                            height: size.height * 0.5,
-                                                            child: Column(
-                                                              mainAxisSize: MainAxisSize.min,
-                                                              children: [
-                                                                Stack(
-                                                                  children: [
-                                                                    Positioned(left: 15, top: 30,
-                                                                      child: InkWell(
-                                                                        child: Text('Cancel',
-                                                                          style: TextStyle(color: Colors.redAccent, fontSize: 20,
-                                                                            fontWeight: FontWeight.bold,
-                                                                            fontStyle: FontStyle.italic,
+                                                          return Padding(
+                                                            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                            child: Container(
+                                                              height: size.height * 0.5,
+                                                              child: Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: [
+                                                                  Stack(
+                                                                    children: [
+                                                                      Positioned(left: 15, top: 30,
+                                                                        child: InkWell(
+                                                                          child: Text('Cancel',
+                                                                            style: TextStyle(color: Colors.redAccent, fontSize: 20,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontStyle: FontStyle.italic,
+                                                                            ),
                                                                           ),
+                                                                          onTap: () {
+                                                                            Navigator.of(context).pop();
+                                                                          },
                                                                         ),
-                                                                        onTap: () {
-                                                                          Navigator.of(context).pop();
-                                                                        },
                                                                       ),
-                                                                    ),
-                                                                    Positioned(right: 15, top: 30,
-                                                                      child: InkWell(
-                                                                        child: Text('Save',
-                                                                          style: TextStyle(
-                                                                            color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
-                                                                          ),
-                                                                        ),
-                                                                        onTap: () {
-                                                                          FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-                                                                              .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                            'foodProvisionExpense': _foodprovisionController.text,
-                                                                            'beverageExpense': _beverageController.text,
-                                                                            'alcoholExpense': _alcoholController.text,
-                                                                            // 'expenseAddList': FieldValue.arrayUnion([{
-                                                                            //   upDateExpenseAddList.first, upDateExpenseAddList.last}]),
-                                                                          });
-                                                                          Navigator.of(context).pop();
-                                                                          _foodprovisionController.clear();
-                                                                          _beverageController.clear();
-                                                                          _alcoholController.clear();
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                    Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                      children: <Widget>[
-                                                                        SizedBox(height: 30,),
-                                                                        Container(
-                                                                          height: salTtfHeightSize,
-                                                                          child: Text(
-                                                                            snapshotData['selectedDate'],
+                                                                      Positioned(right: 15, top: 30,
+                                                                        child: InkWell(
+                                                                          child: Text('Save',
                                                                             style: TextStyle(
-                                                                              color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                              color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
                                                                             ),
                                                                           ),
+                                                                          onTap: () {
+                                                                            FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                              'foodProvisionExpense': _foodprovisionController.text,
+                                                                              'beverageExpense': _beverageController.text,
+                                                                              'alcoholExpense': _alcoholController.text,
+                                                                              // 'expenseAddList': FieldValue.arrayUnion([{
+                                                                              //   upDateExpenseAddList.first, upDateExpenseAddList.last}]),
+                                                                            });
+                                                                            Navigator.of(context).pop();
+                                                                            _foodprovisionController.clear();
+                                                                            _beverageController.clear();
+                                                                            _alcoholController.clear();
+                                                                          },
                                                                         ),
-                                                                        Row(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                          children: <Widget>[
-                                                                            Container(width: expTtfWidthSize,
-                                                                                height: expTtfHeightSize,
-                                                                                child: TextFormField(
-                                                                                  controller: _foodprovisionController,
-                                                                                  style: blackInputStyle(),
-                                                                                  decoration: expenseChangeInputDecor('식자재'),
-                                                                                  inputFormatters: [wonMaskFormatter],
-                                                                                )),
-                                                                            Container(width: expTtfWidthSize,
-                                                                                height: expTtfHeightSize,
-                                                                                child: TextFormField(
-                                                                                  controller: _beverageController,
-                                                                                  style: blackInputStyle(),
-                                                                                  decoration: expenseChangeInputDecor('음료'),
-                                                                                  inputFormatters: [wonMaskFormatter],
-                                                                                )),
-                                                                            Container(
-                                                                                width: expTtfWidthSize,
-                                                                                height: expTtfHeightSize,
-                                                                                child: TextFormField(
-                                                                                  controller: _alcoholController,
-                                                                                  style: blackInputStyle(),
-                                                                                  decoration: expenseChangeInputDecor('주류'),
-                                                                                  inputFormatters: [wonMaskFormatter],
-                                                                                )),
-                                                                          ],
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Container(height: 3, width: size.width * 0.9,
-                                                                  color: Colors.grey,
-                                                                ),
-                                                                SizedBox(height: 20,),
-                                                                Container(
-                                                                  height: size.height*0.04,
-                                                                  width: size.width*0.8,
-                                                                  child: RaisedButton(
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(30),
-                                                                    ),
-                                                                      color: Colors.deepOrange,
-                                                                      child: Text('추가 지출 수정하기',style:  TextStyle(
-                                                                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15,
-                                                                      fontStyle: FontStyle.italic),),
-                                                                      onPressed: (){
-                                                                      setState((){
-                                                                        showMaterialModalBottomSheet(
-                                                                            shape: RoundedRectangleBorder(
-                                                                              borderRadius: BorderRadius.circular(30),
+                                                                      ),
+                                                                      Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                        children: <Widget>[
+                                                                          SizedBox(height: 30,),
+                                                                          Container(
+                                                                            height: salTtfHeightSize,
+                                                                            child: Text(
+                                                                              snapshotData['selectedDate'],
+                                                                              style: TextStyle(
+                                                                                color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                              ),
                                                                             ),
-                                                                            closeProgressThreshold: 5.0,
-                                                                            enableDrag: false,
-                                                                            elevation: 90.0,
-                                                                            animationCurve: Curves.fastOutSlowIn,
-                                                                            duration: Duration(milliseconds: 1500),
-                                                                            barrierColor: Colors.black87,
-                                                                            backgroundColor: Colors.deepOrangeAccent,
-                                                                            context: context,
-                                                                            builder: (BuildContext context){
-                                                                              return StatefulBuilder(
-                                                                                  builder: (BuildContext context, StateSetter setState){
+                                                                          ),
+                                                                          Row(
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                            children: <Widget>[
+                                                                              Container(width: expTtfWidthSize,
+                                                                                  height: expTtfHeightSize,
+                                                                                  child: TextFormField(
+                                                                                    controller: _foodprovisionController,
+                                                                                    style: blackInputStyle(),
+                                                                                    decoration: expenseChangeInputDecor('식자재'),
+                                                                                    inputFormatters: [wonMaskFormatter],
+                                                                                  )),
+                                                                              Container(width: expTtfWidthSize,
+                                                                                  height: expTtfHeightSize,
+                                                                                  child: TextFormField(
+                                                                                    controller: _beverageController,
+                                                                                    style: blackInputStyle(),
+                                                                                    decoration: expenseChangeInputDecor('음료'),
+                                                                                    inputFormatters: [wonMaskFormatter],
+                                                                                  )),
+                                                                              Container(
+                                                                                  width: expTtfWidthSize,
+                                                                                  height: expTtfHeightSize,
+                                                                                  child: TextFormField(
+                                                                                    controller: _alcoholController,
+                                                                                    style: blackInputStyle(),
+                                                                                    decoration: expenseChangeInputDecor('주류'),
+                                                                                    inputFormatters: [wonMaskFormatter],
+                                                                                  )),
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Container(height: 3, width: size.width * 0.9,
+                                                                    color: Colors.grey,
+                                                                  ),
+                                                                  SizedBox(height: 20,),
+                                                                  Container(
+                                                                    height: size.height*0.04,
+                                                                    width: size.width*0.8,
+                                                                    child: RaisedButton(
+                                                                        shape: RoundedRectangleBorder(
+                                                                          borderRadius: BorderRadius.circular(30),
+                                                                        ),
+                                                                        color: Colors.deepOrange,
+                                                                        child: Text('추가 지출 수정하기',style:  TextStyle(
+                                                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15,
+                                                                            fontStyle: FontStyle.italic),),
+                                                                        onPressed: (){
+                                                                          Navigator.of(context).pop();
+                                                                          _editAddExpenseTitleController.clear();
+                                                                          _editAddExpenseAmountController.clear();
 
-                                                                                    return Padding(
-                                                                                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                                                                      child: Container(
-                                                                                        height: size.height * 0.5,
-                                                                                        child: Column(
-                                                                                          mainAxisSize: MainAxisSize.min,
-                                                                                          children: <Widget>[
-                                                                                            Stack(
-                                                                                              children: [
-                                                                                                Positioned(left: 15, top: 30,
-                                                                                                  child: InkWell(
-                                                                                                    child: Text('Cancel',
-                                                                                                      style: TextStyle(color: Colors.pink, fontSize: 20,
-                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                        fontStyle: FontStyle.italic,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    onTap: () {
-                                                                                                      Navigator.of(context).pop();
-                                                                                                    },
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Positioned(right: 15, top: 30,
-                                                                                                  child: InkWell(
-                                                                                                    child: Text('Save',
-                                                                                                      style: TextStyle(
-                                                                                                        color: Colors.pink, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    onTap: () {
-                                                                                                      FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-                                                                                                          .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                                                        'foodProvisionExpense': _foodprovisionController.text,
-                                                                                                        'beverageExpense': _beverageController.text,
-                                                                                                        'alcoholExpense': _alcoholController.text,
-                                                                                                        'expenseAddList': FieldValue.arrayUnion([
-                                                                                                            upDateExpenseAddList.first, upDateExpenseAddList.last])
-                                                                                                      });
-                                                                                                      Navigator.of(context).pop();
-                                                                                                      _foodprovisionController.clear();
-                                                                                                      _beverageController.clear();
-                                                                                                      _alcoholController.clear();
-                                                                                                    },
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Column(
-                                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                  children: <Widget>[
-                                                                                                    SizedBox(height: 30,),
-                                                                                                    Container(
-                                                                                                      height: salTtfHeightSize,
-                                                                                                      child: Text(
-                                                                                                        snapshotData['selectedDate'],
-                                                                                                        style: TextStyle(
-                                                                                                          color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                          setState((){
+                                                                            showMaterialModalBottomSheet(
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(30),
+                                                                                ),
+                                                                                closeProgressThreshold: 5.0,
+                                                                                enableDrag: false,
+                                                                                elevation: 90.0,
+                                                                                animationCurve: Curves.fastOutSlowIn,
+                                                                                duration: Duration(milliseconds: 1500),
+                                                                                barrierColor: Colors.black87,
+                                                                                backgroundColor: Colors.deepOrangeAccent,
+                                                                                context: context,
+                                                                                builder: (BuildContext context){
+                                                                                  return StatefulBuilder(
+                                                                                      builder: (BuildContext context, StateSetter setState){
+
+                                                                                        return Padding(
+                                                                                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                                          child: Container(
+                                                                                            height: size.height * 0.5,
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.min,
+                                                                                              children: <Widget>[
+                                                                                                Stack(
+                                                                                                  children: [
+                                                                                                    Positioned(left: 15, top: 15,
+                                                                                                      child: InkWell(
+                                                                                                        child: IconButton(
+                                                                                                          icon: Icon(Icons.arrow_downward_outlined, color: Colors.pink, size: 30,),
+                                                                                                          onPressed: () {
+                                                                                                            Navigator.of(context).pop();
+                                                                                                          },
                                                                                                         ),
                                                                                                       ),
                                                                                                     ),
-                                                                                                    Row(
-                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                                    Positioned(right: 15, top: 30,
+                                                                                                      child: InkWell(
+                                                                                                        child: Text('Save',
+                                                                                                          style: TextStyle(
+                                                                                                            color: Colors.pink, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        onTap: () {
+                                                                                                          FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                                              .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                            'foodProvisionExpense': _foodprovisionController.text,
+                                                                                                            'beverageExpense': _beverageController.text,
+                                                                                                            'alcoholExpense': _alcoholController.text,
+                                                                                                            'expenseAddList': FieldValue.arrayUnion(
+                                                                                                              upDateExpenseAddList)
+                                                                                                          });
+                                                                                                          Navigator.of(context).pop();
+                                                                                                          _foodprovisionController.clear();
+                                                                                                          _beverageController.clear();
+                                                                                                          _alcoholController.clear();
+                                                                                                        },
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    Column(
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
                                                                                                       children: <Widget>[
+                                                                                                        SizedBox(height: 30,),
                                                                                                         Container(
-                                                                                                            width: size.width*0.5,
-                                                                                                            height: expTtfHeightSize,
-                                                                                                            child: Badge(
-                                                                                                              showBadge: _titleBadge,
-                                                                                                              position: BadgePosition.topEnd(end: 10, top: 30),
-                                                                                                              badgeColor: Colors.red,
-                                                                                                              child: TextFormField(
-                                                                                                                controller: _editAddExpenseTitleController,
-                                                                                                                style: blackInputStyle(),
-                                                                                                                decoration: editAddExpenseInputDecor('내용'),
-                                                                                                              ),
-                                                                                                            )),
-                                                                                                        Container(
-                                                                                                            width: size.width*0.3,
-                                                                                                            height: expTtfHeightSize,
-                                                                                                            child: Badge(
-                                                                                                              showBadge: _amountBadge,
-                                                                                                              position: BadgePosition.topEnd(end: 10, top: 30),
-                                                                                                              badgeColor: Colors.red,
-                                                                                                              child: TextFormField(
-                                                                                                                controller: _editAddExpenseAmountController,
-                                                                                                                style: blackInputStyle(),
-                                                                                                                decoration: editAddExpenseInputDecor('지출금액'),
-                                                                                                                inputFormatters: [wonMaskFormatter],
-                                                                                                              ),
-                                                                                                            )),
+                                                                                                          height: salTtfHeightSize,
+                                                                                                          child: Text(
+                                                                                                            snapshotData['selectedDate'],
+                                                                                                            style: TextStyle(
+                                                                                                              color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        Row(
+                                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                                          children: <Widget>[
+                                                                                                            Container(
+                                                                                                                width: size.width*0.5,
+                                                                                                                height: expTtfHeightSize,
+                                                                                                                child: Badge(
+                                                                                                                  showBadge: _titleBadge,
+                                                                                                                  position: BadgePosition.topEnd(end: 10, top: 30),
+                                                                                                                  badgeColor: Colors.red,
+                                                                                                                  child: TextFormField(
+                                                                                                                    keyboardType: TextInputType.text,
+                                                                                                                    textInputAction: TextInputAction.next,
+                                                                                                                    controller: _editAddExpenseTitleController,
+                                                                                                                    style: blackInputStyle(),
+                                                                                                                    decoration: editAddExpenseInputDecor('내용'),
+                                                                                                                  ),
+                                                                                                                )),
+                                                                                                            Container(
+                                                                                                                width: size.width*0.3,
+                                                                                                                height: expTtfHeightSize,
+                                                                                                                child: Badge(
+                                                                                                                  showBadge: _amountBadge,
+                                                                                                                  position: BadgePosition.topEnd(end: 10, top: 30),
+                                                                                                                  badgeColor: Colors.red,
+                                                                                                                  child: TextFormField(
+                                                                                                                    keyboardType: TextInputType.number,
+                                                                                                                    textInputAction: TextInputAction.done,
+                                                                                                                    controller: _editAddExpenseAmountController,
+                                                                                                                    style: blackInputStyle(),
+                                                                                                                    decoration: editAddExpenseInputDecor('지출금액'),
+                                                                                                                    inputFormatters: [wonMaskFormatter],
+                                                                                                                  ),
+                                                                                                                )),
+                                                                                                          ],
+                                                                                                        ),
                                                                                                       ],
                                                                                                     ),
                                                                                                   ],
                                                                                                 ),
-                                                                                              ],
-                                                                                            ),
-                                                                                            Container(
-                                                                                              height: 30,
-                                                                                              width: size.width * 0.6,
-                                                                                              child: RaisedButton(
-                                                                                                onPressed: () {
-                                                                                                  setState(() {
-                                                                                                    FocusScope.of(context).unfocus();
-                                                                                                    if (_editAddExpenseTitleController.text.isEmpty) {
-                                                                                                      _titleBadge = true;
-                                                                                                      return print('title 없어');
-                                                                                                    } else if (_editAddExpenseAmountController.text.isEmpty) {
-                                                                                                      _titleBadge = false;
-                                                                                                      _amountBadge = true;
-                                                                                                      return print('금액 없어');
-                                                                                                    }
-                                                                                                    _amountBadge = false;
-                                                                                                    upDateExpenseAddList.addAll([{
-                                                                                                      'title': _editAddExpenseTitleController.text.trim(),
-                                                                                                      'expenseAmount': _editAddExpenseAmountController.text.trim(),
-                                                                                                    }]);
-                                                                                                    // print(expenseAddMapList);
-                                                                                                  });
-                                                                                                  if(_titleBadge == false && _amountBadge == false)
-                                                                                                    _editAddExpenseTitleController.clear();
-                                                                                                  _editAddExpenseAmountController.clear();
-                                                                                                },
-                                                                                                elevation: 1,
-                                                                                                color: Colors.pink,
-                                                                                                splashColor: Colors.white,
-                                                                                                child: Text(
-                                                                                                  '추가하기',
-                                                                                                  style: TextStyle(
-                                                                                                      fontStyle: FontStyle.italic,
-                                                                                                      fontWeight: FontWeight.bold),
+                                                                                                Container(
+                                                                                                  height: 30,
+                                                                                                  width: size.width * 0.6,
+                                                                                                  child: RaisedButton(
+                                                                                                    onPressed: () {
+                                                                                                      setState(() {
+                                                                                                        FocusScope.of(context).unfocus();
+                                                                                                        if (_editAddExpenseTitleController.text.isEmpty) {
+                                                                                                          _titleBadge = true;
+                                                                                                          return snackBarManagementScreenTopFlushBar(context, '내용을 입력해 주세요');
+                                                                                                        } else if (_editAddExpenseAmountController.text.isEmpty) {
+                                                                                                          _titleBadge = false;
+                                                                                                          _amountBadge = true;
+                                                                                                          return snackBarManagementScreenTopFlushBar(context, '지출금액을 입력해 주세요');
+                                                                                                        }
+                                                                                                        _amountBadge = false;
+                                                                                                        _titleBadge = false;
+                                                                                                        upDateExpenseAddList.addAll([{
+                                                                                                          'title': _editAddExpenseTitleController.text.trim(),
+                                                                                                          'expenseAmount': _editAddExpenseAmountController.text.trim(),
+                                                                                                        }]);
+                                                                                                        // print(expenseAddMapList);
+                                                                                                      });
+                                                                                                      if(_titleBadge == false && _amountBadge == false)
+                                                                                                        _editAddExpenseTitleController.clear();
+                                                                                                      _editAddExpenseAmountController.clear();
+                                                                                                    },
+                                                                                                    elevation: 1,
+                                                                                                    color: Colors.pink,
+                                                                                                    splashColor: Colors.white,
+                                                                                                    child: Text(
+                                                                                                      '추가하기',
+                                                                                                      style: TextStyle(
+                                                                                                          fontStyle: FontStyle.italic,
+                                                                                                          fontWeight: FontWeight.bold),
+                                                                                                    ),
+                                                                                                    shape: RoundedRectangleBorder(
+                                                                                                      borderRadius: BorderRadius.circular(30),
+                                                                                                    ),
+                                                                                                  ),
                                                                                                 ),
-                                                                                                shape: RoundedRectangleBorder(
-                                                                                                  borderRadius: BorderRadius.circular(30),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                            StatefulBuilder(
-                                                                                              builder: (BuildContext context, StateSetter mySetState) {
-                                                                                                return Container(
-                                                                                                  height: size.height * 0.2,
-                                                                                                  width: size.width*0.9,
-                                                                                                  child: ListView.separated(
-                                                                                                    itemCount: upDateExpenseAddList.length,
-                                                                                                    itemBuilder: (BuildContext context, int index) {
-                                                                                                      return Column(
-                                                                                                        children: [
-                                                                                                          Row(
-                                                                                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                                            children: <Widget>[
-                                                                                                              Container(
-                                                                                                                width: size.width*0.5,
-                                                                                                                child: Text(
-                                                                                                                  upDateExpenseAddList[index]['title'].toString(), style: TextStyle(
-                                                                                                                    color: Colors.white),
-                                                                                                                ),
-                                                                                                              ),
-                                                                                                              Expanded(
-                                                                                                                child: Container(
-                                                                                                                  width: size.width*0.2,
-                                                                                                                  child: Text(
-                                                                                                                    upDateExpenseAddList[index]['expenseAmount'].toString(), style: TextStyle(
-                                                                                                                      color: Colors.white),),
-                                                                                                                ),
-                                                                                                              ),
-                                                                                                              InkWell(
-                                                                                                                child: Icon(Icons.delete_forever, color: Colors.pink,size: 20,),
-                                                                                                                onTap: (){
-                                                                                                                  FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-                                                                                                                      .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                                                                    'expenseAddList': FieldValue.arrayRemove([
-                                                                                                                      upDateExpenseAddList[index]]),
-                                                                                                                  });
-                                                                                                                  mySetState((){
-                                                                                                                    print(upDateExpenseAddList);
-                                                                                                                    upDateExpenseAddList.removeAt(index);
-                                                                                                                    print(upDateExpenseAddList);
-                                                                                                                  });
-                                                                                                                },
+                                                                                                StatefulBuilder(
+                                                                                                  builder: (BuildContext context, StateSetter mySetState) {
+                                                                                                    return Container(
+                                                                                                      height: size.height * 0.2,
+                                                                                                      width: size.width*0.9,
+                                                                                                      child: ListView.separated(
+                                                                                                        itemCount: upDateExpenseAddList.length,
+                                                                                                        itemBuilder: (BuildContext context, int index) {
+                                                                                                          return Column(
+                                                                                                            children: [
+                                                                                                              Row(
+                                                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                                children: <Widget>[
+                                                                                                                  Container(
+                                                                                                                    width: size.width*0.5,
+                                                                                                                    child: Text(
+                                                                                                                      upDateExpenseAddList[index]['title'].toString(), style: TextStyle(
+                                                                                                                        color: Colors.white),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  Expanded(
+                                                                                                                    child: Container(
+                                                                                                                      width: size.width*0.2,
+                                                                                                                      child: Text(
+                                                                                                                        upDateExpenseAddList[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                                                                          color: Colors.white),),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  InkWell(
+                                                                                                                    child: Icon(Icons.delete_forever, color: Colors.pink,size: 20,),
+                                                                                                                    onTap: (){
+                                                                                                                      FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+                                                                                                                          .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                                        'expenseAddList': FieldValue.arrayRemove([
+                                                                                                                          upDateExpenseAddList[index]]),
+                                                                                                                      });
+                                                                                                                      mySetState((){
+                                                                                                                        print(upDateExpenseAddList);
+                                                                                                                        upDateExpenseAddList.removeAt(index);
+                                                                                                                        print(upDateExpenseAddList);
+                                                                                                                      });
+                                                                                                                    },
+                                                                                                                  ),
+                                                                                                                ],
                                                                                                               ),
                                                                                                             ],
-                                                                                                          ),
-                                                                                                        ],
-                                                                                                      );
-                                                                                                    }, separatorBuilder: (BuildContext context, int index) {
-                                                                                                    return Container(height: 15,);
+                                                                                                          );
+                                                                                                        }, separatorBuilder: (BuildContext context, int index) {
+                                                                                                        return Container(height: 15,);
+                                                                                                      },
+                                                                                                      ),
+                                                                                                    );
                                                                                                   },
-                                                                                                  ),
-                                                                                                );
-                                                                                              },
+                                                                                                ),
+                                                                                              ],
+
                                                                                             ),
-                                                                                          ],
-
-                                                                                        ),
-                                                                                      ),
-                                                                                    );
-                                                                                  });
-                                                                            });
-                                                                      });
-                                                                      }),
-                                                                ),
-                                                                StatefulBuilder(
-                                                                  builder: (BuildContext context, StateSetter mySetState) {
+                                                                                          ),
+                                                                                        );
+                                                                                      });
+                                                                                });
+                                                                          });
+                                                                        }),
+                                                                  ),
+                                                                  StatefulBuilder(
+                                                                    builder: (BuildContext context, StateSetter mySetState) {
 
 
-                                                                    return Container(
-                                                                      height: size.height * 0.2,
-                                                                      width: size.width*0.9,
-                                                                      child: ListView.separated(
-                                                                        itemCount: addListToExpense.length,
-                                                                        itemBuilder: (BuildContext context, int index) {
-                                                                          return Column(
-                                                                            children: [
-                                                                              Row(
-                                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                children: <Widget>[
-                                                                                  Container(
-                                                                                    width: size.width*0.5,
-                                                                                    child: Text(
-                                                                                      addListToExpense[index]['title'].toString(), style: TextStyle(
-                                                                                        color: Colors.white),
-                                                                                    ),
-                                                                                  ),
-                                                                                  Expanded(
-                                                                                    child: Container(
-                                                                                      width: size.width*0.2,
+                                                                      return Container(
+                                                                        height: size.height * 0.17,
+                                                                        width: size.width*0.9,
+                                                                        child: ListView.separated(
+                                                                          itemCount: addListToExpense.length,
+                                                                          itemBuilder: (BuildContext context, int index) {
+                                                                            return Column(
+                                                                              children: [
+                                                                                Row(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                  children: <Widget>[
+                                                                                    Container(
+                                                                                      width: size.width*0.5,
                                                                                       child: Text(
-                                                                                        addListToExpense[index]['expenseAmount'].toString(), style: TextStyle(
-                                                                                          color: Colors.white),),
+                                                                                        addListToExpense[index]['title'].toString(), style: TextStyle(
+                                                                                          color: Colors.white),
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        }, separatorBuilder: (BuildContext context, int index) {
-                                                                        return Container(height: 15,);
-                                                                      },
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ],
+                                                                                    Expanded(
+                                                                                      child: Container(
+                                                                                        width: size.width*0.2,
+                                                                                        child: Text(
+                                                                                          addListToExpense[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                                            color: Colors.white),),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          }, separatorBuilder: (BuildContext context, int index) {
+                                                                          return Container(height: 15,);
+                                                                        },
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  }
-                                              );
-                                            });
-                                          },
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                );
+                                              });
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        );
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
                         });
 
                       },
@@ -804,6 +1510,30 @@ class _ManagementScreenState extends State<ManagementScreen> {
         );
       },
     );
+  }
+
+  void snackBarManagementScreenTopFlushBar(BuildContext context, String title) {
+    Flushbar(
+      flushbarPosition: FlushbarPosition.TOP,
+      padding: EdgeInsets.all(20),
+      margin: EdgeInsets.all(20),
+      borderRadius: 12,
+      backgroundGradient: LinearGradient(
+        colors: [Colors.green.shade800, Colors.greenAccent.shade700],
+        stops: [0.6, 1],
+      ),
+      boxShadows: [
+        BoxShadow(
+          color: Colors.black45,
+          offset: Offset(3, 3),
+          blurRadius: 3,
+        ),
+      ],
+      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+      forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+      title: title,
+      message: '필수 입력사항 입니다',
+    )..show(context);
   }
 
   AppBar _managementScreenAppBar(BuildContext context) {
