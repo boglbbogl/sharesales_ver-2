@@ -9,7 +9,7 @@ import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 
-DateTime pickerDate = DateTime.now();
+DateTime pickerDate = DateTime.now().toUtc();
 String format = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
 
 class DatePickerCupertino extends StatefulWidget {

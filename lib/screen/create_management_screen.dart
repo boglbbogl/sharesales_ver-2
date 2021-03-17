@@ -274,13 +274,13 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                   SalesModel.createMapForManagementList(
                     userKey: userModel.userKey,
                         actualSales: _actualSalesController.text,
-                        totalSales: _totalSalesController.text,
+                        totalSales:  _totalSalesController.text,
                         selectedDate: pickerDate.toUtc().toString().substring(0,10),
                         expenseAddList: expenseAddMapList,
                         stdDate: pickerDate.toUtc(),
                         foodProvisionExpense: _foodprovisionController.text,
                         beverageExpense: _beverageController.text,
-                        alcoholExpense: _alcoholController.text,
+                        alcoholExpense:  _alcoholController.text,
                       ));
 
                   setState(() {

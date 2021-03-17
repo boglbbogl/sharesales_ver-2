@@ -117,13 +117,14 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                     FocusScope.of(context).unfocus();
                       if (expenseTitleController.text.isEmpty) {
                         _titleBadge = true;
-                        return Scaffold.of(context).showSnackBar(titleSnackBar);
+                        return snackBarManagementScreenTopFlushBar(context, '내용을 입력해 주세요');
                       } else if (expenseAmountController.text.isEmpty) {
                         _titleBadge = false;
                         _amountBadge = true;
-                        return Scaffold.of(context).showSnackBar(amountSnackBar);
+                        return snackBarManagementScreenTopFlushBar(context, '지출금액을 입력해 주세요');
                       }
                       _amountBadge = false;
+                      _titleBadge = false;
                     expenseAddMapList.addAll([{
                       'title': expenseTitleController.text.trim(),
                       'expenseAmount': expenseAmountController.text.trim(),

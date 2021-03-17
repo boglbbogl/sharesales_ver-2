@@ -4,7 +4,7 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 final wonMaskFormatter = MoneyInputFormatter(
   thousandSeparator: ThousandSeparator.None,
   mantissaLength: 0,
-  maxTextLength: 0
+  maxTextLength: 0,
 );
 
 // var wonMaskFormatter = new MaskTextInputFormatter(
@@ -16,18 +16,24 @@ TextStyle blackInputStyle(){
   );
 }
 
+TextStyle pinkInputStyle(){
+  return TextStyle(
+    color: Colors.white,
+  );
+}
+
 InputDecoration editAddExpenseInputDecor(String hint){
   return InputDecoration(
     enabledBorder: _editAddExpenseInputDecor(),
     focusedBorder: _editAddExpenseInputDecor(),
     labelText: hint,
-    labelStyle: TextStyle(color: Colors.white,),
+    labelStyle: TextStyle(color: Colors.pink,),
   );
 }
 UnderlineInputBorder _editAddExpenseInputDecor() {
   return UnderlineInputBorder(
     borderSide: BorderSide(
-      color: Colors.white,
+      color: Colors.pink,
     ),
   );
 }
@@ -39,7 +45,7 @@ InputDecoration expenseInputDecor(String hint){
     enabledBorder: _expenseInputDecor(),
     focusedBorder: _expenseInputDecor(),
     labelText: hint,
-      labelStyle: TextStyle(color: Colors.redAccent,),
+      labelStyle: TextStyle(color: Colors.red,),
   );
 }
 
@@ -47,7 +53,7 @@ OutlineInputBorder _expenseInputDecor() {
   return OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
     borderSide: BorderSide(
-      color: Colors.redAccent,
+      color: Colors.red,
     ),
   );
 }
@@ -57,7 +63,7 @@ InputDecoration expenseChangeInputDecor(String hint){
     enabledBorder: _expenseInputDecor(),
     focusedBorder: _expenseInputDecor(),
     labelText: hint,
-    labelStyle: TextStyle(color: Colors.redAccent,),
+    labelStyle: TextStyle(color: Colors.red,),
   );
 }
 
