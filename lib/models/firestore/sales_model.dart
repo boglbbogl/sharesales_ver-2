@@ -28,7 +28,7 @@ class SalesModel {
       : this.fromMap(snapshot.data(), snapshot.id,
             reference: snapshot.reference);
 
-  static Map<String, dynamic> createMapForManagementList({
+  static Map<dynamic, dynamic> createMapForManagementList({
     String selectedDate,
     String userKey,
     DateTime stdDate,

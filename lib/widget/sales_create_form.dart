@@ -46,7 +46,7 @@ class SalesCreateForm extends StatelessWidget {
           child: TextFormField(
             controller: startController,
             inputFormatters: [wonMaskFormatter],
-            // validator: _salesInputValidator,
+            validator: _salesInputValidator,
             style: blackInputStyle(),
             cursorColor: Colors.white,
             decoration: blackInputDecor(leftText),

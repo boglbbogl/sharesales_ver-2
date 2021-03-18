@@ -1,11 +1,15 @@
 import 'dart:ui';
 import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
+import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/models/firestore/sales_model.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
@@ -29,6 +33,7 @@ class CreateManagementScreen extends StatefulWidget {
 }
 
 class _CreateManagementScreenState extends State<CreateManagementScreen> {
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   SelectedIndicator _selectedIndicator = SelectedIndicator.left;
@@ -49,7 +54,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
     expenseAddMapList.clear();
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -74,43 +78,44 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
       child: Scaffold(
         appBar: _createScreenAppbar(context),
         body: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                Container(
-
-                ),
-                DatePickerCupertino(),
-                _tapButton(),
-                _tapIndicator(),
-                SizedBox(
-                  height: 40,
-                ),
-                Stack(
-                  children: <Widget>[
-                    AnimatedContainer(
-                      duration: mainDuration,
-                      transform: Matrix4.translationValues(_salesPos, 0, 0),
-                      curve: Curves.fastOutSlowIn,
-                      child: SalesCreateForm(
-                        totalSalesController: _totalSalesController,
-                        actualSalesController: _actualSalesController,
+          child: Builder(
+            builder: (BuildContext context) =>
+            Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Container(),
+                  DatePickerCupertino(),
+                  _tapButton(),
+                  _tapIndicator(),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Stack(
+                    children: <Widget>[
+                      AnimatedContainer(
+                        duration: mainDuration,
+                        transform: Matrix4.translationValues(_salesPos, 0, 0),
+                        curve: Curves.fastOutSlowIn,
+                        child: SalesCreateForm(
+                          totalSalesController: _totalSalesController,
+                          actualSalesController: _actualSalesController,
+                        ),
                       ),
-                    ),
-                    AnimatedContainer(
-                      duration: mainDuration,
-                      transform: Matrix4.translationValues(_expensePos, 0, 0),
-                      curve: Curves.fastOutSlowIn,
-                      child: ExpenseCreateForm(
-                        foodprovisionsController: _foodprovisionController,
-                        beverageController: _beverageController,
-                        alcoholController: _alcoholController,
+                      AnimatedContainer(
+                        duration: mainDuration,
+                        transform: Matrix4.translationValues(_expensePos, 0, 0),
+                        curve: Curves.fastOutSlowIn,
+                        child: ExpenseCreateForm(
+                          foodprovisionsController: _foodprovisionController,
+                          beverageController: _beverageController,
+                          alcoholController: _alcoholController,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -253,65 +258,51 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
       actions: [
         Stack(
           children: [
-            Badge(
-              showBadge: _showTabBarBadge,
-              position: BadgePosition.topEnd(end: 5, top: 5),
-              badgeColor: _selectedIndicator == SelectedIndicator.right
-                  ? Colors.amberAccent
-                  : Colors.redAccent,
-              child: IconButton(
-                icon: Icon(Icons.save),
-                onPressed: () async{
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Badge(
+                showBadge: _showTabBarBadge,
+                position: BadgePosition.topEnd(end: 5, top: 5),
+                badgeColor: _selectedIndicator == SelectedIndicator.right
+                    ? Colors.amberAccent
+                    : Colors.redAccent,
+                child: IconButton(
+                  icon: Icon(Icons.save_alt_rounded, size: 35,),
+                  onPressed: () async{
 
-                  print(expenseAddMapList);
+                    UserModel userModel =
+                        Provider.of<UserModelState>(context, listen: false)
+                            .userModel;
 
-                  UserModel userModel =
-                      Provider.of<UserModelState>(context, listen: false)
-                          .userModel;
+                      FocusScope.of(context).unfocus();
 
-                  await managementRepository.createManagement(
-                     userModel,
-                  SalesModel.createMapForManagementList(
-                    userKey: userModel.userKey,
-                        actualSales: _actualSalesController.text,
-                        totalSales:  _totalSalesController.text,
-                        selectedDate: pickerDate.toUtc().toString().substring(0,10),
-                        expenseAddList: expenseAddMapList,
-                        stdDate: pickerDate.toUtc(),
-                        foodProvisionExpense: _foodprovisionController.text,
-                        beverageExpense: _beverageController.text,
-                        alcoholExpense:  _alcoholController.text,
-                      ));
-
-                  setState(() {
-                    FocusScope.of(context).unfocus();
-                    if (!_formKey.currentState.validate()) {
-                      _showTabBarBadge = true;
-                    } else {
-                      _showTabBarBadge = false;
-                      _formKey.currentState.save();
-                      expenseAddMapList.clear();
-                      Navigator.of(context).pop();
-                    }
-                    print(_totalSalesController.text);
-                    print(_actualSalesController.text);
-                  });
-                },
+                      if (!_formKey.currentState.validate()) {
+                        setState(() {
+                          _showTabBarBadge = true;
+                        });
+                      } else {
+                        _showTabBarBadge = false;
+                        _formKey.currentState.save();
+                        Navigator.of(context).pop();
+                        await managementRepository.createManagement(context,
+                            userModel,
+                            SalesModel.createMapForManagementList(
+                              userKey: userModel.userKey,
+                              actualSales: _actualSalesController.text,
+                              totalSales: _totalSalesController.text,
+                              selectedDate: pickerDate.toUtc().toString().substring(0, 10),
+                              expenseAddList: expenseAddMapList,
+                              stdDate: pickerDate.toUtc(),
+                              foodProvisionExpense: _foodprovisionController.text,
+                              beverageExpense: _beverageController.text,
+                              alcoholExpense: _alcoholController.text,
+                            ));
+                      }
+                    },
+                ),
               ),
             ),
           ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 18, top: 18),
-          child: InkWell(
-            onTap: () {
-              print(expenseAddMapList);
-            },
-            child: Text(
-              'save',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          ),
         ),
       ],
     );

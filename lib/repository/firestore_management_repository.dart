@@ -5,32 +5,38 @@ import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
+import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 
 class ManagementRepository {
-  Future<void> createManagement(UserModel userModel,
+  Future<void> createManagement(BuildContext context, UserModel userModel,
       Map<String, dynamic> managementData) async {
 
     final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
     .collection(userModel.userName).doc(pickerDate.toUtc().toString().substring(0,10));
     final DocumentSnapshot managementSnapshot = await managementReference.get();
 
+    String outputDate = pickerDate.toUtc().toString().substring(0,10);
+
     if (!managementSnapshot.exists) {
-      managementReference.set(managementData);
-      print('저장됨');
-    } else
-      print('저장 안됨');
+     await managementReference.set(managementData);
+      snackBarCreateManagementScreenTopFlushBarGreenForm(context, '$outputDate' + ' 저장 완료',);
+      print('Save success !!');
+    } else if(managementSnapshot.exists){
+      snackBarCreateManagementScreenTopFlushBarAmberForm(context, '$outputDate' + '  저장 할 수 없습니다', '이미 존재하는 날짜입니다');
+      print('Not Working !!');
+    }
   }
 
   Future<void> updateManagement(UserModel userModel,
       Map<String, dynamic> managementData) async{
 
     final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
-        .collection(userModel.userName).doc(pickerDate.toUtc().toString().substring(0,10));
+        .collection(userModel.userName).doc();
     final DocumentSnapshot managementSnapshot = await managementReference.get();
 
-    if(managementSnapshot.exists) {
-      managementReference.update(managementData);
-    }
+    if(!managementSnapshot.exists){
+      print('저장이 안되네요');
+    } managementReference.update(managementData);
   }
 
 }

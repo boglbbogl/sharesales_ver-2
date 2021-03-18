@@ -1,6 +1,5 @@
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:folding_cell/folding_cell.dart';
@@ -11,12 +10,8 @@ import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
-import 'package:sharesales_ver2/models/firestore/expense_model.dart';
-import 'package:sharesales_ver2/models/firestore/sales_model.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
-import 'package:sharesales_ver2/repository/firestore_management_repository.dart';
-import 'package:sharesales_ver2/widget/expense_text_add_create_form.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'create_management_screen.dart';
 
@@ -68,9 +63,12 @@ class _ManagementScreenState extends State<ManagementScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrangeAccent,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                   width: size.width,
-                  height: size.height * 0.1,
-                  color: Colors.indigoAccent,
+                  height: size.height * 0.07,
                 ),
                 Flexible(
                   child: ListView(
@@ -90,7 +88,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                             },
                             child: _foldingFrontWidget(snapshotData)),
                         innerWidget: _foldingInnerWidget(snapshotData),
-                        cellSize: Size(MediaQuery.of(context).size.width, 90),
+                        cellSize: Size(MediaQuery.of(context).size.width, 80),
                         padding: EdgeInsets.all(12),
                         animationDuration: Duration(milliseconds: 300),
                         borderRadius: 20,
@@ -657,11 +655,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                       setState(() {
                                                                                                         if (_editAddExpenseTitleController.text.isEmpty) {
                                                                                                           _titleBadge = true;
-                                                                                                          return snackBarManagementScreenTopFlushBar(context, '내용을 입력해 주세요');
+                                                                                                          return snackBarManagementScreenTopFlushBar(context, '내용을 입력해 주세요', '필수 입력사항 입니다');
                                                                                                         } else if (_editAddExpenseAmountController.text.isEmpty) {
                                                                                                           _titleBadge = false;
                                                                                                           _amountBadge = true;
-                                                                                                          return snackBarManagementScreenTopFlushBar(context, '지출금액을 입력해 주세요');
+                                                                                                          return snackBarManagementScreenTopFlushBar(context, '지출금액을 입력해 주세요', '필수 입력사항 입니다');
                                                                                                         }
                                                                                                         _amountBadge = false;
                                                                                                         _titleBadge = false;
@@ -846,7 +844,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
       actions: [
         IconButton(
           icon: Icon(
-            Icons.add,
+            Icons.create,
             color: Colors.amberAccent,
             size: 30,
           ),
@@ -865,7 +863,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
     return Builder(
       builder: (BuildContext context) {
         return Container(
-          color: Colors.amber,
+          color: Color(0xFFecf2f9),
           alignment: Alignment.center,
           child: Stack(
             children: <Widget>[
@@ -958,6 +956,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
   TextStyle _frontWidgetTextStyle() {
     return TextStyle(
+      color: Colors.black,
         fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: 14);
   }
 
@@ -965,7 +964,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
     return Builder(
       builder: (context) {
         return Container(
-          color: Color(0xFFecf2f9),
+          color: Colors.deepOrangeAccent,
           padding: EdgeInsets.only(top: 10),
           child: Stack(
             children: [
