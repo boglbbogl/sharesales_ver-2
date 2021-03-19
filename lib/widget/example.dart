@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 
@@ -42,7 +42,8 @@ class _ExampleState extends State<Example> {
                 width: salTtfWidthSize,
                 child: TextFormField(
                   controller: test2Controller,
-                  // inputFormatters: [wonMaskFormatter],
+                  // inputFormatters: [wonMaskFormatter, FilteringTextInputFormatter.allow(RegExp("[1-9]"))],
+                  inputFormatters: [wonMaskFormatter],
                   style: blackInputStyle(),
                   cursorColor: Colors.white,
                   decoration: blackInputDecor('숫자입력 2'),
@@ -50,6 +51,7 @@ class _ExampleState extends State<Example> {
                   textInputAction: TextInputAction.next,
                 ),
               ),
+              Text(test1Controller.text,style: TextStyle(color: Colors.redAccent),),
               RaisedButton(
                   onPressed: (){
                     setState(() {
@@ -62,7 +64,7 @@ class _ExampleState extends State<Example> {
               ),
               RaisedButton(
                   onPressed: (){
-                    print(currencyFormat(1000000));
+                    print(int.parse('0'));
                   },
                   child: Text('Update')
               ),
@@ -76,16 +78,12 @@ class _ExampleState extends State<Example> {
           ),
         ));
   }
-  static String currencyFormat(int price){
-    final formatCurrency = NumberFormat.simpleCurrency(locale: "ko_KR", name: "", decimalDigits: 0,);
-        return formatCurrency.format(price);
-  }
 
   void intTypeWrite(){
     FirebaseFirestore.instance.collection('test').doc().set({
-      '테스트': test1Controller.text,
-      '테스트 2' : test2Controller.text,
-      '테스트 3' : test1Controller.text + test2Controller.text,
+      '테스트': int.parse(test1Controller.text.replaceAll(',', "")),
+      '테스트 2' : int.parse(test2Controller.text.replaceAll(',', "")),
+      '테스트 3' : int.parse(test1Controller.text.replaceAll(',', "")) + int.parse(test2Controller.text.replaceAll(',', "")),
     });
   }
 
@@ -93,10 +91,10 @@ class _ExampleState extends State<Example> {
     FirebaseFirestore.instance.collection('test').get().then((value) {
       value.docs.forEach((element) {
         var test = element.data()['테스트'];
-        int test2 = int.parse(test).toInt();
+        print(test);
+        String test2 =  test;
         print(test2);
-        int testsu = test2+test2;
-        print(testsu);
+
       });
     });
   }

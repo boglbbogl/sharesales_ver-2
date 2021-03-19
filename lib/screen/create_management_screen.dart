@@ -1,15 +1,11 @@
 import 'dart:ui';
 import 'package:badges/badges.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
-import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
-import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/models/firestore/sales_model.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/models/user_model_state.dart';
@@ -22,7 +18,6 @@ import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
 class CreateManagementScreen extends StatefulWidget {
 
-  // final List expenseAddMapList;
   final String userKey;
 
   const CreateManagementScreen( {Key key, this.userKey,}) : super(key: key);
@@ -52,6 +47,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
   @override
   void initState() {
     expenseAddMapList.clear();
+    expenseAddAmountList.clear();
     super.initState();
   }
 
@@ -67,9 +63,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    // String formatDate = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
-
 
     return GestureDetector(
       onTap: () {
@@ -283,22 +276,28 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                       } else {
                         _showTabBarBadge = false;
                         _formKey.currentState.save();
-                        Navigator.of(context).pop();
+
+                        // Navigator.of(context).pop();
+
+
                         await managementRepository.createManagement(context,
                             userModel,
                             SalesModel.createMapForManagementList(
                               userKey: userModel.userKey,
-                              actualSales: _actualSalesController.text,
-                              totalSales: _totalSalesController.text,
+                              actualSales: _actualSalesController.text.isEmpty ? int.parse('0') : int.parse(_actualSalesController.text.replaceAll(",", "")),
+                              totalSales: _totalSalesController.text.isEmpty ? int.parse('0') : int.parse(_totalSalesController.text.replaceAll(",", "")),
                               selectedDate: pickerDate.toUtc().toString().substring(0, 10),
                               expenseAddList: expenseAddMapList,
+                              // expenseAddListAmount: ,
                               stdDate: pickerDate.toUtc(),
-                              foodProvisionExpense: _foodprovisionController.text,
-                              beverageExpense: _beverageController.text,
-                              alcoholExpense: _alcoholController.text,
-                            ));
+                              foodProvisionExpense: _foodprovisionController.text.isEmpty ? int.parse('0') : int.parse(_foodprovisionController.text.replaceAll(",", "")),
+                              beverageExpense: _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
+                              alcoholExpense: _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_alcoholController.text.replaceAll(",", "")),
+                            ),);
+
                       }
-                    },
+
+                  },
                 ),
               ),
             ),

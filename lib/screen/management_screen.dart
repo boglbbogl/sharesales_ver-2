@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:folding_cell/folding_cell.dart';
+import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
@@ -15,6 +16,8 @@ import 'package:sharesales_ver2/models/user_model_state.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'create_management_screen.dart';
 
+final koFormatMoney = NumberFormat.simpleCurrency(locale: "ko_KR", name: '', decimalDigits: 0);
+
 class ManagementScreen extends StatefulWidget {
   @override
   _ManagementScreenState createState() => _ManagementScreenState();
@@ -23,7 +26,7 @@ class ManagementScreen extends StatefulWidget {
 class _ManagementScreenState extends State<ManagementScreen> {
   TextEditingController _totalSalesController = TextEditingController();
   TextEditingController _actualSalesController = TextEditingController();
-  TextEditingController _foodprovisionController = TextEditingController();
+  TextEditingController _foodProvisionController = TextEditingController();
   TextEditingController _beverageController = TextEditingController();
   TextEditingController _alcoholController = TextEditingController();
   TextEditingController _editAddExpenseTitleController = TextEditingController();
@@ -33,7 +36,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
   void dispose() {
     _totalSalesController.dispose();
     _actualSalesController.dispose();
-    _foodprovisionController.dispose();
+    _foodProvisionController.dispose();
     _beverageController.dispose();
     _alcoholController.dispose();
     _editAddExpenseTitleController.dispose();
@@ -218,11 +221,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       onTap: () {
-                        _totalSalesController.text = snapshotData['totalSales'];
-                        _actualSalesController.text = snapshotData['actualSales'];
-                        _foodprovisionController.text = snapshotData['foodProvisionExpense'];
-                        _beverageController.text = snapshotData['beverageExpense'];
-                        _alcoholController.text = snapshotData['alcoholExpense'];
+                        _totalSalesController.text = koFormatMoney.format(snapshotData['totalSales']);
+                        _actualSalesController.text = koFormatMoney.format(snapshotData['actualSales']);
+                        _foodProvisionController.text = koFormatMoney.format(snapshotData['foodProvisionExpense']);
+                        _beverageController.text = koFormatMoney.format(snapshotData['beverageExpense']);
+                        _alcoholController.text = koFormatMoney.format(snapshotData['alcoholExpense']);
 
                         setState((){
                           showModalBottomSheet(
@@ -341,8 +344,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
                                                                         await FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
                                                                             .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                          'totalSales': _totalSalesController.text,
-                                                                          'actualSales': _actualSalesController.text,
+                                                                          'totalSales': _totalSalesController.text.isEmpty ? int.parse('0') : int.parse(_totalSalesController.text.replaceAll(",", "")),
+                                                                          'actualSales': _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_actualSalesController.text.replaceAll(",", "")),
                                                                         });
                                                                         Navigator.of(context).pop();
                                                                         _totalSalesController.clear();
@@ -442,13 +445,13 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
                                                                             await FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
                                                                                 .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                              'foodProvisionExpense': _foodprovisionController.text,
-                                                                              'beverageExpense': _beverageController.text,
-                                                                              'alcoholExpense': _alcoholController.text,
+                                                                              'foodProvisionExpense': _foodProvisionController.text.isEmpty ? int.parse('0') : int.parse(_foodProvisionController.text.replaceAll(",", "")),
+                                                                              'beverageExpense': _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
+                                                                              'alcoholExpense': _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_alcoholController.text.replaceAll(",", "")),
                                                                             });
 
                                                                             Navigator.of(context).pop();
-                                                                            _foodprovisionController.clear();
+                                                                            _foodProvisionController.clear();
                                                                             _beverageController.clear();
                                                                             _alcoholController.clear();
                                                                           },
@@ -477,7 +480,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                   child: TextFormField(
                                                                                     keyboardType: TextInputType.number,
                                                                                     textInputAction: TextInputAction.next,
-                                                                                    controller: _foodprovisionController,
+                                                                                    controller: _foodProvisionController,
                                                                                     style: blackInputStyle(),
                                                                                     decoration: expenseChangeInputDecor('식자재'),
                                                                                     inputFormatters: [wonMaskFormatter],
@@ -528,12 +531,15 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
                                                                           await FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
                                                                               .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                            'foodProvisionExpense': _foodprovisionController.text,
-                                                                            'beverageExpense': _beverageController.text,
-                                                                            'alcoholExpense': _alcoholController.text,
+                                                                            'foodProvisionExpense': _foodProvisionController.text.isEmpty ? int.parse('0') : int.parse(_foodProvisionController.text.replaceAll(",", "")),
+                                                                            'beverageExpense': _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
+                                                                            'alcoholExpense': _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_alcoholController.text.replaceAll(",", "")),
                                                                           });
 
                                                                           Navigator.of(context).pop();
+                                                                          _foodProvisionController.clear();
+                                                                          _beverageController.clear();
+                                                                          _alcoholController.clear();
                                                                           _editAddExpenseTitleController.clear();
                                                                           _editAddExpenseAmountController.clear();
 
@@ -860,6 +866,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
   }
 
   Builder _foldingFrontWidget(QueryDocumentSnapshot snapshotData) {
+
+
     return Builder(
       builder: (BuildContext context) {
         return Container(
@@ -890,13 +898,13 @@ class _ManagementScreenState extends State<ManagementScreen> {
                         Container(
                           width: size.width * 0.45,
                           child: Text(
-                            '실제 매출 : ' + snapshotData['actualSales'],
+                            '실제 매출 : ' + koFormatMoney.format(snapshotData['actualSales']),
                             style: _frontWidgetTextStyle(),
                           ),
                         ),
                         Container(
                           child: Text(
-                            '식자재 : ' + snapshotData['foodProvisionExpense'],
+                            '식자재 : ' + koFormatMoney.format(snapshotData['foodProvisionExpense']),
                             style: _frontWidgetTextStyle(),
                           ),
                         ),
@@ -911,13 +919,13 @@ class _ManagementScreenState extends State<ManagementScreen> {
                         Container(
                           width: size.width * 0.45,
                           child: Text(
-                            '총 매출 : ' + snapshotData['totalSales'],
+                            '총 매출 : ' + koFormatMoney.format(snapshotData['totalSales']),
                             style: _frontWidgetTextStyle(),
                           ),
                         ),
                         Container(
                           child: Text(
-                            '기타지출 : ' + snapshotData['alcoholExpense'],
+                            '기타지출 : ' + koFormatMoney.format(snapshotData['alcoholExpense']),
                             style: _frontWidgetTextStyle(),
                           ),
                         ),
@@ -939,7 +947,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                     _foldingCellState?.toggleFold();
                   },
                   child: Text(
-                    "OPEN",
+                    'OPEN',
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
@@ -971,7 +979,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
               Align(
                 alignment: Alignment.topCenter,
                 child: Text(
-                  snapshotData['totalSales'],
+                  'test',
                 ),
               ),
               Align(

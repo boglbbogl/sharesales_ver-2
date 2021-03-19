@@ -3,14 +3,15 @@ import 'package:sharesales_ver2/constant/firestore_keys.dart';
 
 class SalesModel {
   final String userKey;
-  final String totalSales;
-  final String actualSales;
+  final int totalSales;
+  final int actualSales;
   final DateTime stdDate;
   final String selectedDate;
   final List<dynamic> expenseAddList;
-  final String foodProvisionExpense;
-  final String beverageExpense;
-  final String alcoholExpense;
+  final List<int> expenseAddListAmount;
+  final int foodProvisionExpense;
+  final int beverageExpense;
+  final int alcoholExpense;
   final DocumentReference reference;
 
   SalesModel.fromMap(Map<String, dynamic> map, this.userKey, {this.reference})
@@ -19,7 +20,8 @@ class SalesModel {
         selectedDate = map[KEY_SELECTEDDATE],
         totalSales = map[KEY_TOTALSALES],
         actualSales = map[KEY_ACTUALSALES],
-  expenseAddList = map[KEY_EXPENSEADDLIST],
+        expenseAddList = map[KEY_EXPENSEADDLIST],
+        expenseAddListAmount = map[KEY_EXPENSEADDLISTAMOUNT],
         foodProvisionExpense = map[KEY_FOODPROVISION],
         beverageExpense = map[KEY_BEVERAGE],
         alcoholExpense = map[KEY_ALCOHOL];
@@ -32,12 +34,13 @@ class SalesModel {
     String selectedDate,
     String userKey,
     DateTime stdDate,
-    String totalSales,
-    String actualSales,
+    int totalSales,
+    int actualSales,
     List<dynamic> expenseAddList,
-    String foodProvisionExpense,
-    String beverageExpense,
-    String alcoholExpense,
+    List<int> expenseAddListAmount,
+    int foodProvisionExpense,
+    int beverageExpense,
+    int alcoholExpense,
   }) {
     Map<String, dynamic> map = Map();
     map[KEY_USERKEY] = userKey;
@@ -46,6 +49,7 @@ class SalesModel {
     map[KEY_STDDATE] = stdDate;
     map[KEY_TOTALSALES] = totalSales;
     map[KEY_EXPENSEADDLIST] = expenseAddList;
+    map[KEY_EXPENSEADDLISTAMOUNT] = expenseAddListAmount;
     map[KEY_FOODPROVISION] = foodProvisionExpense;
     map[KEY_BEVERAGE] = beverageExpense;
     map[KEY_ALCOHOL] = alcoholExpense;

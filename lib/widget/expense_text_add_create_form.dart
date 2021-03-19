@@ -1,10 +1,12 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import '../constant/input_decor.dart';
 import '../constant/size.dart';
 
 List<Map<String, String>> expenseAddMapList = [];
+List<int> expenseAddAmountList = [];
 
 class ExpenseTextAddCreateForm extends StatefulWidget {
   @override
@@ -125,16 +127,21 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                       }
                       _amountBadge = false;
                       _titleBadge = false;
+
                     expenseAddMapList.addAll([{
                       'title': expenseTitleController.text.trim(),
                       'expenseAmount': expenseAmountController.text.trim(),
                     }]);
-                    print(expenseAddMapList);
+                    // expenseAddAmountList.add(int.parse(expenseAmountController.text.replaceAll(",", "").trim()));
+                    // print(expenseAddMapList);
+                    expenseAddAmountList.add(int.parse(expenseAddMapList.last.values.last.replaceAll(",", "")));
                   });
+
                   if(_titleBadge == false && _amountBadge == false)
                   expenseTitleController.clear();
                   expenseAmountController.clear();
                 },
+
                 elevation: 0,
                 color: Colors.grey,
                 splashColor: Colors.redAccent,
@@ -249,12 +256,20 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                 color: Colors.white,
                 icon: Icon(Icons.delete_forever),
                 onPressed: () {
+
                   setState(() {
-                    print(expenseAddMapList);
+
+                    var deleteExpenseAddAmount = expenseAddMapList.last.values.last;
+
+                    print(expense.values.last);
+                    // print(expenseAddMapList);
+                    // print(expenseAddAmountList);
                     expenseAddMapList.remove(expense);
-                    print(expenseAddMapList);
+                    // print(expenseAddMapList);
+                    print('int 금액' + '$expenseAddAmountList');
+
                   });
-                  print(expense);
+                  // print(expense);
                 },
               ),
             ),

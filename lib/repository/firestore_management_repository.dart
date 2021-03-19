@@ -19,12 +19,14 @@ class ManagementRepository {
 
     if (!managementSnapshot.exists) {
      await managementReference.set(managementData);
-      snackBarCreateManagementScreenTopFlushBarGreenForm(context, '$outputDate' + ' 저장 완료',);
-      print('Save success !!');
+     Navigator.of(context).pop();
+     snackBarCreateManagementScreenTopFlushBarGreenForm(context, '$outputDate' + ' 저장 완료',);
+       print('Save success !!');
     } else if(managementSnapshot.exists){
       snackBarCreateManagementScreenTopFlushBarAmberForm(context, '$outputDate' + '  저장 할 수 없습니다', '이미 존재하는 날짜입니다');
       print('Not Working !!');
-    }
+    } else
+      print('몰라');
   }
 
   Future<void> updateManagement(UserModel userModel,

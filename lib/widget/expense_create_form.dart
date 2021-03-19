@@ -16,12 +16,12 @@ class ExpenseCreateForm extends StatelessWidget {
       TextEditingController foodprovisionsController,
       TextEditingController beverageController,
       TextEditingController alcoholController})
-      : _foodprovisionsController = foodprovisionsController,
+      : _foodProvisionsController = foodprovisionsController,
         _beverageController = beverageController,
         _alcoholController = alcoholController,
         super(key: key);
 
-  final TextEditingController _foodprovisionsController;
+  final TextEditingController _foodProvisionsController;
   final TextEditingController _beverageController;
   final TextEditingController _alcoholController;
 
@@ -31,7 +31,7 @@ class ExpenseCreateForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          _expenseTextForm('식자재', '음료', '주류', _foodprovisionsController,
+          _expenseTextForm('식자재', '음료', '주류', _foodProvisionsController,
               _beverageController, _alcoholController),
           ExpenseTextAddCreateForm(),
         ]);
