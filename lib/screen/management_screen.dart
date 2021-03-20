@@ -1,3 +1,4 @@
+
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,7 +90,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                     context, snapshotData, userModel, snapshot);
                               });
                             },
-                            child: _foldingFrontWidget(snapshotData)),
+                            child: _foldingFrontWidget(snapshotData, userModel, snapshot)),
                         innerWidget: _foldingInnerWidget(snapshotData),
                         cellSize: Size(MediaQuery.of(context).size.width, 80),
                         padding: EdgeInsets.all(12),
@@ -865,8 +866,15 @@ class _ManagementScreenState extends State<ManagementScreen> {
     );
   }
 
-  Builder _foldingFrontWidget(QueryDocumentSnapshot snapshotData) {
+  Builder _foldingFrontWidget(QueryDocumentSnapshot snapshotData, UserModel userModel, AsyncSnapshot<QuerySnapshot> snapshot) {
 
+    List<dynamic> test = snapshotData.data()['expenseAddList'];
+    var te = test.forEach((element) {
+      var aa = element['expenseAmount'];
+      int testint = int.parse(aa.toString().replaceAll(",", ''));
+      int subtest = testint;
+      print(subtest);
+    });
 
     return Builder(
       builder: (BuildContext context) {
@@ -941,7 +949,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 child: RaisedButton(
                   color: Colors.redAccent,
                   onPressed: () {
-                    // print(snapshotData['expenseAddList'][0]['title']);
+
                     final _foldingCellState = context
                         .findRootAncestorStateOfType<SimpleFoldingCellState>();
                     _foldingCellState?.toggleFold();

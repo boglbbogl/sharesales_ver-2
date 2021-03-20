@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/models/firestore/user_model.dart';
+import 'package:sharesales_ver2/models/user_model_state.dart';
 
 class Example extends StatefulWidget {
   @override
@@ -55,22 +59,18 @@ class _ExampleState extends State<Example> {
               RaisedButton(
                   onPressed: (){
                     setState(() {
-                      intTypeWrite();
-                      test1Controller.clear();
-                      test2Controller.clear();
+
                     });
                   },
               child: Text('Write')
               ),
               RaisedButton(
                   onPressed: (){
-                    print(int.parse('0'));
                   },
                   child: Text('Update')
               ),
               RaisedButton(
                   onPressed: (){
-                    intTypeRead();
                   },
                   child: Text('Read')
               ),
@@ -80,22 +80,9 @@ class _ExampleState extends State<Example> {
   }
 
   void intTypeWrite(){
-    FirebaseFirestore.instance.collection('test').doc().set({
-      '테스트': int.parse(test1Controller.text.replaceAll(',', "")),
-      '테스트 2' : int.parse(test2Controller.text.replaceAll(',', "")),
-      '테스트 3' : int.parse(test1Controller.text.replaceAll(',', "")) + int.parse(test2Controller.text.replaceAll(',', "")),
-    });
+
   }
 
   void intTypeRead(){
-    FirebaseFirestore.instance.collection('test').get().then((value) {
-      value.docs.forEach((element) {
-        var test = element.data()['테스트'];
-        print(test);
-        String test2 =  test;
-        print(test2);
-
-      });
-    });
   }
 }
