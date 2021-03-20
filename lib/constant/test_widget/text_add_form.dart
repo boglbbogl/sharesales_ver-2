@@ -313,7 +313,7 @@ class _TextAddFormState extends State<TextAddForm> {
       // print(list);
     UserModel userModel = Provider.of<UserModelState>(context, listen: false).userModel;
 
-    FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+    FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName)
           .doc(pickerDate.toUtc().toString().substring(0,10)).set({
         'expenseAdd' : FieldValue.arrayUnion([{
           // list,

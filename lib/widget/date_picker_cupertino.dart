@@ -62,7 +62,7 @@ class _DatePickerCupertinoState extends State<DatePickerCupertino> {
               minTime: DateTime(2000, 1, 1),
               maxTime: DateTime(2100, 12, 31),
               onChanged: (selectedDate) {
-                FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey).collection(userModel.userName)
+                FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName)
                     .get().then((snap) {
                   snap.docs.forEach((element) {
                     String selectedDateInDb = element.data()['selectedDate'];

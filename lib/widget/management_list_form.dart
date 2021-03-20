@@ -15,7 +15,7 @@ class FoldingCellSimpleDemo extends StatelessWidget {
         children: [
           StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection(COLLECTION_SALES)
+                  .collection(COLLECTION_SALES_MANAGEMENT)
                   .snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if(!snapshot.hasData) {

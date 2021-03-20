@@ -11,7 +11,7 @@ class ManagementRepository {
   Future<void> createManagement(BuildContext context, UserModel userModel,
       Map<String, dynamic> managementData) async {
 
-    final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+    final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
     .collection(userModel.userName).doc(pickerDate.toUtc().toString().substring(0,10));
     final DocumentSnapshot managementSnapshot = await managementReference.get();
 
@@ -32,7 +32,7 @@ class ManagementRepository {
   Future<void> updateManagement(UserModel userModel,
       Map<String, dynamic> managementData) async{
 
-    final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES).doc(userModel.userKey)
+    final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
         .collection(userModel.userName).doc();
     final DocumentSnapshot managementSnapshot = await managementReference.get();
 

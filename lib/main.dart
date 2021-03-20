@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
         //   const Locale('ko', 'KO'),
         // ],
         theme: ThemeData(
+          fontFamily: 'Yanolja',
           canvasColor: blackColor,
           primarySwatch: Colors.red,
         ),

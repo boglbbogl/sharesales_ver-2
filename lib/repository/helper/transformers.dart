@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sharesales_ver2/models/firestore/sales_model.dart';
+import 'package:sharesales_ver2/models/firestore/management_model.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 
 class Transformers {
@@ -10,9 +10,9 @@ class Transformers {
   });
 
   final toSales =
-      StreamTransformer<DocumentSnapshot, SalesModel>.fromHandlers(
+      StreamTransformer<DocumentSnapshot, ManagementModel>.fromHandlers(
           handleData: (snapshot, sink) async {
-            sink.add(SalesModel.fromSnapshot(snapshot));
+            sink.add(ManagementModel.fromSnapshot(snapshot));
   });
   //
   // final combineListOfPosts =

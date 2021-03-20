@@ -12,3 +12,4 @@ final expTtfWidthSize = size.width * 0.27;
 
 final salTtfHeightSize = size.width*0.19;
 final salTtfWidthSize = size.width*0.35;
+final salTtfHeightSizeVer2 = size.width*0.12;

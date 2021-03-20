@@ -6,7 +6,6 @@ import '../constant/input_decor.dart';
 import '../constant/size.dart';
 
 List<Map<String, String>> expenseAddMapList = [];
-List<int> expenseAddAmountList = [];
 
 class ExpenseTextAddCreateForm extends StatefulWidget {
   @override
@@ -132,9 +131,6 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                       'title': expenseTitleController.text.trim(),
                       'expenseAmount': expenseAmountController.text.trim(),
                     }]);
-                    // expenseAddAmountList.add(int.parse(expenseAmountController.text.replaceAll(",", "").trim()));
-                    // print(expenseAddMapList);
-                    expenseAddAmountList.add(int.parse(expenseAddMapList.last.values.last.replaceAll(",", "")));
                   });
 
                   if(_titleBadge == false && _amountBadge == false)
@@ -256,18 +252,9 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                 color: Colors.white,
                 icon: Icon(Icons.delete_forever),
                 onPressed: () {
-
                   setState(() {
-
-                    var deleteExpenseAddAmount = expenseAddMapList.last.values.last;
-
                     print(expense.values.last);
-                    // print(expenseAddMapList);
-                    // print(expenseAddAmountList);
                     expenseAddMapList.remove(expense);
-                    // print(expenseAddMapList);
-                    print('int 금액' + '$expenseAddAmountList');
-
                   });
                   // print(expense);
                 },

@@ -7,12 +7,39 @@ class SalesCreateForm extends StatelessWidget {
     Key key,
     @required TextEditingController totalSalesController,
     @required TextEditingController actualSalesController,
+    @required TextEditingController vosController,
+    @required TextEditingController vatController,
+    @required TextEditingController discountController,
+    @required TextEditingController creditCardController,
+    @required TextEditingController cashController,
+    @required TextEditingController cashReceiptController,
+    @required TextEditingController deliveryController,
+    @required TextEditingController giftCardController,
+
+
   })  : _totalSalesController = totalSalesController,
         _actualSalesController = actualSalesController,
+        _vosController = vosController,
+        _vatController = vatController,
+  _discountController = discountController,
+  _creditCardController = creditCardController,
+  _cashController = cashController,
+  _cashReceiptController = cashReceiptController,
+  _deliveryController = deliveryController,
+  _giftCardController = giftCardController,
+
         super(key: key);
 
   final TextEditingController _totalSalesController;
   final TextEditingController _actualSalesController;
+  final TextEditingController _vosController;
+  final TextEditingController _vatController;
+  final TextEditingController _discountController;
+  final TextEditingController _creditCardController;
+  final TextEditingController _cashController;
+  final TextEditingController _cashReceiptController;
+  final TextEditingController _deliveryController;
+  final TextEditingController _giftCardController;
 
 
   @override
@@ -21,12 +48,11 @@ class SalesCreateForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        _createTextForm(
-            '총매출', '실제매출', _totalSalesController, _actualSalesController),
-        // _createTextForm('공급가액','세액'),
-        // _createTextForm('할인','신용카드'),
-        // _createTextForm('현금','현금영수증'),
-        // _createTextForm('Delivery','Gift Card'),
+        _createTextForm('총매출', '실제매출', _totalSalesController, _actualSalesController),
+        _createTextForm('공급가액','세액', _vosController, _vatController),
+        _createTextForm('할인','신용카드', _discountController, _creditCardController),
+        _createTextForm('현금','현금영수증', _cashController, _cashReceiptController),
+        _createTextForm('Delivery','Gift Card', _deliveryController, _giftCardController),
       ],
     );
   }
