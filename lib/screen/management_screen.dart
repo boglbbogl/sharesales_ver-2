@@ -3,6 +3,7 @@ import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:folding_cell/folding_cell.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -54,7 +55,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
       stream: FirebaseFirestore.instance
           .collection(COLLECTION_SALES)
           .doc(userModel.userKey)
-          .collection(userModel.userName)
+          .collection(userModel.userName).orderBy("stdDate", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
@@ -90,7 +91,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                     context, snapshotData, userModel, snapshot);
                               });
                             },
-                            child: _foldingFrontWidget(snapshotData, userModel, snapshot)),
+                            child: _foldingFrontWidget(snapshotData)),
                         innerWidget: _foldingInnerWidget(snapshotData),
                         cellSize: Size(MediaQuery.of(context).size.width, 80),
                         padding: EdgeInsets.all(12),
@@ -145,7 +146,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
                       ),
                       onTap: () {
                         setState((){
-
 
                           showModalBottomSheet(
                               shape: RoundedRectangleBorder(
@@ -866,14 +866,14 @@ class _ManagementScreenState extends State<ManagementScreen> {
     );
   }
 
-  Builder _foldingFrontWidget(QueryDocumentSnapshot snapshotData, UserModel userModel, AsyncSnapshot<QuerySnapshot> snapshot) {
+  Builder _foldingFrontWidget(QueryDocumentSnapshot snapshotData) {
 
-    List<dynamic> test = snapshotData.data()['expenseAddList'];
-    var te = test.forEach((element) {
-      var aa = element['expenseAmount'];
-      int testint = int.parse(aa.toString().replaceAll(",", ''));
-      int subtest = testint;
-      print(subtest);
+    final expenseAmountOnlyResult = [];
+    List<dynamic> expenseAddListInExpenseAmount = snapshotData.data()['expenseAddList'];
+    var te = expenseAddListInExpenseAmount.forEach((element) {
+      var expenseAmount = element['expenseAmount'];
+      int expenseAmountIntType = int.parse(expenseAmount.toString().replaceAll(",", ''));
+      expenseAmountOnlyResult.add(expenseAmountIntType);
     });
 
     return Builder(
@@ -933,7 +933,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                         ),
                         Container(
                           child: Text(
-                            '기타지출 : ' + koFormatMoney.format(snapshotData['alcoholExpense']),
+                            '추가 지출 : ' + koFormatMoney.format(expenseAmountOnlyResult.reduce((v, e) => v + e)),
                             style: _frontWidgetTextStyle(),
                           ),
                         ),
@@ -949,6 +949,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 child: RaisedButton(
                   color: Colors.redAccent,
                   onPressed: () {
+
+                    print(snapshotData['totalSales']+snapshotData['actualSales']);
 
                     final _foldingCellState = context
                         .findRootAncestorStateOfType<SimpleFoldingCellState>();
