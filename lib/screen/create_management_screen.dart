@@ -247,8 +247,6 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
     );
   }
 
-
-
   AppBar _createScreenAppbar(BuildContext context) {
     return AppBar(
       backgroundColor: blackColor,

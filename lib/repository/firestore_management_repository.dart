@@ -5,7 +5,6 @@ import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/models/firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/date_picker_cupertino.dart';
-import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 
 class ManagementRepository {
   Future<void> createManagement(BuildContext context, UserModel userModel,

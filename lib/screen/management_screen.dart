@@ -8,6 +8,7 @@ import 'package:folding_cell/folding_cell.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:sharesales_ver2/constant.change_library/change_month_strip_pub_dev.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
@@ -21,6 +22,8 @@ import 'create_management_screen.dart';
 final koFormatMoney = NumberFormat.simpleCurrency(locale: "ko_KR", name: '', decimalDigits: 0);
 
 class ManagementScreen extends StatefulWidget {
+
+
   @override
   _ManagementScreenState createState() => _ManagementScreenState();
 }
@@ -42,6 +45,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
   TextEditingController _editAddExpenseTitleController = TextEditingController();
   TextEditingController _editAddExpenseAmountController = TextEditingController();
 
+
   @override
   void dispose() {
     _totalSalesController.dispose();
@@ -54,8 +58,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
     super.dispose();
   }
 
+  DateTime pickerMonth = DateTime.now().toUtc();
+
   @override
   Widget build(BuildContext context) {
+
     UserModel userModel =
         Provider.of<UserModelState>(context, listen: false).userModel;
 
@@ -66,22 +73,53 @@ class _ManagementScreenState extends State<ManagementScreen> {
           .collection(userModel.userName).orderBy("stdDate", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return MyProgressIndicator();
+
+        if(!snapshot.hasData || snapshot.data == null || snapshot.hasError) {
+          return Text('Loading..');
         }
+
+        final monthActualSalesTotalShow = [];
+        final monthExpenseTotalShow = [];
+        final monthAddExpenseList = [];
+
+         snapshot.data.docs.forEach((element)  {
+           var docQuery = element.data();
+           if(docQuery['selectedDate'].toString().substring(0, 7) == pickerMonth.toString().substring(0,7)) {
+           List<dynamic> test = docQuery['expenseAddList'];
+           test.forEach((element) {
+             var monthExpenseAmount = element['expenseAmount'];
+             int monthExpenseAmountIntType = int.parse(monthExpenseAmount.toString().replaceAll(",", ''));
+             monthAddExpenseList.add(monthExpenseAmountIntType);
+           });
+            monthActualSalesTotalShow.add(docQuery['actualSales']);
+            monthExpenseTotalShow.add(docQuery['foodProvisionExpense'] + docQuery['alcoholExpense'] + docQuery['beverageExpense'],);
+          }
+        });
+
+         int monthChangeAddExpenseList = monthAddExpenseList.isEmpty ? int.parse('0') : monthAddExpenseList.reduce((v, e) => v + e);
+         int monthChangeExpenseList = monthExpenseTotalShow.isEmpty ? int.parse('0') : monthExpenseTotalShow.reduce((v, e) => v + e);
+         int monthTotalExpenseShowTextIntType = monthChangeAddExpenseList + monthChangeExpenseList;
+
         return SafeArea(
           child: Scaffold(
             appBar: _managementScreenAppBar(context),
             body: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                _monthPicker(),
                 Container(
-                  decoration: BoxDecoration(
-                    color: Colors.deepOrangeAccent,
-                    borderRadius: BorderRadius.circular(30),
+                  width: size.width*0.9,
+                  height: size.height*0.05,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text('매출 : ' + koFormatMoney.format(monthActualSalesTotalShow.isEmpty ? int.parse('0') :
+                      monthActualSalesTotalShow.reduce((v, e) => v+e)), style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 17),),
+                      Text('지출 : ' + koFormatMoney.format(monthTotalExpenseShowTextIntType.isNaN ? int.parse('0') :
+                      monthTotalExpenseShowTextIntType), style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold, fontSize: 17),),
+                    ],
                   ),
-                  width: size.width,
-                  height: size.height * 0.07,
                 ),
                 Flexible(
                   child: ListView(
@@ -96,11 +134,18 @@ class _ManagementScreenState extends State<ManagementScreen> {
                         expenseAmountOnlyResult.add(expenseAmountIntType);
                       });
 
+                      String formatPickerMonth = pickerMonth.toString().substring(0,7);
+                      String fireStoreMonthFormat = snapshotData['selectedDate'].toString().substring(0, 7);
+
+                      if(formatPickerMonth!=fireStoreMonthFormat){
+                        return Container();
+                      } else
                       return SimpleFoldingCell.create(
-                        // frontWidget: _buildFrontWidget(),
                         frontWidget: GestureDetector(
                             onTap: () {
                               print('short click');
+                              print(formatPickerMonth);
+                              print(fireStoreMonthFormat);
                             },
                             onLongPress: () async {
                               setState(() {
@@ -126,6 +171,34 @@ class _ManagementScreenState extends State<ManagementScreen> {
         );
       },
     );
+  }
+
+  Container _monthPicker() {
+    return Container(
+            width: size.width*0.8,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+            ),
+            child: MonthStrip(
+              normalTextStyle: TextStyle(color: Colors.white, fontSize: 17,),
+              selectedTextStyle: TextStyle(color: Colors.deepOrange, fontSize: 22, fontWeight: FontWeight.w900),
+              format: 'yyyy MM',
+              from: DateTime(2000, 01),
+              to: DateTime(2100, 01),
+              height: size.height*0.04,
+              viewportFraction: 0.4,
+              onMonthChanged: (select){
+                if (select != null || pickerMonth != null) {
+                  setState(() {
+                    pickerMonth = select;
+                  });
+                } else {
+                  return MyProgressIndicator();
+                }
+              },
+              initialMonth: pickerMonth,
+            ),
+          );
   }
 
   Future _managementBottomSheet(BuildContext context,
@@ -888,7 +961,14 @@ class _ManagementScreenState extends State<ManagementScreen> {
     return Builder(
       builder: (BuildContext context) {
         return Container(
-          color: Color(0xFFecf2f9),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [Colors.deepOrange[100],Colors.amber[100]],
+            ),
+          ),
+          // color: Color(0xFFecf2f9),
           alignment: Alignment.center,
           child: Stack(
             children: <Widget>[
@@ -913,7 +993,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                     '기타 지출 : ' + koFormatMoney.format(
                       expenseAmountOnlyResult.isEmpty ? snapshotData['alcoholExpense'] + snapshotData['beverageExpense']
                           : expenseAmountOnlyResult.reduce((v, e) => v + e) +
-                          snapshotData['alcoholExpense'] + snapshotData['beverageExpense'] + snapshotData['foodProvisionExpense']),),
+                          snapshotData['alcoholExpense'] + snapshotData['beverageExpense']),),
                 ],
               ),
               Positioned(
@@ -950,7 +1030,12 @@ class _ManagementScreenState extends State<ManagementScreen> {
     return Builder(
       builder: (context) {
         return Container(
-          color: Colors.deepOrangeAccent,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.deepOrange[400],Colors.deepOrange[300],Colors.deepOrange[200]]),
+          ),
           padding: EdgeInsets.only(top: 10),
           child: Stack(
             children: [
@@ -983,118 +1068,10 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   _managementScreenCardLayoutForm(snapshotData, '현금 : ' + koFormatMoney.format(snapshotData['cash']),
                       '추가 지출 금액: ' + koFormatMoney.format(
                           expenseAmountOnlyResult.isEmpty ? int.parse('0') : expenseAmountOnlyResult.reduce((v, e) => v + e))),
-                  _managementScreenCardLayoutForm(snapshotData, '현금영수증 : ' + koFormatMoney.format(snapshotData['cashReceipt']), ''),
+                  _managementScreenCardLayoutWithDetailForm(snapshotData, context, showBottomSheetExpenseAddShow),
                   _managementScreenCardLayoutForm(snapshotData, 'Delivery : ' + koFormatMoney.format(snapshotData['delivery']), ''),
                   _managementScreenCardLayoutForm(snapshotData, 'Gift Card : ' + koFormatMoney.format(snapshotData['giftCard']), ''),
                 ],
-              ),
-              Positioned(
-                bottom: 68,
-                right: 70,
-                child: IconButton(
-                  icon: Icon(Icons.expand_more_sharp),
-                  onPressed: () {
-                    showMaterialModalBottomSheet(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        closeProgressThreshold: 5.0,
-                        elevation: 90.0,
-                        animationCurve: Curves.fastOutSlowIn,
-                        duration: Duration(milliseconds: 1500),
-                        barrierColor: Colors.black54,
-                        backgroundColor: Colors.deepOrangeAccent,
-                        context: context,
-                        builder: (BuildContext context){
-                          return StatefulBuilder(
-                              builder: (BuildContext context, StateSetter setState){
-                                    return Container(
-                                      height: size.height * 0.4,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: <Widget>[
-                                                  SizedBox(height: 20,),
-                                                  Container(
-                                                    height: salTtfHeightSizeVer2,
-                                                    child: Text(
-                                                      snapshotData['selectedDate'],
-                                                      style: TextStyle(
-                                                        color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                    children: <Widget>[
-                                                      Text('내용',style: TextStyle(fontSize: 16),),
-                                                      Text('지출금액',style: TextStyle(fontSize: 16),),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 7,),
-                                                  Container(
-                                                    width: size.width*0.8,
-                                                    height: 3,
-                                                    color: Colors.deepOrange,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                              Container(
-                                                height: size.height * 0.2,
-                                                width: size.width*0.8,
-                                                child: ListView.separated(
-                                                  itemCount: showBottomSheetExpenseAddShow.length,
-                                                  itemBuilder: (BuildContext context, int index) {
-                                                    return Column(
-                                                      children: [
-                                                        Row(
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: <Widget>[
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(left: 25),
-                                                              child: Container(
-                                                                width: size.width*0.5,
-                                                                child: Text(
-                                                                showBottomSheetExpenseAddShow[index]['title'].toString(), style: TextStyle(
-                                                                    color: Colors.white),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                width: size.width*0.2,
-                                                                child: Text(
-                                                                  showBottomSheetExpenseAddShow[index]['expenseAmount'].toString() +' 원', style: TextStyle(
-                                                                    color: Colors.white),),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    );
-                                                  }, separatorBuilder: (BuildContext context, int index) {
-                                                  return Container(height: 15,);
-                                                },
-                                                ),
-                                              ),
-                                        ],
-                                      ),
-                                    );
-                              });
-
-                        });
-                  },
-                  color: Colors.black,
-                  splashColor: Colors.white.withOpacity(0.8),
-                ),
               ),
               Positioned(
                 top: -10,
@@ -1191,9 +1168,136 @@ class _ManagementScreenState extends State<ManagementScreen> {
     );
   }
 
+  Padding _managementScreenCardLayoutWithDetailForm(QueryDocumentSnapshot snapshotData, BuildContext context, showBottomSheetExpenseAddShow) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: size.width * 0.45,
+            child: Text('현금영수증 : ' + koFormatMoney.format(snapshotData['cashReceipt']),
+              style: _frontWidgetTextStyle(),
+            ),
+          ),
+          Row(
+            children: [
+              Icon(Icons.expand_more_rounded, size: 13,color: Colors.indigo,),
+              Icon(Icons.expand_more_rounded, size: 13,color: Colors.indigo,),
+              InkWell(
+                child: Container(
+                    child: Text('자세히보기',style: TextStyle(color: Colors.indigo),),
+                ),
+                onTap: (){
+                  showMaterialModalBottomSheet(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      closeProgressThreshold: 5.0,
+                      elevation: 90.0,
+                      animationCurve: Curves.fastOutSlowIn,
+                      duration: Duration(milliseconds: 1500),
+                      barrierColor: Colors.black54,
+                      backgroundColor: Colors.deepOrangeAccent,
+                      context: context,
+                      builder: (BuildContext context){
+                        return StatefulBuilder(
+                            builder: (BuildContext context, StateSetter setState){
+                              return Container(
+                                height: size.height * 0.4,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            SizedBox(height: 20,),
+                                            Container(
+                                              height: salTtfHeightSizeVer2,
+                                              child: Text(
+                                                snapshotData['selectedDate'],
+                                                style: TextStyle(
+                                                  color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                ),
+                                              ),
+                                            ),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: <Widget>[
+                                                Text('내용',style: TextStyle(fontSize: 16),),
+                                                Text('지출금액',style: TextStyle(fontSize: 16),),
+                                              ],
+                                            ),
+                                            SizedBox(height: 7,),
+                                            Container(
+                                              width: size.width*0.8,
+                                              height: 3,
+                                              color: Colors.deepOrange,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      height: size.height * 0.23,
+                                      width: size.width*0.8,
+                                      child: ListView.separated(
+                                        itemCount: showBottomSheetExpenseAddShow.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return Column(
+                                            children: [
+                                              Row(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left: 25),
+                                                    child: Container(
+                                                      width: size.width*0.5,
+                                                      child: Text(
+                                                        showBottomSheetExpenseAddShow[index]['title'].toString(), style: TextStyle(
+                                                          color: Colors.white),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      width: size.width*0.2,
+                                                      child: Text(
+                                                        showBottomSheetExpenseAddShow[index]['expenseAmount'].toString() +' 원', style: TextStyle(
+                                                          color: Colors.white),),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          );
+                                        }, separatorBuilder: (BuildContext context, int index) {
+                                        return Container(height: 15,);
+                                      },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            });
+                      });
+                },
+              ),
+              Icon(Icons.expand_more_rounded, size: 13,color: Colors.indigo,),
+              Icon(Icons.expand_more_rounded, size: 13,color: Colors.indigo,),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   TextStyle _frontWidgetTextStyle() {
     return TextStyle(
         color: Colors.black, fontSize: 15);
   }
-
 }

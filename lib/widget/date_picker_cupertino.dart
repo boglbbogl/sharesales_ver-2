@@ -68,7 +68,6 @@ class _DatePickerCupertinoState extends State<DatePickerCupertino> {
                     String selectedDateInDb = element.data()['selectedDate'];
                     String changePickerDate = selectedDate.toUtc().toString().substring(0, 10);
 
-
                     if (selectedDate != null || pickerDate != null) {
                       pickerDate = selectedDate;
                     } else {
