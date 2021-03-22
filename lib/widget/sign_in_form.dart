@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
-import 'package:sharesales_ver2/models/firebase_auth_state.dart';
+import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 import '../main_home_page.dart';
 
 class SignInForm extends StatefulWidget {

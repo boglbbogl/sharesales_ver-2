@@ -1,12 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
-import 'package:sharesales_ver2/models/firestore/user_model.dart';
-import 'package:sharesales_ver2/models/user_model_state.dart';
+
 
 class Example extends StatefulWidget {
   @override
@@ -18,8 +14,10 @@ class _ExampleState extends State<Example> {
   TextEditingController test1Controller = TextEditingController();
   TextEditingController test2Controller = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
         child: Container(
           height: size.height,

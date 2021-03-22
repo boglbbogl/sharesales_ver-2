@@ -7,19 +7,19 @@ import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
-import 'package:sharesales_ver2/models/firestore/user_model.dart';
-import 'package:sharesales_ver2/models/user_model_state.dart';
+import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
+import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 
 DateTime pickerDate = DateTime.now().toUtc();
 String format = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
 
-class DatePickerCupertino extends StatefulWidget {
+class DatePickerCreateForm extends StatefulWidget {
   @override
-  _DatePickerCupertinoState createState() => _DatePickerCupertinoState();
+  _DatePickerCreateFormState createState() => _DatePickerCreateFormState();
 }
 
-class _DatePickerCupertinoState extends State<DatePickerCupertino> {
+class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
   @override
   Widget build(BuildContext context) {
     String formatDate = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
@@ -100,4 +100,4 @@ class _DatePickerCupertinoState extends State<DatePickerCupertino> {
   );
 }
 
-DatePickerCupertino get datePickerCupertino => DatePickerCupertino();
+DatePickerCreateForm get datePickerCupertino => DatePickerCreateForm();

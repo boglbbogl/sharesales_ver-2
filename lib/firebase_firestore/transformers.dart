@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sharesales_ver2/models/firestore/management_model.dart';
-import 'package:sharesales_ver2/models/firestore/user_model.dart';
+import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
+
+import 'management_model.dart';
 
 class Transformers {
   final toUser = StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(

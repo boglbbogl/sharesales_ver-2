@@ -1,12 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/models/firebase_auth_state.dart';
-import 'package:sharesales_ver2/models/user_model_state.dart';
-import 'package:sharesales_ver2/repository/firestore_user_repository.dart';
 import 'package:sharesales_ver2/screen/auth_screen.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'constant/color.dart';
+import 'firebase_auth/firebase_auth_state.dart';
+import 'firebase_auth/user_model_state.dart';
+import 'firebase_firestore/firestore_user_repository.dart';
 import 'main_home_page.dart';
 
 void main() async {

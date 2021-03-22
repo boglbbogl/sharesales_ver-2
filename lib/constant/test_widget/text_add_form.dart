@@ -6,10 +6,9 @@ import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
-import 'package:sharesales_ver2/models/firestore/user_model.dart';
-import 'package:sharesales_ver2/models/user_model_state.dart';
-
-import '../../widget/date_picker_cupertino.dart';
+import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
+import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
+import '../../widget/date_picker_create_form.dart';
 
 
 class AddText {
@@ -163,7 +162,6 @@ class _TextAddFormState extends State<TextAddForm> {
               });
 
 
-              UserModel userModel = Provider.of<UserModelState>(context, listen: false).userModel;
               // managementRepository.createManagement( userModel,SalesModel.createMapForManagementList(
               //   expenseAddList:FieldValue.arrayUnion([
               //     {'sdfkl':_titleController.text, 'sdfsdf':_amountController.text}

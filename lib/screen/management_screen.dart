@@ -8,21 +8,21 @@ import 'package:folding_cell/folding_cell.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/constant.change_library/change_month_strip_pub_dev.dart';
-import 'package:sharesales_ver2/constant/color.dart';
+import 'package:sharesales_ver2/constant/app_bar.dart';
+import 'package:sharesales_ver2/constant/change_library/change_month_strip_pub_dev.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
-import 'package:sharesales_ver2/models/firestore/user_model.dart';
-import 'package:sharesales_ver2/models/user_model_state.dart';
+import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
+import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
+
 import 'create_management_screen.dart';
 
 final koFormatMoney = NumberFormat.simpleCurrency(locale: "ko_KR", name: '', decimalDigits: 0);
 
 class ManagementScreen extends StatefulWidget {
-
 
   @override
   _ManagementScreenState createState() => _ManagementScreenState();
@@ -75,7 +75,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
         if(!snapshot.hasData || snapshot.data == null || snapshot.hasError) {
-          return Text('Loading..');
+          return MyProgressIndicator();
         }
 
         final monthActualSalesTotalShow = [];
@@ -102,25 +102,24 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
         return SafeArea(
           child: Scaffold(
-            appBar: _managementScreenAppBar(context),
+            appBar: mainAppBar(context, IconButton(
+            icon: Icon(
+              Icons.create,
+              color: Colors.amberAccent,
+              size: 30,
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateManagementScreen()));
+            },
+          )),
             body: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _monthPicker(),
-                Container(
-                  width: size.width*0.9,
-                  height: size.height*0.05,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text('매출 : ' + koFormatMoney.format(monthActualSalesTotalShow.isEmpty ? int.parse('0') :
-                      monthActualSalesTotalShow.reduce((v, e) => v+e)), style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 17),),
-                      Text('지출 : ' + koFormatMoney.format(monthTotalExpenseShowTextIntType.isNaN ? int.parse('0') :
-                      monthTotalExpenseShowTextIntType), style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold, fontSize: 17),),
-                    ],
-                  ),
-                ),
+                _managementScreenMonthPicker(),
+                _managementScreenMonthTotalSalesAndTotalExpense(monthActualSalesTotalShow, monthTotalExpenseShowTextIntType),
                 Flexible(
                   child: ListView(
                     shrinkWrap: true,
@@ -172,37 +171,52 @@ class _ManagementScreenState extends State<ManagementScreen> {
       },
     );
   }
-
-  Container _monthPicker() {
+  Container _managementScreenMonthPicker() {
     return Container(
-            width: size.width*0.8,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: MonthStrip(
-              normalTextStyle: TextStyle(color: Colors.white, fontSize: 17,),
-              selectedTextStyle: TextStyle(color: Colors.deepOrange, fontSize: 22, fontWeight: FontWeight.w900),
-              format: 'yyyy MM',
-              from: DateTime(2000, 01),
-              to: DateTime(2100, 01),
-              height: size.height*0.04,
-              viewportFraction: 0.4,
-              onMonthChanged: (select){
-                if (select != null || pickerMonth != null) {
-                  setState(() {
-                    pickerMonth = select;
-                  });
-                } else {
-                  return MyProgressIndicator();
-                }
-              },
-              initialMonth: pickerMonth,
-            ),
-          );
+      width: size.width*0.8,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(40),
+      ),
+      child: MonthStrip(
+        normalTextStyle: TextStyle(color: Colors.white, fontSize: 17,),
+        selectedTextStyle: TextStyle(color: Colors.deepOrange, fontSize: 22, fontWeight: FontWeight.w900),
+        format: 'yyyy MM',
+        from: DateTime(2000, 01),
+        to: DateTime(2100, 01),
+        height: size.height*0.04,
+        viewportFraction: 0.4,
+        onMonthChanged: (select){
+          if (select != null || pickerMonth != null) {
+            setState(() {
+              pickerMonth = select;
+            });
+          } else {
+            return MyProgressIndicator();
+          }
+        },
+        initialMonth: pickerMonth,
+      ),
+    );
   }
 
-  Future _managementBottomSheet(BuildContext context,
-      QueryDocumentSnapshot snapshotData, UserModel userModel) {
+  Container _managementScreenMonthTotalSalesAndTotalExpense(List monthActualSalesTotalShow, int monthTotalExpenseShowTextIntType) {
+    return Container(
+                width: size.width*0.9,
+                height: size.height*0.05,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text('매출 : ' + koFormatMoney.format(monthActualSalesTotalShow.isEmpty ? int.parse('0') :
+                    monthActualSalesTotalShow.reduce((v, e) => v+e)), style: TextStyle(color: Colors.amberAccent, fontWeight: FontWeight.bold, fontSize: 17),),
+                    Text('지출 : ' + koFormatMoney.format(monthTotalExpenseShowTextIntType.isNaN ? int.parse('0') :
+                    monthTotalExpenseShowTextIntType), style: TextStyle(color: Colors.amberAccent,fontWeight: FontWeight.bold, fontSize: 17),),
+                  ],
+                ),
+              );
+  }
+
+  Future _managementBottomSheet(BuildContext context, QueryDocumentSnapshot snapshotData, UserModel userModel) {
 
     return showModalBottomSheet(
       shape: RoundedRectangleBorder(
@@ -926,37 +940,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
     );
   }
 
-  AppBar _managementScreenAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: blackColor,
-      centerTitle: true,
-      title: Text(
-        'share sales',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-          fontSize: fontSize,
-          foreground: Paint()..shader = mainColor,
-        ),
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.create,
-            color: Colors.amberAccent,
-            size: 30,
-          ),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CreateManagementScreen()));
-          },
-        )
-      ],
-    );
-  }
-
   Builder _foldingFrontWidget(QueryDocumentSnapshot snapshotData, List expenseAmountOnlyResult) {
     return Builder(
       builder: (BuildContext context) {
@@ -1034,8 +1017,9 @@ class _ManagementScreenState extends State<ManagementScreen> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.deepOrange[400],Colors.deepOrange[300],Colors.deepOrange[200]]),
+            colors: [Colors.amber[300],Colors.amber,Colors.amber[600],Colors.amber,Colors.amber[400]]),
           ),
+          // color: Colors.deepOrange,
           padding: EdgeInsets.only(top: 10),
           child: Stack(
             children: [

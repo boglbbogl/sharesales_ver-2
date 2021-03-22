@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'firestore/user_model.dart';
+import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 
 class UserModelState extends ChangeNotifier{
   UserModel _userModel;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/models/firebase_auth_state.dart';
+import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 
 class AccountScreenSideMenu extends StatelessWidget {
 

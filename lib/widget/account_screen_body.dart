@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
-import 'package:sharesales_ver2/models/user_model_state.dart';
-import 'package:sharesales_ver2/repository/firestore_management_repository.dart';
+import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 
 class AccountScreenBody extends StatefulWidget {
   final Function onPageChanged;
