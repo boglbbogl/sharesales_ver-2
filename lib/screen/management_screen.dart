@@ -201,19 +201,35 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
   Container _managementScreenMonthTotalSalesAndTotalExpense(List monthActualSalesTotalShow, int monthTotalExpenseShowTextIntType) {
     return Container(
-                width: size.width*0.9,
-                height: size.height*0.05,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text('매출 : ' + koFormatMoney.format(monthActualSalesTotalShow.isEmpty ? int.parse('0') :
-                    monthActualSalesTotalShow.reduce((v, e) => v+e)), style: TextStyle(color: Colors.amberAccent, fontWeight: FontWeight.bold, fontSize: 17),),
-                    Text('지출 : ' + koFormatMoney.format(monthTotalExpenseShowTextIntType.isNaN ? int.parse('0') :
-                    monthTotalExpenseShowTextIntType), style: TextStyle(color: Colors.amberAccent,fontWeight: FontWeight.bold, fontSize: 17),),
-                  ],
-                ),
-              );
+      width: size.width * 0.9,
+      height: size.height * 0.05,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Text(
+            '매출 : ' +
+                koFormatMoney.format(monthActualSalesTotalShow.isEmpty
+                    ? int.parse('0')
+                    : monthActualSalesTotalShow.reduce((v, e) => v + e)),
+            style: TextStyle(
+                color: Colors.amberAccent,
+                fontWeight: FontWeight.bold,
+                fontSize: 17),
+          ),
+          Text(
+            '지출 : ' +
+                koFormatMoney.format(monthTotalExpenseShowTextIntType.isNaN
+                    ? int.parse('0')
+                    : monthTotalExpenseShowTextIntType),
+            style: TextStyle(
+                color: Colors.amberAccent,
+                fontWeight: FontWeight.bold,
+                fontSize: 17),
+          ),
+        ],
+      ),
+    );
   }
 
   Future _managementBottomSheet(BuildContext context, QueryDocumentSnapshot snapshotData, UserModel userModel) {
@@ -580,43 +596,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                               ),
                                                                             ),
                                                                           ),
-                                                                          Row(
-                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                            children: <Widget>[
-                                                                              Container(width: expTtfWidthSize,
-                                                                                  height: salTtfHeightSizeVer2,
-                                                                                  child: TextFormField(
-                                                                                    keyboardType: TextInputType.number,
-                                                                                    textInputAction: TextInputAction.next,
-                                                                                    controller: _foodProvisionController,
-                                                                                    style: blackInputStyle(),
-                                                                                    decoration: expenseChangeInputDecor('식자재'),
-                                                                                    inputFormatters: [wonMaskFormatter],
-                                                                                  )),
-                                                                              Container(width: expTtfWidthSize,
-                                                                                  height: salTtfHeightSizeVer2,
-                                                                                  child: TextFormField(
-                                                                                    keyboardType: TextInputType.number,
-                                                                                    textInputAction: TextInputAction.next,
-                                                                                    controller: _beverageController,
-                                                                                    style: blackInputStyle(),
-                                                                                    decoration: expenseChangeInputDecor('음료'),
-                                                                                    inputFormatters: [wonMaskFormatter],
-                                                                                  )),
-                                                                              Container(
-                                                                                  width: expTtfWidthSize,
-                                                                                  height: salTtfHeightSizeVer2,
-                                                                                  child: TextFormField(
-                                                                                    keyboardType: TextInputType.number,
-                                                                                    textInputAction: TextInputAction.done,
-                                                                                    controller: _alcoholController,
-                                                                                    style: blackInputStyle(),
-                                                                                    decoration: expenseChangeInputDecor('주류'),
-                                                                                    inputFormatters: [wonMaskFormatter],
-                                                                                  )),
-                                                                            ],
-                                                                          ),
+                                                                          _expenseEditTffForm('식자재', '음료', '주류', _foodProvisionController, _beverageController, _alcoholController),
                                                                         ],
                                                                       ),
                                                                     ],
@@ -1122,6 +1102,49 @@ class _ManagementScreenState extends State<ManagementScreen> {
               controller: rightController,
               style: blackInputStyle(),
               decoration: salesChangeInputDecor(rightHint),
+              inputFormatters: [wonMaskFormatter],
+            )),
+      ],
+    );
+  }
+
+  Row _expenseEditTffForm(String startHint, String centerHint, String endHint,
+      TextEditingController startController, TextEditingController centerController, TextEditingController endController) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Container(
+            width: expTtfWidthSize,
+            height: salTtfHeightSizeVer2,
+            child: TextFormField(
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              controller: startController,
+              style: blackInputStyle(),
+              decoration: expenseChangeInputDecor(startHint),
+              inputFormatters: [wonMaskFormatter],
+            )),
+        Container(
+            width: expTtfWidthSize,
+            height: salTtfHeightSizeVer2,
+            child: TextFormField(
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              controller: centerController,
+              style: blackInputStyle(),
+              decoration: expenseChangeInputDecor(centerHint),
+              inputFormatters: [wonMaskFormatter],
+            )),
+        Container(
+            width: expTtfWidthSize,
+            height: salTtfHeightSizeVer2,
+            child: TextFormField(
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              controller: endController,
+              style: blackInputStyle(),
+              decoration: expenseChangeInputDecor(endHint),
               inputFormatters: [wonMaskFormatter],
             )),
       ],

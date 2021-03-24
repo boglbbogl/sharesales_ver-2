@@ -6,6 +6,7 @@ import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/date_picker_create_form.dart';
 
+
 class ManagementRepository {
   Future<void> createManagement(BuildContext context, UserModel userModel,
       Map<String, dynamic> managementData) async {
@@ -27,19 +28,6 @@ class ManagementRepository {
     } else
       print('몰라');
   }
-
-  Future<void> updateManagement(UserModel userModel,
-      Map<String, dynamic> managementData) async{
-
-    final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
-        .collection(userModel.userName).doc();
-    final DocumentSnapshot managementSnapshot = await managementReference.get();
-
-    if(!managementSnapshot.exists){
-      print('저장이 안되네요');
-    } managementReference.update(managementData);
-  }
-
 }
 
 ManagementRepository managementRepository = ManagementRepository();
