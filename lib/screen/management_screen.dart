@@ -85,8 +85,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
          snapshot.data.docs.forEach((element)  {
            var docQuery = element.data();
            if(docQuery['selectedDate'].toString().substring(0, 7) == pickerMonth.toString().substring(0,7)) {
-           List<dynamic> test = docQuery['expenseAddList'];
-           test.forEach((element) {
+           List<dynamic> expenseAddListMapArray = docQuery['expenseAddList'];
+           expenseAddListMapArray.forEach((element) {
              var monthExpenseAmount = element['expenseAmount'];
              int monthExpenseAmountIntType = int.parse(monthExpenseAmount.toString().replaceAll(",", ''));
              monthAddExpenseList.add(monthExpenseAmountIntType);
