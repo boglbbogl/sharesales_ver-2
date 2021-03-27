@@ -38,14 +38,22 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   @override
+  void initState() {
+    rangePickerStartDateTime=DateTime.now().toUtc();
+    rangePickerEndDateTime=DateTime.now().toUtc();
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
 
     UserModel userModel = Provider.of<UserModelState>(context, listen: false).userModel;
 
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName)
-      .where('stdDate', isGreaterThanOrEqualTo: rangePickerStartDateTime)
-          .where('stdDate', isLessThanOrEqualTo: rangePickerEndDateTime==null?rangePickerStartDateTime:rangePickerEndDateTime)
+      .where('stdDate', isGreaterThanOrEqualTo: rangePickerStartDateTime,
+          isLessThanOrEqualTo: rangePickerEndDateTime==null?rangePickerStartDateTime.add(Duration(days: 1)):rangePickerEndDateTime.add(Duration(days: 1)))
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
@@ -54,11 +62,27 @@ class _SearchScreenState extends State<SearchScreen> {
         }
         final totalSales = [];
         final actualSales = [];
+        final discount = [];
+        final delivery = [];
+        final creditCard = [];
+        final giftCard = [];
+        final vos = [];
+        final vat = [];
+        final cash = [];
+        final cashReceipt = [];
 
         snapshot.data.docs.forEach((element) {
           var docQuery = element.data();
           totalSales.add(docQuery['totalSales']);
           actualSales.add(docQuery['actualSales']);
+          discount.add(docQuery['discount']);
+          delivery.add(docQuery['delivery']);
+          creditCard.add(docQuery['creditCard']);
+          giftCard.add(docQuery['giftCard']);
+          vos.add(docQuery['vos']);
+          vat.add(docQuery['vat']);
+          cash.add(docQuery['cash']);
+          cashReceipt.add(docQuery['cashReceipt']);
         });
 
         return SafeArea(
@@ -85,7 +109,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         ],
                       ),
                       onTap: (){
-                        print(rangePickerStartDateTime);
                         showMaterialModalBottomSheet(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
@@ -102,13 +125,32 @@ class _SearchScreenState extends State<SearchScreen> {
                                 builder: (BuildContext context, StateSetter fulSetState) {
                                   return Container(
                                     height: size.height * 0.55,
-                                    color: Colors.deepOrange,
+                                    // color: Colors.deepOrange,
                                     child: Padding(
                                       padding: EdgeInsets.only(top: 10),
                                       child: SfDateRangePicker(
+                                        monthCellStyle: DateRangePickerMonthCellStyle(
+                                          specialDatesTextStyle: TextStyle(color: Colors.white),
+                                          blackoutDateTextStyle: TextStyle(color: Colors.red),
+                                          todayTextStyle: TextStyle(color: Colors.white),
+                                          textStyle: TextStyle(color: Colors.white),
+                                          weekendTextStyle: TextStyle(color: Colors.white),
+                                          leadingDatesTextStyle: TextStyle(color: Colors.white),
+                                          trailingDatesTextStyle: TextStyle(color: Colors.white),
+                                          disabledDatesTextStyle: TextStyle(color: Colors.white),
+                                        ),
+                                        rangeTextStyle: TextStyle(color: Colors.white),
+                                        selectionTextStyle: TextStyle(color: Colors.white),
+                                        headerStyle: DateRangePickerHeaderStyle(
+                                          textStyle: TextStyle(color: Colors.white),
+                                        ),
+
+
+                                        backgroundColor: Colors.amber[200],
+
+
                                         controller: _dayRangePickerController,
                                         allowViewNavigation: false,
-                                        backgroundColor: Colors.amber,
                                         view: DateRangePickerView.month,
                                         selectionMode: DateRangePickerSelectionMode.range,
                                         monthViewSettings: DateRangePickerMonthViewSettings(
@@ -148,7 +190,21 @@ class _SearchScreenState extends State<SearchScreen> {
                           Container(
                             decoration: _decorationContainerPageView([Colors.amber[400],Colors.amber[300],Colors.amber[200]]),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
+                              Container(height: size.height*0.03,),
+                              Container(height: size.height*0.05, child: Text(userModel.userName)),
+                              _managementScreenSalesPageViewShowTextForm(FontWeight.bold, 18, Colors.indigo,size.height*0.05, '실제매출', actualSales,),
+                              _managementScreenSalesPageViewShowTextForm(FontWeight.bold, 18, Colors.indigo,size.height*0.05, '총매출', totalSales,),
+                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '할인', discount,),
+                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, 'Delivery', delivery,),
+                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '신용카드', creditCard,),
+                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '공급가액', vos,),
+                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '세액', vat,),
+                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '현금', cash,),
+                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '현금영수증', cashReceipt,),
+                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, 'Gift card', giftCard,),
                             ],
                           ),
                           ),
@@ -160,34 +216,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         ],
                       ),
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          child:  Text(
-                            '실제매출 : ' +
-                                koFormatMoney.format(actualSales.isEmpty
-                                    ? int.parse('0')
-                                    : actualSales.reduce((v, e) => v + e)),
-                            style: TextStyle(
-                                color: Colors.amberAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17),
-                          ),
-                        ),
-                        Container(
-                          child:  Text(
-                            '총매출 : ' +
-                                koFormatMoney.format(totalSales.isEmpty
-                                    ? int.parse('0')
-                                    : totalSales.reduce((v, e) => v + e)),
-                            style: TextStyle(
-                                color: Colors.amberAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -196,6 +224,23 @@ class _SearchScreenState extends State<SearchScreen> {
         );
 
       }
+    );
+  }
+
+  Container _managementScreenSalesPageViewShowTextForm(FontWeight fontWeight, double fontSize, Color color, double sizeHeight, String hint, data) {
+    return Container(
+      width: size.width*0.5,
+      height: sizeHeight == null ? size.height*0.03 : sizeHeight,
+      child: Text(
+        '$hint -   ' +
+            koFormatMoney.format(
+                data.isEmpty || rangePickerStartDateTime == null
+                    ? int.parse('0')
+                    : data.reduce((v, e) => v + e)) + ' \\',
+        style: TextStyle(
+            color: color == null? Colors.black : color, fontWeight: fontWeight == null ? FontWeight.w400 : fontWeight,
+            fontSize: fontSize==null? 16 : fontSize),
+      ),
     );
   }
 
