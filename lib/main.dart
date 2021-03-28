@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/screen/auth_screen.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 import 'constant/color.dart';
 import 'firebase_auth/firebase_auth_state.dart';
 import 'firebase_auth/user_model_state.dart';
@@ -34,11 +36,17 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         // debugShowCheckedModeBanner: ,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          SfGlobalLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('en', 'US'),
+          const Locale('ko', 'KO'),
+        ],
+        locale: const Locale('ko', 'KO'),
         title: 'share sales',
-        // supportedLocales: [
-        //   const Locale('en', 'US'),
-        //   const Locale('ko', 'KO'),
-        // ],
         theme: ThemeData(
           fontFamily: 'Yanolja',
           canvasColor: blackColor,

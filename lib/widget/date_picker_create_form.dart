@@ -62,17 +62,23 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
               minTime: DateTime(2000, 1, 1),
               maxTime: DateTime(2100, 12, 31),
               onChanged: (selectedDate) {
+                setState(() {
+                  if (selectedDate != null || pickerDate != null) {
+                    pickerDate = selectedDate.toUtc();
+                  } else {
+                    return MyProgressIndicator();
+                  }
+                });
                 FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName)
                     .get().then((snap) {
                   snap.docs.forEach((element) {
-                    String selectedDateInDb = element.data()['selectedDate'];
-                    String changePickerDate = selectedDate.toUtc().toString().substring(0, 10);
-
-                    if (selectedDate != null || pickerDate != null) {
+                    if(!element.exists) {
                       pickerDate = selectedDate;
-                    } else {
-                      return MyProgressIndicator();
                     }
+                      String selectedDateInDb = element.data()['selectedDate'];
+                      String changePickerDate = selectedDate.toUtc()
+                          .toString()
+                          .substring(0, 10);
                     setState(() {
                       if (selectedDateInDb == changePickerDate) {
                         return snackBarDatePickerMiddleFlushBarRedForm(context,  '$changePickerDate' + ' 날짜를 변경하세요', '이미 저장된 날짜입니다');
@@ -81,23 +87,12 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
                   });
                 });
               },
-              currentTime: pickerDate,
-              locale: LocaleType.en,
+              currentTime: pickerDate.toUtc(),
+              locale: LocaleType.ko,
             );
           },
         ),
       ],
     );
   }
-
-  SnackBar pickerSnackBar = SnackBar(
-    duration: Duration(seconds: 1),
-    content: Text(
-      '날짜를 선택 해주세요',
-      style: snackBarStyle(),
-    ),
-    backgroundColor: Colors.lightBlueAccent,
-  );
 }
-
-DatePickerCreateForm get datePickerCupertino => DatePickerCreateForm();

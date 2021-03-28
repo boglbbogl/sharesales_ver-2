@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -24,6 +25,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   DateRangePickerController _dayRangePickerController = DateRangePickerController();
   PageController _pageController = PageController(viewportFraction: 0.8);
+  PageController _listViewPageController = PageController();
 
   String rangePickerStartDate;
   String rangePickerEndDate;
@@ -39,8 +41,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
-    rangePickerStartDateTime=DateTime.now().toUtc();
-    rangePickerEndDateTime=DateTime.now().toUtc();
+    rangePickerStartDateTime=DateTime(1000,01,01);
+    rangePickerEndDateTime=DateTime(1000,01,02);
     super.initState();
   }
 
@@ -87,133 +89,162 @@ class _SearchScreenState extends State<SearchScreen> {
 
         return SafeArea(
           child: Scaffold(
-            appBar: mainAppBar(context, Container()),
+            appBar: mainAppBar(context, IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.yellow,),
+                onPressed: (){
+
+            })),
             body: SingleChildScrollView(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    InkWell(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(rangePickerStartDate == null ? '기간을 선택해주세요' : rangePickerStartDate,
-                            style: TextStyle(color: Colors.white, fontSize: 20),),
-                          Text(rangePickerStartDate == rangePickerEndDate ? '' : '   -   ', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),),
-                          Text(rangePickerEndDate == null || rangePickerEndDate==rangePickerStartDate ? '' : rangePickerEndDate,
-                            style: TextStyle(color: Colors.white, fontSize: 20),),
-                          SizedBox(width: size.width*0.05,),
-                          Icon(Icons.search, color: Colors.yellowAccent,),
-                        ],
-                      ),
-                      onTap: (){
-                        showMaterialModalBottomSheet(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            closeProgressThreshold: 5.0,
-                            enableDrag: true,
-                            animationCurve: Curves.fastOutSlowIn,
-                            duration: Duration(milliseconds: 300),
-                            barrierColor: Colors.black87,
-                            backgroundColor: Colors.black,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return StatefulBuilder(
-                                builder: (BuildContext context, StateSetter fulSetState) {
-                                  return Container(
-                                    height: size.height * 0.55,
-                                    // color: Colors.deepOrange,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: SfDateRangePicker(
-                                        monthCellStyle: DateRangePickerMonthCellStyle(
-                                          specialDatesTextStyle: TextStyle(color: Colors.white),
-                                          blackoutDateTextStyle: TextStyle(color: Colors.red),
-                                          todayTextStyle: TextStyle(color: Colors.white),
-                                          textStyle: TextStyle(color: Colors.white),
-                                          weekendTextStyle: TextStyle(color: Colors.white),
-                                          leadingDatesTextStyle: TextStyle(color: Colors.white),
-                                          trailingDatesTextStyle: TextStyle(color: Colors.white),
-                                          disabledDatesTextStyle: TextStyle(color: Colors.white),
-                                        ),
-                                        rangeTextStyle: TextStyle(color: Colors.white),
-                                        selectionTextStyle: TextStyle(color: Colors.white),
-                                        headerStyle: DateRangePickerHeaderStyle(
-                                          textStyle: TextStyle(color: Colors.white),
-                                        ),
-
-
-                                        backgroundColor: Colors.amber[200],
-
-
-                                        controller: _dayRangePickerController,
-                                        allowViewNavigation: false,
-                                        view: DateRangePickerView.month,
-                                        selectionMode: DateRangePickerSelectionMode.range,
-                                        monthViewSettings: DateRangePickerMonthViewSettings(
-                                          enableSwipeSelection: false,
-                                        ),
-                                        onSelectionChanged: (DateRangePickerSelectionChangedArgs  args){
-                                          setState((){
-                                            if (args.value is PickerDateRange) {
-                                              rangePickerStartDate = DateFormat('yyyy MM dd').format(args.value.startDate).toString();
-                                              rangePickerEndDate = DateFormat('yyyy MM dd')
-                                                  .format(args.value.endDate ?? args.value.startDate)
-                                                  .toString();
-
-                                              rangePickerStartDateTime = args.value.startDate;
-                                              rangePickerEndDateTime = args.value.endDate;
-                                            } else {
-                                              return MyProgressIndicator();
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                        );
-                      },
-                    ),
-                    SizedBox(height: size.height*0.05,),
-                    SizedBox(
-                      width: size.width,
-                      height: size.height*0.5,
-                      child: PageView(
-                        controller: _pageController,
-                        children: [
-                          Container(
-                            decoration: _decorationContainerPageView([Colors.amber[400],Colors.amber[300],Colors.amber[200]]),
-                          child: Column(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: InkWell(
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Container(height: size.height*0.03,),
-                              Container(height: size.height*0.05, child: Text(userModel.userName)),
-                              _managementScreenSalesPageViewShowTextForm(FontWeight.bold, 18, Colors.indigo,size.height*0.05, '실제매출', actualSales,),
-                              _managementScreenSalesPageViewShowTextForm(FontWeight.bold, 18, Colors.indigo,size.height*0.05, '총매출', totalSales,),
-                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '할인', discount,),
-                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, 'Delivery', delivery,),
-                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '신용카드', creditCard,),
-                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '공급가액', vos,),
-                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '세액', vat,),
-                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '현금', cash,),
-                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, '현금영수증', cashReceipt,),
-                              _managementScreenSalesPageViewShowTextForm(null, null, null, null, 'Gift card', giftCard,),
+                              Text(rangePickerStartDate == null ? '기간을 선택해주세요' : rangePickerStartDate,
+                                style: TextStyle(color: Colors.deepOrange, fontSize: 22, fontStyle: FontStyle.italic),),
+                              Text(rangePickerStartDate == rangePickerEndDate ? '' : '   -   ', style: TextStyle(color: Colors.deepOrange,
+                                  fontSize: 22, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic),),
+                              Text(rangePickerEndDate == null || rangePickerEndDate==rangePickerStartDate ? '' : rangePickerEndDate,
+                                style: TextStyle(color: Colors.deepOrange, fontSize: 22, fontStyle: FontStyle.italic),),
                             ],
                           ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12),
-                            child: Container(
-                              decoration: _decorationContainerPageView([Colors.orange[500], Colors.orange[400], Colors.orange[300]]),),
-                          ),
-                        ],
+                          onTap: (){
+                            showMaterialModalBottomSheet(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                closeProgressThreshold: 5.0,
+                                enableDrag: true,
+                                animationCurve: Curves.fastOutSlowIn,
+                                duration: Duration(milliseconds: 300),
+                                barrierColor: Colors.black87,
+                                backgroundColor: Colors.deepOrangeAccent,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Theme(
+                                    data: Theme.of(context).copyWith(
+                                      colorScheme: ColorScheme.dark(),
+                                    ),
+                                    child: StatefulBuilder(
+                                      builder: (BuildContext context, StateSetter fulSetState) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                          height: size.height * 0.45,
+                                          // color: Colors.deepOrange,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(top: 10),
+                                            child: SfDateRangePicker(
+                                              minDate: DateTime(2000,01,01),
+                                              maxDate: DateTime(2100,01,01),
+                                              monthCellStyle: DateRangePickerMonthCellStyle(
+                                                textStyle: TextStyle(color: Colors.white),
+                                                weekendDatesDecoration: BoxDecoration(
+                                                  color: Colors.deepOrange,
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+                                                specialDatesDecoration: BoxDecoration(
+                                                  color: Colors.deepOrange,
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+
+                                                todayTextStyle: TextStyle(color: Colors.white),
+                                              ),
+                                              startRangeSelectionColor: Colors.orange,
+                                              endRangeSelectionColor: Colors.orange,
+                                              rangeSelectionColor: Colors.orange,
+                                              selectionTextStyle: TextStyle(color: Colors.white),
+                                              todayHighlightColor: Colors.orange,
+                                              selectionColor: Colors.orange,
+                                              backgroundColor: Colors.deepOrangeAccent,
+                                              controller: _dayRangePickerController,
+                                              allowViewNavigation: false,
+                                              view: DateRangePickerView.month,
+                                              selectionMode: DateRangePickerSelectionMode.range,
+                                              headerStyle: DateRangePickerHeaderStyle(
+                                                  textStyle: TextStyle(
+                                                      fontWeight:FontWeight.bold,color: Colors.white,fontSize: 18,fontStyle: FontStyle.italic)),
+                                              monthViewSettings: DateRangePickerMonthViewSettings(
+                                                enableSwipeSelection: false,
+                                              ),
+                                              onSelectionChanged: (DateRangePickerSelectionChangedArgs  args){
+                                                setState((){
+                                                  if (args.value is PickerDateRange) {
+                                                    rangePickerStartDate = DateFormat.yMEd('ko_KO').format(args.value.startDate).toString();
+                                                    // rangePickerStartDate = DateFormat('yyyy MM dd').format(args.value.startDate).toString();
+                                                    rangePickerEndDate = DateFormat.yMEd('ko_KO').
+                                                    format(args.value.endDate ?? args.value.startDate).toString();
+                                                    // rangePickerEndDate = DateFormat('yyyy MM dd')
+                                                    //     .format(args.value.endDate ?? args.value.startDate)
+                                                    //     .toString();
+
+                                                    rangePickerStartDateTime = args.value.startDate;
+                                                    rangePickerEndDateTime = args.value.endDate;
+                                                  } else {
+                                                    return MyProgressIndicator();
+                                                  }
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                            );
+                          },
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: SizedBox(
+                        width: size.width,
+                        height: size.height*0.5,
+                        child: PageView(
+                          controller: _pageController,
+                          children: [
+                            Container(
+                              decoration: _decorationContainerPageView([Colors.amber[400],Colors.amber[300],Colors.amber[200]]),
+                              child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Container(height: size.height*0.01,),
+                                Container(height: size.height*0.04, child: Text('매출', style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 18),),),
+                                Container(height: size.height*0.04, child: Text(userModel.userName.isEmpty? '로그인을 해주세요' : userModel.userName)),
+                                _managementScreenSalesPageViewShowTextForm(Colors.red[700], '실제매출', actualSales,),
+                                _managementScreenSalesPageViewShowTextForm(null, '총매출', totalSales,),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  child: Container(width: size.width*0.7, height: 2, color: Colors.amberAccent[100],),
+                                ),
+                                _managementScreenSalesPageViewShowTextForm(null, '할인', discount,),
+                                _managementScreenSalesPageViewShowTextForm(null, 'Delivery', delivery,),
+                                _managementScreenSalesPageViewShowTextForm(null, '신용카드', creditCard,),
+                                _managementScreenSalesPageViewShowTextForm(null, '공급가액', vos,),
+                                _managementScreenSalesPageViewShowTextForm(null, '세액', vat,),
+                                _managementScreenSalesPageViewShowTextForm(null, '현금', cash,),
+                                _managementScreenSalesPageViewShowTextForm(null, '현금영수증', cashReceipt,),
+                                _managementScreenSalesPageViewShowTextForm(null, 'Gift card', giftCard,),
+                              ],
+                            ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 12),
+                              child: Container(
+                                decoration: _decorationContainerPageView([Colors.orange[500], Colors.orange[400], Colors.orange[300]]),),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -222,24 +253,28 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
         );
-
       }
     );
   }
 
-  Container _managementScreenSalesPageViewShowTextForm(FontWeight fontWeight, double fontSize, Color color, double sizeHeight, String hint, data) {
+  Container _managementScreenSalesPageViewShowTextForm(Color color,String hint, data) {
     return Container(
-      width: size.width*0.5,
-      height: sizeHeight == null ? size.height*0.03 : sizeHeight,
-      child: Text(
-        '$hint -   ' +
-            koFormatMoney.format(
-                data.isEmpty || rangePickerStartDateTime == null
-                    ? int.parse('0')
-                    : data.reduce((v, e) => v + e)) + ' \\',
-        style: TextStyle(
-            color: color == null? Colors.black : color, fontWeight: fontWeight == null ? FontWeight.w400 : fontWeight,
-            fontSize: fontSize==null? 16 : fontSize),
+      width: size.width*0.6,
+      height: size.height*0.032,
+      child: Row(
+        children: [
+          Text(
+            '$hint     ' +
+                koFormatMoney.format(
+                    data.isEmpty || rangePickerStartDateTime == null
+                        ? int.parse('0')
+                        : data.reduce((v, e) => v + e)),
+            style: TextStyle(
+                color: color == null? Colors.black : color,
+                fontSize: 16),
+          ),
+          Text('   \\', style: TextStyle(color: color == null ? Colors.black : color, fontSize: 12),)
+        ],
       ),
     );
   }
