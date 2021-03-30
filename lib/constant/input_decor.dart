@@ -10,9 +10,10 @@ final wonMaskFormatter = MoneyInputFormatter(
 // var wonMaskFormatter = new MaskTextInputFormatter(
 //     mask: '###,###,###,###,##');
 
-TextStyle blackInputStyle(){
+TextStyle salesInputStyle(){
   return TextStyle(
-    color: Colors.white,
+    fontSize: 15,
+    color: Colors.black54,
   );
 }
 
@@ -53,7 +54,7 @@ OutlineInputBorder _expenseInputDecor() {
   return OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
     borderSide: BorderSide(
-      color: Colors.red,
+      color: Colors.pink,
     ),
   );
 }
@@ -63,7 +64,7 @@ InputDecoration expenseChangeInputDecor(String hint){
     enabledBorder: _expenseInputDecor(),
     focusedBorder: _expenseInputDecor(),
     labelText: hint,
-    labelStyle: TextStyle(color: Colors.red,),
+    labelStyle: TextStyle(color: Colors.pink,),
   );
 }
 
@@ -74,7 +75,7 @@ InputDecoration salesChangeInputDecor(String hint) {
     errorBorder: _blackErrorInputBorder(),
     focusedErrorBorder: _blackErrorInputBorder(),
     labelText: hint,
-    labelStyle: TextStyle(color: Colors.amberAccent),
+    labelStyle: TextStyle(color: Colors.deepPurple),
 
   );
 }
@@ -101,7 +102,7 @@ UnderlineInputBorder _blackErrorInputBorder() {
 UnderlineInputBorder _blackActiveInputBorder() {
   return UnderlineInputBorder(
     borderSide: BorderSide(
-        color: Colors.amberAccent,
+        color: Colors.deepPurple,
     ),
   );
 }

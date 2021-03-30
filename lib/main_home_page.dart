@@ -62,14 +62,14 @@ class _MainHomePageState extends State<MainHomePage> {
 
   BottomNavigationBar _btmNav() {
     return BottomNavigationBar(
-      backgroundColor: blackColor,
+      backgroundColor: Colors.white,
       type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndex,
       items: _btmNavItems,
       showSelectedLabels: false,
       showUnselectedLabels: false,
-      selectedItemColor: Colors.yellowAccent,
-      unselectedItemColor: Colors.white54,
+      selectedItemColor: Colors.deepPurpleAccent,
+      unselectedItemColor: Colors.black26,
       onTap: (index){
         setState(() {
           _selectedIndex = index;

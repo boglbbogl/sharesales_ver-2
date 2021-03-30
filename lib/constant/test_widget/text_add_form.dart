@@ -87,7 +87,7 @@ class _TextAddFormState extends State<TextAddForm> {
             child: TextFormField(
               inputFormatters: [wonMaskFormatter],
               controller: _amountController,
-              style: blackInputStyle(),
+              style: salesInputStyle(),
               cursorColor: Colors.white,
               decoration: expenseTextAddInputDecor('지출금액'),
               keyboardType: TextInputType.number,
@@ -111,7 +111,7 @@ class _TextAddFormState extends State<TextAddForm> {
             badgeColor: Colors.amberAccent,
             child: TextFormField(
               controller: _titleController,
-              style: blackInputStyle(),
+              style: salesInputStyle(),
               cursorColor: Colors.white,
               decoration: expenseTextAddInputDecor('내용'),
               keyboardType: TextInputType.text,

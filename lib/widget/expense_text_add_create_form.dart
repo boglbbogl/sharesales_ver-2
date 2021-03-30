@@ -171,7 +171,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                   badgeColor: Colors.amberAccent,
                   child: TextFormField(
                     controller: expenseTitleController,
-                    style: blackInputStyle(),
+                    style: salesInputStyle(),
                     cursorColor: Colors.white,
                     decoration: expenseTextAddInputDecor('내용'),
                     keyboardType: TextInputType.text,
@@ -193,7 +193,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                   child: TextFormField(
                     inputFormatters: [wonMaskFormatter],
                     controller: expenseAmountController,
-                    style: blackInputStyle(),
+                    style: salesInputStyle(),
                     cursorColor: Colors.white,
                     decoration: expenseTextAddInputDecor('지출금액'),
                     keyboardType: TextInputType.number,

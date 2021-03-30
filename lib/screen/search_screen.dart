@@ -25,7 +25,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   DateRangePickerController _dayRangePickerController = DateRangePickerController();
   PageController _pageController = PageController(viewportFraction: 0.8);
-  PageController _listViewPageController = PageController();
 
   String rangePickerStartDate;
   String rangePickerEndDate;
@@ -72,6 +71,7 @@ class _SearchScreenState extends State<SearchScreen> {
         final vat = [];
         final cash = [];
         final cashReceipt = [];
+        final List<dynamic> stdDate = [];
 
         snapshot.data.docs.forEach((element) {
           var docQuery = element.data();
@@ -85,11 +85,13 @@ class _SearchScreenState extends State<SearchScreen> {
           vat.add(docQuery['vat']);
           cash.add(docQuery['cash']);
           cashReceipt.add(docQuery['cashReceipt']);
+          stdDate.add(docQuery['stdDate']);
         });
 
         return SafeArea(
           child: Scaffold(
-            appBar: mainAppBar(context, IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.yellow,),
+            backgroundColor: Colors.white,
+            appBar: mainAppBar(context, IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
                 onPressed: (){
 
             })),
@@ -107,12 +109,12 @@ class _SearchScreenState extends State<SearchScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text(rangePickerStartDate == null ? '기간을 선택해주세요' : rangePickerStartDate,
-                                style: TextStyle(color: Colors.deepOrange, fontSize: 22, fontStyle: FontStyle.italic),),
-                              Text(rangePickerStartDate == rangePickerEndDate ? '' : '   -   ', style: TextStyle(color: Colors.deepOrange,
-                                  fontSize: 22, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic),),
-                              Text(rangePickerEndDate == null || rangePickerEndDate==rangePickerStartDate ? '' : rangePickerEndDate,
-                                style: TextStyle(color: Colors.deepOrange, fontSize: 22, fontStyle: FontStyle.italic),),
+                              Text(rangePickerStartDate == null ? '기간을 선택해주세요' : rangePickerStartDate.replaceAll(".", ''),
+                                style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
+                              Text(rangePickerStartDate == rangePickerEndDate ? '' : '   -   ', style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic, color: Colors.black54),),
+                              Text(rangePickerEndDate == null || rangePickerEndDate==rangePickerStartDate ? '' : rangePickerEndDate.replaceAll(".", ""),
+                                style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
                             ],
                           ),
                           onTap: (){
@@ -143,8 +145,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 10),
                                             child: SfDateRangePicker(
-                                              minDate: DateTime(2000,01,01),
-                                              maxDate: DateTime(2100,01,01),
+                                              minDate: DateTime(2000, 01, 01),
+                                              maxDate: DateTime(2100, 01, 01),
                                               monthCellStyle: DateRangePickerMonthCellStyle(
                                                 textStyle: TextStyle(color: Colors.white),
                                                 weekendDatesDecoration: BoxDecoration(
@@ -155,7 +157,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   color: Colors.deepOrange,
                                                   borderRadius: BorderRadius.circular(10),
                                                 ),
-
                                                 todayTextStyle: TextStyle(color: Colors.white),
                                               ),
                                               startRangeSelectionColor: Colors.orange,
@@ -171,21 +172,25 @@ class _SearchScreenState extends State<SearchScreen> {
                                               selectionMode: DateRangePickerSelectionMode.range,
                                               headerStyle: DateRangePickerHeaderStyle(
                                                   textStyle: TextStyle(
-                                                      fontWeight:FontWeight.bold,color: Colors.white,fontSize: 18,fontStyle: FontStyle.italic)),
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                      fontStyle: FontStyle.italic)),
                                               monthViewSettings: DateRangePickerMonthViewSettings(
+                                                blackoutDates: stdDate,
                                                 enableSwipeSelection: false,
                                               ),
-                                              onSelectionChanged: (DateRangePickerSelectionChangedArgs  args){
-                                                setState((){
+                                              onSelectionChanged:
+                                                  (DateRangePickerSelectionChangedArgs args) {
+                                                setState(() {
                                                   if (args.value is PickerDateRange) {
-                                                    rangePickerStartDate = DateFormat.yMEd('ko_KO').format(args.value.startDate).toString();
-                                                    // rangePickerStartDate = DateFormat('yyyy MM dd').format(args.value.startDate).toString();
-                                                    rangePickerEndDate = DateFormat.yMEd('ko_KO').
-                                                    format(args.value.endDate ?? args.value.startDate).toString();
-                                                    // rangePickerEndDate = DateFormat('yyyy MM dd')
-                                                    //     .format(args.value.endDate ?? args.value.startDate)
-                                                    //     .toString();
-
+                                                    rangePickerStartDate = DateFormat.yMEd('ko_KO')
+                                                        .format(args.value.startDate)
+                                                        .toString();
+                                                    rangePickerEndDate = DateFormat.yMEd('ko_KO')
+                                                        .format(
+                                                        args.value.endDate ?? args.value.startDate)
+                                                        .toString();
                                                     rangePickerStartDateTime = args.value.startDate;
                                                     rangePickerEndDateTime = args.value.endDate;
                                                   } else {
@@ -199,8 +204,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       },
                                     ),
                                   );
-                                }
-                            );
+                                });
                           },
                         ),
                       ),
@@ -212,36 +216,39 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: PageView(
                           controller: _pageController,
                           children: [
-                            Container(
-                              decoration: _decorationContainerPageView([Colors.amber[400],Colors.amber[300],Colors.amber[200]]),
-                              child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(height: size.height*0.01,),
-                                Container(height: size.height*0.04, child: Text('매출', style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 18),),),
-                                Container(height: size.height*0.04, child: Text(userModel.userName.isEmpty? '로그인을 해주세요' : userModel.userName)),
-                                _managementScreenSalesPageViewShowTextForm(Colors.red[700], '실제매출', actualSales,),
-                                _managementScreenSalesPageViewShowTextForm(null, '총매출', totalSales,),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  child: Container(width: size.width*0.7, height: 2, color: Colors.amberAccent[100],),
-                                ),
-                                _managementScreenSalesPageViewShowTextForm(null, '할인', discount,),
-                                _managementScreenSalesPageViewShowTextForm(null, 'Delivery', delivery,),
-                                _managementScreenSalesPageViewShowTextForm(null, '신용카드', creditCard,),
-                                _managementScreenSalesPageViewShowTextForm(null, '공급가액', vos,),
-                                _managementScreenSalesPageViewShowTextForm(null, '세액', vat,),
-                                _managementScreenSalesPageViewShowTextForm(null, '현금', cash,),
-                                _managementScreenSalesPageViewShowTextForm(null, '현금영수증', cashReceipt,),
-                                _managementScreenSalesPageViewShowTextForm(null, 'Gift card', giftCard,),
-                              ],
-                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: Container(
+                                decoration: _decorationContainerPageView([Colors.deepPurple[400],Colors.deepPurple[300],Colors.deepPurple[200]]),
+                                child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(height: size.height*0.01,),
+                                  Container(height: size.height*0.04, child: Text('매출', style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 18),),),
+                                  Container(height: size.height*0.04, child: Text(userModel.userName.isEmpty? '로그인을 해주세요' : userModel.userName)),
+                                  _managementScreenSalesPageViewShowTextForm(Colors.red[700], '실제매출', actualSales,),
+                                  _managementScreenSalesPageViewShowTextForm(null, '총매출', totalSales,),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    child: Container(width: size.width*0.7, height: 2, color: Colors.white,),
+                                  ),
+                                  _managementScreenSalesPageViewShowTextForm(null, '할인', discount,),
+                                  _managementScreenSalesPageViewShowTextForm(null, 'Delivery', delivery,),
+                                  _managementScreenSalesPageViewShowTextForm(null, '신용카드', creditCard,),
+                                  _managementScreenSalesPageViewShowTextForm(null, '공급가액', vos,),
+                                  _managementScreenSalesPageViewShowTextForm(null, '세액', vat,),
+                                  _managementScreenSalesPageViewShowTextForm(null, '현금', cash,),
+                                  _managementScreenSalesPageViewShowTextForm(null, '현금영수증', cashReceipt,),
+                                  _managementScreenSalesPageViewShowTextForm(null, 'Gift card', giftCard,),
+                                ],
+                              ),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 12),
                               child: Container(
-                                decoration: _decorationContainerPageView([Colors.orange[500], Colors.orange[400], Colors.orange[300]]),),
+                                decoration: _decorationContainerPageView([Colors.pink[500], Colors.pink[400], Colors.pink[300]]),),
                             ),
                           ],
                         ),
@@ -281,6 +288,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   BoxDecoration _decorationContainerPageView(List<Color> colorsList) {
     return BoxDecoration(
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black45,
+          blurRadius: 5.0,
+          // spreadRadius: 5.0,
+          // offset: Offset(2.0,1.0),
+        ),
+      ],
       borderRadius: BorderRadius.circular(30),
       gradient: LinearGradient(
         begin: Alignment.topRight,

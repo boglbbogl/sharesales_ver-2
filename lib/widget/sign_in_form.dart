@@ -50,7 +50,7 @@ class _SignInFormState extends State<SignInForm> {
                 SizedBox(height: 100,),
                 TextFormField(
                   cursorColor: Colors.white,
-                  style: blackInputStyle(),
+                  style: salesInputStyle(),
                   controller: _emailController,
                   decoration: blackInputDecor('Email'),
                   validator: (text){
@@ -63,7 +63,7 @@ class _SignInFormState extends State<SignInForm> {
                 ),
                 TextFormField(
                   cursorColor: Colors.white,
-                  style: blackInputStyle(),
+                  style: salesInputStyle(),
                   controller: _pwController,
                   decoration: blackInputDecor('Password'),
                   validator: (text){

@@ -52,7 +52,7 @@ class ExpenseCreateForm extends StatelessWidget {
           child: TextFormField(
             controller: startController,
             inputFormatters: [wonMaskFormatter],
-            style: blackInputStyle(),
+            style: salesInputStyle(),
             cursorColor: Colors.white,
             decoration: expenseInputDecor(startText),
             keyboardType: TextInputType.number,
@@ -65,7 +65,7 @@ class ExpenseCreateForm extends StatelessWidget {
           child: TextFormField(
             controller: centerController,
             inputFormatters: [wonMaskFormatter],
-            style: blackInputStyle(),
+            style: salesInputStyle(),
             cursorColor: Colors.white,
             decoration: expenseInputDecor(centerText),
             keyboardType: TextInputType.number,
@@ -78,7 +78,7 @@ class ExpenseCreateForm extends StatelessWidget {
           child: TextFormField(
             controller: endController,
             inputFormatters: [wonMaskFormatter],
-            style: blackInputStyle(),
+            style: salesInputStyle(),
             cursorColor: Colors.white,
             decoration: expenseInputDecor(endText),
             keyboardType: TextInputType.number,

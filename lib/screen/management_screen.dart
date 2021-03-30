@@ -102,10 +102,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
         return SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.white,
             appBar: mainAppBar(context, IconButton(
             icon: Icon(
               Icons.create,
-              color: Colors.amberAccent,
+              color: Colors.deepPurpleAccent,
               size: 30,
             ),
             onPressed: () {
@@ -119,6 +120,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _managementScreenMonthPicker(),
+                Divider(color: Colors.black26,),
                 _managementScreenMonthTotalSalesAndTotalExpense(monthActualSalesTotalShow, monthTotalExpenseShowTextIntType),
                 Flexible(
                   child: ListView(
@@ -178,8 +180,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
         borderRadius: BorderRadius.circular(40),
       ),
       child: MonthStrip(
-        normalTextStyle: TextStyle(color: Colors.white, fontSize: 17,),
-        selectedTextStyle: TextStyle(color: Colors.deepOrange, fontSize: 22, fontWeight: FontWeight.w900),
+        normalTextStyle: TextStyle(color: Colors.black26, fontSize: 17,),
+        selectedTextStyle: TextStyle(color: Colors.deepPurple, fontSize: 22, fontWeight: FontWeight.bold),
         format: 'yyyy MM',
         from: DateTime(2000, 01),
         to: DateTime(2100, 01),
@@ -213,7 +215,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                     ? int.parse('0')
                     : monthActualSalesTotalShow.reduce((v, e) => v + e)),
             style: TextStyle(
-                color: Colors.amberAccent,
+                color: Colors.black54,
                 fontWeight: FontWeight.bold,
                 fontSize: 17),
           ),
@@ -223,7 +225,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                     ? int.parse('0')
                     : monthTotalExpenseShowTextIntType),
             style: TextStyle(
-                color: Colors.amberAccent,
+                color: Colors.black54,
                 fontWeight: FontWeight.bold,
                 fontSize: 17),
           ),
@@ -239,7 +241,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30), topRight: Radius.circular(30)),
       ),
-      backgroundColor: Colors.indigo,
+      backgroundColor: Colors.black,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
@@ -269,15 +271,15 @@ class _ManagementScreenState extends State<ManagementScreen> {
                           showModalBottomSheet(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),),
-                              backgroundColor: Colors.redAccent,
+                              backgroundColor: Colors.pink,
                               context: context,
                               builder: (BuildContext context) {
                                 return StatefulBuilder(
                                   builder: (BuildContext context, StateSetter setState) {
-                                    return Container(height: size.height * 0.07,
+                                    return Container(height: size.height * 0.09,
                                       child: Row(
                                         children: <Widget>[
-                                          Expanded(child: Text(' ' + snapshotData['selectedDate'] + '  삭제 하시겠습니까 ?',
+                                          Expanded(child: Text('     ' + snapshotData['selectedDate'] + '  삭제 하시겠습니까 ?',
                                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
                                           ),
                                           ),
@@ -297,11 +299,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                               },
                                             ),
                                           ),
-                                          Container(color: Colors.red, height: size.height * 0.1, width: size.width * 0.005,),
+                                          Container(color: Colors.pinkAccent, height: size.height * 0.08, width: size.width * 0.005,),
                                           Container(width: size.width * 0.2,
                                             child: InkWell(
                                               child: Center(
-                                                child: Text('Cancel',
+                                                child: Text('Cancel  ',
                                                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
@@ -325,7 +327,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                       },
                     ),
                   ),
-                  Container(color: Colors.indigoAccent,
+                  Container(color: Colors.white,
                     height: size.height * 0.075,
                     width: size.width * 0.01,
                   ),
@@ -356,7 +358,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
                         setState((){
                           showModalBottomSheet(
-                            backgroundColor: Colors.redAccent,
+                            backgroundColor: Colors.black,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(30),
@@ -367,19 +369,24 @@ class _ManagementScreenState extends State<ManagementScreen> {
                               return StatefulBuilder(
                                 builder: (BuildContext context, StateSetter setState) {
                                   return Container(
-                                    height: size.height * 0.08,
+                                    height: size.height * 0.09,
                                     child: Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
                                         Container(
-                                          width: size.width * 0.4,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(12),
+                                            bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+                                            color: Colors.deepPurple
+                                          ),
+                                          width: size.width * 0.45,
                                           child: ListTile(horizontalTitleGap: 0.01,
-                                            leading: Icon(Icons.add_outlined, color: Colors.redAccent, size: 25,
+                                            leading: Icon(Icons.add_outlined, color: Colors.deepPurple, size: 25,
                                             ),
-                                            title: Text('매출',
-                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                            title: Text('   매출',
+                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 21),
                                             ),
                                             onTap: () {
                                               Navigator.pop(context);
@@ -396,7 +403,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                     animationCurve: Curves.fastOutSlowIn,
                                                     duration: Duration(milliseconds: 1500),
                                                     barrierColor: Colors.black87,
-                                                    backgroundColor: Colors.black,
+                                                    backgroundColor: Colors.white,
                                                     context: context,
                                                     builder: (BuildContext context) {
 
@@ -412,7 +419,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                     Positioned(left: 15, top: 30,
                                                                       child: InkWell(
                                                                         child: Text('Cancel',
-                                                                          style: TextStyle(color: Colors.amberAccent, fontSize: 20, fontWeight: FontWeight.bold,
+                                                                          style: TextStyle(color: Colors.deepPurple, fontSize: 20, fontWeight: FontWeight.bold,
                                                                             fontStyle: FontStyle.italic,
                                                                           ),
                                                                         ),
@@ -428,7 +435,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                         SizedBox(height: 30,),
                                                                         Container(height: salTtfHeightSize,
                                                                           child: Text(snapshotData['selectedDate'],
-                                                                            style: TextStyle(color: Colors.indigo, fontSize: 22,
+                                                                            style: TextStyle(color: Colors.black54, fontSize: 22,
                                                                               fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
                                                                             ),
                                                                           ),
@@ -445,7 +452,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                       child: InkWell(
                                                                         child: Text('Save',
                                                                           style: TextStyle(
-                                                                            color: Colors.amberAccent, fontSize: 20,
+                                                                            color: Colors.deepPurple, fontSize: 20,
                                                                             fontWeight: FontWeight.bold,
                                                                             fontStyle: FontStyle.italic,
                                                                           ),
@@ -492,17 +499,18 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                             },
                                           ),
                                         ),
-                                        Container(color: Colors.red,
-                                          height: size.height * 0.04,
-                                          width: size.width * 0.01,
-                                        ),
                                         Container(
-                                          width: size.width * 0.4,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(topRight: Radius.circular(30),topLeft: Radius.circular(12),
+                                              bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                                              color: Colors.deepPurple,
+                                          ),
+                                          width: size.width * 0.45,
                                           child: ListTile(horizontalTitleGap: 0.01,
-                                            leading: Icon(Icons.add_outlined, color: Colors.redAccent, size: 25,
+                                            leading: Icon(Icons.add_outlined, color: Colors.deepPurple, size: 25,
                                             ),
-                                            title: Text('지출',
-                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                            title: Text('   지출',
+                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 21),
                                             ),
                                             onTap: () {
 
@@ -522,7 +530,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                     animationCurve: Curves.fastOutSlowIn,
                                                     duration: Duration(milliseconds: 1500),
                                                     barrierColor: Colors.black87,
-                                                    backgroundColor: Colors.black,
+                                                    backgroundColor: Colors.white,
                                                     context: context,
                                                     builder: (BuildContext context) {
 
@@ -549,7 +557,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                       Positioned(left: 15, top: 30,
                                                                         child: InkWell(
                                                                           child: Text('Cancel',
-                                                                            style: TextStyle(color: Colors.redAccent, fontSize: 20,
+                                                                            style: TextStyle(color: Colors.pinkAccent, fontSize: 20,
                                                                               fontWeight: FontWeight.bold,
                                                                               fontStyle: FontStyle.italic,
                                                                             ),
@@ -563,7 +571,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                         child: InkWell(
                                                                           child: Text('Save',
                                                                             style: TextStyle(
-                                                                              color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                              color: Colors.pinkAccent, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
                                                                             ),
                                                                           ),
                                                                           onTap: () async{
@@ -592,7 +600,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                             child: Text(
                                                                               snapshotData['selectedDate'],
                                                                               style: TextStyle(
-                                                                                color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                color: Colors.black54, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
                                                                               ),
                                                                             ),
                                                                           ),
@@ -697,7 +705,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                           child: Text(
                                                                                                             snapshotData['selectedDate'],
                                                                                                             style: TextStyle(
-                                                                                                              color: Colors.indigo, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
                                                                                                             ),
                                                                                                           ),
                                                                                                         ),
@@ -928,7 +936,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
             gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Colors.deepOrange[100],Colors.amber[100]],
+              colors: [Colors.pink[100],Colors.redAccent[100]],
             ),
           ),
           // color: Color(0xFFecf2f9),
@@ -939,14 +947,14 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.only(bottom: 12),
                     child: Text(
                       snapshotData['selectedDate'],
                       style: TextStyle(
-                        color: Colors.indigo,
+                        color: Colors.white70,
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
-                        fontSize: 19,
+                        fontSize: 18,
                       ),
                     ),
                   ),
@@ -997,7 +1005,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.amber[300],Colors.amber,Colors.amber[600],Colors.amber,Colors.amber[400]]),
+            colors: [Colors.purple[100],Colors.purple[200],Colors.purple[200],Colors.purple[200],Colors.purple[100]]),
           ),
           // color: Colors.deepOrange,
           padding: EdgeInsets.only(top: 10),
@@ -1011,7 +1019,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                     child: Text(
                       snapshotData['selectedDate'],
                       style: TextStyle(
-                        color: Colors.indigo,
+                        color: Colors.black54,
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
                         fontSize: 19,
@@ -1028,7 +1036,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   _managementScreenCardLayoutForm(snapshotData, '할인 : ' + koFormatMoney.format(snapshotData['discount']),
                       ''),
                   _managementScreenCardLayoutForm(snapshotData, '신용카드 : ' + koFormatMoney.format(snapshotData['creditCard']),
-                      '추가 지출 : ' + expenseAmountOnlyResult.length.toString() + ' 건' ),
+                      '추가 지출 : ' + expenseAmountOnlyResult.length.toString() + '  건' ),
                   _managementScreenCardLayoutForm(snapshotData, '현금 : ' + koFormatMoney.format(snapshotData['cash']),
                       '추가 지출 금액: ' + koFormatMoney.format(
                           expenseAmountOnlyResult.isEmpty ? int.parse('0') : expenseAmountOnlyResult.reduce((v, e) => v + e))),
@@ -1046,7 +1054,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                     _managementBottomSheet(
                         context, snapshotData, userModel);
                   },
-                  color: Colors.indigo,
+                  color: Colors.black54,
                   splashColor: Colors.white.withOpacity(0.8),
                 ),
               ),
@@ -1066,7 +1074,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   textColor: Colors.white,
-                  color: Colors.redAccent,
+                  color: Colors.deepPurple,
                   splashColor: Colors.white.withOpacity(0.8),
                 ),
               ),
@@ -1089,7 +1097,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               controller: leftController,
-              style: blackInputStyle(),
+              style: salesInputStyle(),
               decoration: salesChangeInputDecor(leftHint),
               inputFormatters: [wonMaskFormatter],
             )),
@@ -1100,7 +1108,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               controller: rightController,
-              style: blackInputStyle(),
+              style: salesInputStyle(),
               decoration: salesChangeInputDecor(rightHint),
               inputFormatters: [wonMaskFormatter],
             )),
@@ -1121,7 +1129,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               controller: startController,
-              style: blackInputStyle(),
+              style: salesInputStyle(),
               decoration: expenseChangeInputDecor(startHint),
               inputFormatters: [wonMaskFormatter],
             )),
@@ -1132,7 +1140,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               controller: centerController,
-              style: blackInputStyle(),
+              style: salesInputStyle(),
               decoration: expenseChangeInputDecor(centerHint),
               inputFormatters: [wonMaskFormatter],
             )),
@@ -1143,7 +1151,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
               controller: endController,
-              style: blackInputStyle(),
+              style: salesInputStyle(),
               decoration: expenseChangeInputDecor(endHint),
               inputFormatters: [wonMaskFormatter],
             )),
@@ -1153,15 +1161,18 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
   Padding _managementScreenCardLayoutForm(QueryDocumentSnapshot snapshotData, String leftTitle, rightTitle) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            width: size.width * 0.45,
-            child: Text(
-              leftTitle,
-              style: _frontWidgetTextStyle(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child: Container(
+              width: size.width * 0.45,
+              child: Text(
+                leftTitle,
+                style: _frontWidgetTextStyle(),
+              ),
             ),
           ),
           Container(
@@ -1177,7 +1188,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
   Padding _managementScreenCardLayoutWithDetailForm(QueryDocumentSnapshot snapshotData, BuildContext context, showBottomSheetExpenseAddShow) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -1189,11 +1200,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
           ),
           Row(
             children: [
-              Icon(Icons.expand_more_rounded, size: 13,color: Colors.indigo,),
-              Icon(Icons.expand_more_rounded, size: 13,color: Colors.indigo,),
+              Icon(Icons.expand_more_rounded, size: 13,color: Colors.white,),
+              Icon(Icons.expand_more_rounded, size: 13,color: Colors.white,),
               InkWell(
                 child: Container(
-                    child: Text('자세히보기',style: TextStyle(color: Colors.indigo),),
+                    child: Text('자세히보기',style: TextStyle(color: Colors.white),),
                 ),
                 onTap: (){
                   showMaterialModalBottomSheet(
@@ -1294,8 +1305,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                       });
                 },
               ),
-              Icon(Icons.expand_more_rounded, size: 13,color: Colors.indigo,),
-              Icon(Icons.expand_more_rounded, size: 13,color: Colors.indigo,),
+              Icon(Icons.expand_more_rounded, size: 13,color: Colors.white,),
+              Icon(Icons.expand_more_rounded, size: 13,color: Colors.white,),
             ],
           ),
         ],
@@ -1305,6 +1316,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
   TextStyle _frontWidgetTextStyle() {
     return TextStyle(
-        color: Colors.black, fontSize: 15);
+        color: Colors.black, fontSize: 12);
   }
 }

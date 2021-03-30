@@ -3,7 +3,7 @@ import 'dart:ui';
 Size size;
 
 
-const double fontSize = 30.0;
+const double fontSize = 32.0;
 
 
 final expTtfHeightSize = size.width * 0.19;
