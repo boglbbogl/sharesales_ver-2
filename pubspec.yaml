@@ -45,6 +45,10 @@ dependencies:
   syncfusion_flutter_datepicker: ^18.4.49-beta
   syncfusion_localizations: ^18.1.36
   flutter_datetime_picker: ^1.5.0
+  expansion_card: ^0.1.0
+  expandable_page_view: ^1.0.3
+
+
 
 
 dependency_overrides:

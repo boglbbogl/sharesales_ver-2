@@ -1,8 +1,8 @@
+import 'package:expandable_page_view/expandable_page_view.dart';
+import 'package:expansion_card/expansion_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:sharesales_ver2/constant/size.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-
 
 class Example extends StatefulWidget {
   @override
@@ -10,107 +10,85 @@ class Example extends StatefulWidget {
 }
 
 class _ExampleState extends State<Example> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey,
+        appBar: AppBar(
+          title: Text('widget'),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              ExpandablePageView(
+                children: [
+                  ExpansionCard(
+                    background: ColoredBox(
+                      color: Colors.green,
+                    ),
+                      title: Container(
+                                   height: 100,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text('sdfklsjdfl'),
+                                      Text('sdfklsjdfl'),
+                                      Text('sdfklsjdfl'),
+                                    ],
+                                  ),),
+                  children: [
+                    Text('sdfklsjdfl'),
+                    Text('sdfklsjdfl'),
+                    Text('sdfklsjdfl'),
+                  ],),
+                  ExamplePage(Colors.blue, "1", 100),
+                  ExamplePage(Colors.green, "2", 200),
+                  ExamplePage(Colors.red, "3", 300),
+                  Container(height: 400,),
+                ],
+              ),
+              Container(height: 20,color: Colors.green,),
+              // ExpandablePageView(
+              //   animateFirstPage: true,
+              //   estimatedPageSize: 100,
+              //   itemCount: 3,
+              //   itemBuilder: (context, index) {
+              //     return ExamplePage(
+              //       Colors.blue,
+              //       index.toString(),
+              //       (index + 1) * 100.0,
+              //     );
+              //   },
+              // ),
+              const SizedBox(height: 50),
+              Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.white),),
+            ],
+          ),
+        ));
+  }
+}
+class ExamplePage extends StatelessWidget {
+  final Color color;
+  final String text;
+  final double height;
 
-  PageController test1Controller = PageController(viewportFraction: 0.8);
-  PageController test2Controller = PageController(viewportFraction: 0.5);
+  const ExamplePage(this.color, this.text, this.height);
 
   @override
   Widget build(BuildContext context) {
-
-    return Center(
-        child: Container(
-          height: size.height*0.8, width: size.width*0.8,color: Colors.blue,
-        child: IconButton(
-          icon: Icon(Icons.add),
-          onPressed: (){
-            showMaterialModalBottomSheet(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                closeProgressThreshold: 5.0,
-                enableDrag: true,
-                animationCurve: Curves.fastOutSlowIn,
-                duration: Duration(milliseconds: 300),
-                barrierColor: Colors.black87,
-                backgroundColor: Colors.deepOrangeAccent,
-                context: context,
-                builder: (BuildContext context) {
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      colorScheme: ColorScheme.dark(),
-                    ),
-                    child: StatefulBuilder(
-                      builder: (BuildContext context, StateSetter fulSetState) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          height: size.height * 0.45,
-                          // color: Colors.deepOrange,
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 10),
-                            child: SfDateRangePicker(
-                              minDate: DateTime(2000,01,01),
-                              maxDate: DateTime(2100,01,01),
-                              monthCellStyle: DateRangePickerMonthCellStyle(
-                                textStyle: TextStyle(color: Colors.white),
-                                weekendDatesDecoration: BoxDecoration(
-                                  color: Colors.deepOrange,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                specialDatesDecoration: BoxDecoration(
-                                  color: Colors.deepOrange,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-
-                                todayTextStyle: TextStyle(color: Colors.white),
-                              ),
-                              startRangeSelectionColor: Colors.orange,
-                              endRangeSelectionColor: Colors.orange,
-                              rangeSelectionColor: Colors.orange,
-                              selectionTextStyle: TextStyle(color: Colors.white),
-                              todayHighlightColor: Colors.orange,
-                              selectionColor: Colors.orange,
-                              backgroundColor: Colors.deepOrangeAccent,
-                              // controller: _dayRangePickerController,
-                              allowViewNavigation: false,
-                              view: DateRangePickerView.year,
-                              selectionMode: DateRangePickerSelectionMode.range,
-                              headerStyle: DateRangePickerHeaderStyle(
-                                  textStyle: TextStyle(
-                                      fontWeight:FontWeight.bold,color: Colors.white,fontSize: 18,fontStyle: FontStyle.italic)),
-                              monthViewSettings: DateRangePickerMonthViewSettings(
-                                enableSwipeSelection: false,
-                              ),
-                              onSelectionChanged: (DateRangePickerSelectionChangedArgs  args){
-                                // setState((){
-                                //   if (args.value is PickerDateRange) {
-                                //     rangePickerStartDate = DateFormat.yMEd('ko_KO').format(args.value.startDate).toString();
-                                //     // rangePickerStartDate = DateFormat('yyyy MM dd').format(args.value.startDate).toString();
-                                //     rangePickerEndDate = DateFormat.yMEd('ko_KO').
-                                //     format(args.value.endDate ?? args.value.startDate).toString();
-                                //     // rangePickerEndDate = DateFormat('yyyy MM dd')
-                                //     //     .format(args.value.endDate ?? args.value.startDate)
-                                //     //     .toString();
-                                //
-                                //     rangePickerStartDateTime = args.value.startDate;
-                                //     rangePickerEndDateTime = args.value.endDate;
-                                //   } else {
-                                //     return MyProgressIndicator();
-                                //   }
-                                // });
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }
-            );
-          },
-        ),
-        ));
+    return Container(
+      height: height,
+      width: 200,
+      color: color,
+      child: Column(
+        children: [
+          Center(
+            child: Text(text),
+          ),
+          Center(
+            child: Text(text),
+          ),
+        ],
+      ),
+    );
   }
-
 }
