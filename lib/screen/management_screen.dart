@@ -873,7 +873,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                       width: size.width*0.5,
                                                                                       child: Text(
                                                                                         addListToExpense[index]['title'].toString(), style: TextStyle(
-                                                                                          color: Colors.white),
+                                                                                          color: Colors.black54),
                                                                                       ),
                                                                                     ),
                                                                                     Expanded(
@@ -881,7 +881,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                         width: size.width*0.2,
                                                                                         child: Text(
                                                                                           addListToExpense[index]['expenseAmount'].toString(), style: TextStyle(
-                                                                                            color: Colors.white),),
+                                                                                            color: Colors.black54),),
                                                                                       ),
                                                                                     ),
                                                                                   ],

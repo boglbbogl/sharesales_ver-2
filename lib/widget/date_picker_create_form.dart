@@ -64,7 +64,7 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
               onChanged: (selectedDate) {
                 setState(() {
                   if (selectedDate != null || pickerDate != null) {
-                    pickerDate = selectedDate.toUtc();
+                    pickerDate = selectedDate;
                   } else {
                     return MyProgressIndicator();
                   }
