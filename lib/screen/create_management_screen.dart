@@ -47,7 +47,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
   TextEditingController _cashReceiptController = TextEditingController();
   TextEditingController _deliveryController = TextEditingController();
   TextEditingController _giftCardController = TextEditingController();
-  TextEditingController _foodprovisionController = TextEditingController();
+  TextEditingController _foodProvisionController = TextEditingController();
   TextEditingController _beverageController = TextEditingController();
   TextEditingController _alcoholController = TextEditingController();
 
@@ -69,7 +69,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
     _cashReceiptController.dispose();
     _deliveryController.dispose();
     _giftCardController.dispose();
-    _foodprovisionController.dispose();
+    _foodProvisionController.dispose();
     _beverageController.dispose();
     _alcoholController.dispose();
     super.dispose();
@@ -122,7 +122,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                         transform: Matrix4.translationValues(_expensePos, 0, 0),
                         curve: Curves.fastOutSlowIn,
                         child: ExpenseCreateForm(
-                          foodprovisionsController: _foodprovisionController,
+                          foodProvisionsController: _foodProvisionController,
                           beverageController: _beverageController,
                           alcoholController: _alcoholController,
                         ),
@@ -150,8 +150,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
           height: 3,
           width: size.width / 3,
           color: _selectedIndicator == SelectedIndicator.left
-              ? Colors.amberAccent
-              : Colors.redAccent,
+              ? Colors.deepPurple
+              : Colors.pink,
         ),
         curve: Curves.fastOutSlowIn,
       ),
@@ -172,8 +172,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     showBadge: _showTabBarBadge,
                     position: BadgePosition.bottomEnd(bottom: 9, end: 10),
                     badgeColor: _selectedIndicator == SelectedIndicator.right
-                        ? Colors.amberAccent
-                        : Colors.redAccent,
+                        ? Colors.deepPurple
+                        : Colors.pink,
                     badgeContent: InkWell(
                       onTap: () {
                         setState(() {
@@ -205,8 +205,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: _selectedIndicator == SelectedIndicator.left
-                                ? Colors.amberAccent
-                                : Colors.white,
+                                ? Colors.deepPurple
+                                : Colors.black54,
                           ),
                         ),
                       ),
@@ -234,8 +234,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       color: _selectedIndicator == SelectedIndicator.left
-                          ? Colors.white
-                          : Colors.redAccent,
+                          ? Colors.black54
+                          : Colors.pink,
                     ),
                   ),
                 ),
@@ -249,25 +249,26 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
 
   AppBar _createScreenAppbar(BuildContext context) {
     return AppBar(
-      backgroundColor: blackColor,
+      backgroundColor: Colors.white,
+      elevation: 10,
       title: Text(
         'CREATE',
         style: TextStyle(
             color: _selectedIndicator == SelectedIndicator.left
-                ? Colors.amberAccent
-                : Colors.redAccent,
+                ? Colors.deepPurple
+                : Colors.pink,
             // foreground:  Paint()..shader = mainColor,
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic),
       ),
       iconTheme: IconThemeData(
           color: _selectedIndicator == SelectedIndicator.left
-              ? Colors.amberAccent
-              : Colors.redAccent),
+              ? Colors.deepPurple
+              : Colors.pink),
       actionsIconTheme: IconThemeData(
           color: _selectedIndicator == SelectedIndicator.left
-              ? Colors.amberAccent
-              : Colors.redAccent),
+              ? Colors.deepPurple
+              : Colors.pink),
       actions: [
         Stack(
           children: [
@@ -277,8 +278,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                 showBadge: _showTabBarBadge,
                 position: BadgePosition.topEnd(end: 5, top: 5),
                 badgeColor: _selectedIndicator == SelectedIndicator.right
-                    ? Colors.amberAccent
-                    : Colors.redAccent,
+                    ? Colors.deepPurple
+                    : Colors.pink,
                 child: IconButton(
                   icon: Icon(Icons.save_alt_rounded, size: 35,),
                   onPressed: () async{
@@ -314,7 +315,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                               selectedDate: pickerDate.toUtc().toString().substring(0, 10),
                               expenseAddList: expenseAddMapList,
                               stdDate: pickerDate.toUtc(),
-                              foodProvisionExpense: _foodprovisionController.text.isEmpty ? int.parse('0') : int.parse(_foodprovisionController.text.replaceAll(",", "")),
+                              foodProvisionExpense: _foodProvisionController.text.isEmpty ? int.parse('0') : int.parse(_foodProvisionController.text.replaceAll(",", "")),
                               beverageExpense: _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
                               alcoholExpense: _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_alcoholController.text.replaceAll(",", "")),
                             ),);

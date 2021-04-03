@@ -11,10 +11,10 @@ class ExpenseCreateForm extends StatelessWidget {
   const ExpenseCreateForm(
       {Key key,
       this.index,
-      TextEditingController foodprovisionsController,
+      TextEditingController foodProvisionsController,
       TextEditingController beverageController,
       TextEditingController alcoholController})
-      : _foodProvisionsController = foodprovisionsController,
+      : _foodProvisionsController = foodProvisionsController,
         _beverageController = beverageController,
         _alcoholController = alcoholController,
         super(key: key);

@@ -63,6 +63,7 @@ class _MainHomePageState extends State<MainHomePage> {
   BottomNavigationBar _btmNav() {
     return BottomNavigationBar(
       backgroundColor: Colors.white,
+      elevation: 1,
       type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndex,
       items: _btmNavItems,

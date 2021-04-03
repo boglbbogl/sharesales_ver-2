@@ -46,7 +46,7 @@ InputDecoration expenseInputDecor(String hint){
     enabledBorder: _expenseInputDecor(),
     focusedBorder: _expenseInputDecor(),
     labelText: hint,
-      labelStyle: TextStyle(color: Colors.red,),
+      labelStyle: TextStyle(color: Colors.pink,),
   );
 }
 
@@ -87,14 +87,14 @@ InputDecoration blackInputDecor(String hint) {
     errorBorder: _blackErrorInputBorder(),
     focusedErrorBorder: _blackErrorInputBorder(),
     labelText: hint,
-    labelStyle: TextStyle(color: Colors.amberAccent),
+    labelStyle: TextStyle(color: Colors.deepPurple),
   );
 }
 
 UnderlineInputBorder _blackErrorInputBorder() {
   return UnderlineInputBorder(
     borderSide: BorderSide(
-      color: Colors.redAccent,
+      color: Colors.pink,
     ),
   );
 }
@@ -131,14 +131,14 @@ InputDecoration expenseTextAddInputDecor(String hint){
     enabledBorder: _expenseTextAddInputDecor(),
     focusedBorder: _expenseTextAddInputDecor(),
     labelText: hint,
-    labelStyle: TextStyle(color: Colors.redAccent,),
+    labelStyle: TextStyle(color: Colors.pink,),
   );
 }
 
 UnderlineInputBorder _expenseTextAddInputDecor() {
   return UnderlineInputBorder(
     borderSide: BorderSide(
-      color: Colors.redAccent,
+      color: Colors.pink,
     ),
   );
 }

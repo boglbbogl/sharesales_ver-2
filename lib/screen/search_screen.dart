@@ -31,13 +31,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   String rangePickerStartDate;
   String rangePickerEndDate;
-  String monthRangePickerStartDate;
-  String monthRangePickerEndDate;
   DateTime rangePickerStartDateTime;
   DateTime rangePickerEndDateTime;
-  DateTime monthRangePickerStartDateTime;
-  DateTime monthRangePickerEndDateTime;
-
 
   bool _isExpanded = false;
 
@@ -128,7 +123,6 @@ class _SearchScreenState extends State<SearchScreen> {
               backgroundColor: Colors.white,
               appBar: mainAppBar(context, IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
                   onPressed: (){
-
               })),
               body: SingleChildScrollView(
                 child: Center(
@@ -153,7 +147,57 @@ class _SearchScreenState extends State<SearchScreen> {
                               ],
                             ),
                             onTap: (){
-                              _searchScreenDayDateRangePicker(context);
+                              showMaterialModalBottomSheet(
+
+                                  closeProgressThreshold: 5.0,
+                                  elevation: 0,
+                                  enableDrag: true,
+                                  animationCurve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 300),
+                                  barrierColor: Colors.white12,
+                                  backgroundColor: Colors.white,
+                                  context: context,
+                                  builder: (BuildContext context){
+                                    return Container(
+                                      height: size.height*0.15,
+                                      child: Row(
+                                        children: <Widget>[
+                                          Container(
+                                            width: size.width*0.1,
+                                            height: size.height*0.15,
+                                            color: Colors.white,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                colors: [Colors.green[500], Colors.green[500], Colors.green[400], Colors.green[300]],
+                                              ),
+                                              borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+                                            ),
+                                            width: size.width*0.8,
+                                            height: size.height*0.15,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: size.width*0.1,
+                                            height: size.height*0.15,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                              // _searchScreenDayRangeDatePicker(context);
                             },
                           ),
                         ),
@@ -174,7 +218,88 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Future _searchScreenDayDateRangePicker(BuildContext context) {
+  Future _searchScreenMonthRangeDatePicker(BuildContext context) {
+    return showMaterialModalBottomSheet(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      closeProgressThreshold: 5.0,
+                      enableDrag: true,
+                      animationCurve: Curves.fastOutSlowIn,
+                      duration: Duration(milliseconds: 300),
+                      barrierColor: Colors.black87,
+                      backgroundColor: Colors.pinkAccent,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.dark(),
+                          ),
+                          child: StatefulBuilder(
+                            builder: (BuildContext context, StateSetter fulSetState) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                height: size.height * 0.35,
+                                // color: Colors.deepOrange,
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: SfDateRangePicker(
+                                    minDate: DateTime(2000, 01, 01),
+                                    maxDate: DateTime(2100, 01, 01),
+                                    yearCellStyle: DateRangePickerYearCellStyle(
+                                      textStyle: TextStyle(color: Colors.white),
+                                      todayTextStyle: TextStyle(color: Colors.white),
+                                    ),
+                                    startRangeSelectionColor: Colors.deepPurple,
+                                    endRangeSelectionColor: Colors.deepPurple,
+                                    rangeSelectionColor: Colors.deepPurple,
+                                    selectionTextStyle: TextStyle(color: Colors.white),
+                                    todayHighlightColor: Colors.white,
+                                    selectionColor: Colors.pinkAccent,
+                                    backgroundColor: Colors.pinkAccent,
+                                    controller: _monthRangePickerController,
+                                    allowViewNavigation: false,
+                                    view: DateRangePickerView.year,
+                                    selectionMode: DateRangePickerSelectionMode.range,
+                                    headerStyle: DateRangePickerHeaderStyle(
+                                        textStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontStyle: FontStyle.italic)),
+                                    monthViewSettings: DateRangePickerMonthViewSettings(
+                                      enableSwipeSelection: false,
+                                    ),
+                                    onSelectionChanged:
+                                        (DateRangePickerSelectionChangedArgs args) {
+                                      setState(() {
+                                        if (args.value is PickerDateRange) {
+                                          rangePickerStartDate = DateFormat.yM('ko_KO')
+                                              .format(args.value.startDate)
+                                              .toString();
+                                          rangePickerEndDate = DateFormat.yM('ko_KO')
+                                              .format(
+                                              args.value.endDate ?? args.value.startDate)
+                                              .toString();
+                                          rangePickerStartDateTime = args.value.startDate;
+                                          rangePickerEndDateTime = args.value.endDate;
+                                        }  else{
+                                          return MyProgressIndicator();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      });
+  }
+
+  Future _searchScreenDayRangeDatePicker(BuildContext context) {
     return showMaterialModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

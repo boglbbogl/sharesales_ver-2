@@ -39,10 +39,10 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
               child: Text(
                 '$formatDate',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.deepOrangeAccent,
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
-                  fontSize: 20,
+                  fontSize: 22,
                 ),
               ),
             ),
@@ -52,10 +52,10 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
               context,
               theme: DatePickerTheme(
                 itemStyle: TextStyle(color: Colors.white),
-                backgroundColor: Colors.black,
-                headerColor: Colors.black,
-                doneStyle: TextStyle(color: Colors.redAccent),
-                cancelStyle: TextStyle(color: Colors.redAccent),
+                backgroundColor: Colors.deepOrangeAccent,
+                headerColor: Colors.deepOrangeAccent,
+                doneStyle: TextStyle(color: Colors.white),
+                cancelStyle: TextStyle(color: Colors.white),
                 containerHeight: size.height * 0.3,
               ),
               showTitleActions: true,

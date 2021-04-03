@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         title: 'share sales',
         theme: ThemeData(
           fontFamily: 'Yanolja',
-          canvasColor: blackColor,
+          // canvasColor: blackColor,
           primarySwatch: Colors.red,
         ),
         home: Consumer(

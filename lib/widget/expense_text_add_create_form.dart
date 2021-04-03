@@ -37,39 +37,13 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
             alignment: Alignment.center,
             children: <Widget>[
               Container(
-                width: size.width*0.85,
-                height: 20,
+                width: size.width*0.8,
+                height: size.height*0.05,
+                child: Text('추가 지출', style: TextStyle(color: Colors.black54, fontSize: 20), textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(20),
-                ),),
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Container(
-                  width: size.width*0.84,
-                  height: 15,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-              Container(
-                width: size.width*0.83,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Text('추가 지출',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontStyle: FontStyle.italic,
                   color: Colors.white,
-                ),),
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
             ],
           ),
@@ -99,14 +73,14 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
               right: 0,
               height: 1,
               child: Container(
-                color: Colors.red,
+                color: Colors.deepOrange,
                 height: 1,
               ),
             ),
             Container(
-              color: Colors.white,
+              color: Colors.deepOrange,
               height: 2,
-              width: size.width * 0.85,
+              width: size.width * 0.9,
             ),
             Container(
               height: 30,
@@ -138,11 +112,12 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                 },
 
                 elevation: 0,
-                color: Colors.grey,
-                splashColor: Colors.redAccent,
+                color: Colors.deepOrangeAccent,
+                splashColor: Colors.deepPurple,
                 child: Text(
                   '추가하기',
                   style: TextStyle(
+                    color: Colors.white,
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold),
                 ),
@@ -168,7 +143,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                 Badge(
                   showBadge: _titleBadge,
                   position: BadgePosition.topEnd(end: 10, top: 30),
-                  badgeColor: Colors.amberAccent,
+                  badgeColor: Colors.green,
                   child: TextFormField(
                     controller: expenseTitleController,
                     style: salesInputStyle(),
@@ -189,7 +164,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                 Badge(
                   showBadge: _amountBadge,
                   position: BadgePosition.topEnd(end: 10, top: 30),
-                  badgeColor: Colors.amberAccent,
+                  badgeColor: Colors.green,
                   child: TextFormField(
                     inputFormatters: [wonMaskFormatter],
                     controller: expenseAmountController,
