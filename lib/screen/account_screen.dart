@@ -23,7 +23,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.amberAccent,
+        backgroundColor: Colors.deepPurple[50],
         body: Stack(
           children: <Widget>[
             AnimatedContainer(

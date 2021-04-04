@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:expansion_card/expansion_card.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -12,9 +13,18 @@ import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'management_screen.dart';
 
+class ChartData{
+  final String xValue;
+  final int yValue;
+
+  ChartData.fromMap(Map<dynamic, dynamic> dataMap)
+    :xValue = dataMap ['selectedDate'],
+    yValue = dataMap['actualSales'];
+}
 
 class SearchScreen extends StatefulWidget {
 
@@ -83,6 +93,7 @@ class _SearchScreenState extends State<SearchScreen> {
         final expenseAmountOnlyResult = [];
         var showExpenseAddList = [];
 
+
         snapshot.data.docs.forEach((element) {
           var docQuery = element.data();
           totalSales.add(docQuery['totalSales']);
@@ -114,6 +125,14 @@ class _SearchScreenState extends State<SearchScreen> {
         int alcoholExpense = alcoholExpanse.isEmpty ? int.parse('0') : alcoholExpanse.reduce((v, e) => v+e);
         int totalResultExpenseGroup = expenseAddListTotalAmount + foodProvisionExpensePlus + beverageExpensePlus + alcoholExpense;
 
+          List<ChartData> chartData = [];
+          for(int index=0;index<snapshot.data.docs.length;index++) {
+            DocumentSnapshot document = snapshot.data.docs[index];
+            chartData.add(ChartData.fromMap(document.data()));
+          }
+
+
+
         return SafeArea(
           child: GestureDetector(
             onTap: (){
@@ -122,8 +141,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: mainAppBar(context, IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
-                  onPressed: (){
-              })),
+                  onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),)),
               body: SingleChildScrollView(
                 child: Center(
                   child: Column(
@@ -147,57 +165,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ],
                             ),
                             onTap: (){
-                              showMaterialModalBottomSheet(
-
-                                  closeProgressThreshold: 5.0,
-                                  elevation: 0,
-                                  enableDrag: true,
-                                  animationCurve: Curves.fastOutSlowIn,
-                                  duration: Duration(milliseconds: 300),
-                                  barrierColor: Colors.white12,
-                                  backgroundColor: Colors.white,
-                                  context: context,
-                                  builder: (BuildContext context){
-                                    return Container(
-                                      height: size.height*0.15,
-                                      child: Row(
-                                        children: <Widget>[
-                                          Container(
-                                            width: size.width*0.1,
-                                            height: size.height*0.15,
-                                            color: Colors.white,
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                                colors: [Colors.green[500], Colors.green[500], Colors.green[400], Colors.green[300]],
-                                              ),
-                                              borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-                                            ),
-                                            width: size.width*0.8,
-                                            height: size.height*0.15,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: size.width*0.1,
-                                            height: size.height*0.15,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  });
-                              // _searchScreenDayRangeDatePicker(context);
+                              _searchScreenShowBottomSheetRangeDatePickerList(context);
                             },
                           ),
                         ),
@@ -205,8 +173,34 @@ class _SearchScreenState extends State<SearchScreen> {
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
                           totalResultExpenseGroup, foodProvisionExpanse, beverageExpanse, alcoholExpanse, expenseAmountOnlyResult,
                           context, showExpenseAddList),
-                      SizedBox(height: 20,),
-                      Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),),
+                      Container(
+                        width: size.width*0.8,
+                        height: size.height*0.3,
+                        child: SfCartesianChart(
+                          title: ChartTitle(text: '매출',),
+                          primaryXAxis: CategoryAxis(
+                            labelStyle: TextStyle(color: Colors.black54),
+                            labelPosition: ChartDataLabelPosition.outside,
+                          ),
+                          primaryYAxis: NumericAxis(
+                          ),
+                          series: <ChartSeries<ChartData, dynamic>>[
+                            ColumnSeries<ChartData, dynamic>(
+                                dataSource: chartData,
+                                xValueMapper: (ChartData data, _)=>data.xValue.toString(),
+                                yValueMapper: (ChartData data, _)=>data.yValue,
+                              isVisible: true,
+                              borderRadius: BorderRadius.circular(30),
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [Colors.deepPurple,Colors.deepPurple[400], Colors.deepPurple[200]],
+                              )
+                            ),
+                          ],
+                        ),
+                      ),
+                      InkWell(onTap:()=>print(chartData.toList().first),child: Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),)),
                     ],
                   ),
                 ),
@@ -216,6 +210,92 @@ class _SearchScreenState extends State<SearchScreen> {
         );
       }
     );
+  }
+
+  Future _searchScreenShowBottomSheetRangeDatePickerList(BuildContext context) {
+    return showMaterialModalBottomSheet(
+                                closeProgressThreshold: 5.0,
+                                elevation: 0,
+                                enableDrag: true,
+                                animationCurve: Curves.fastOutSlowIn,
+                                duration: Duration(milliseconds: 300),
+                                barrierColor: Colors.white12,
+                                backgroundColor: Colors.white,
+                                context: context,
+                                builder: (BuildContext context){
+                                  return Container(
+                                    height: size.height*0.2,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width: size.width*0.1,
+                                          height: size.height*0.25,
+                                          color: Colors.white,
+                                        ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [Colors.green[500], Colors.green[500], Colors.green[400], Colors.green[300]],
+                                            ),
+                                            borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+                                          ),
+                                          width: size.width*0.8,
+                                          height: size.height*0.25,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  ListTile(
+                                                    leading: Text('Day'),
+                                                    title: Text('일자별',),
+                                                    dense: true,
+                                                    onTap: (){
+                                                      Navigator.pop(context);
+                                                      _searchScreenDayRangeDatePicker(context);
+                                                    }
+                                                  ),
+                                                  Divider(height: 1,),
+                                                  ListTile(
+                                                      leading: Text('Month'),
+                                                    title: Text('월별'),
+                                                    dense: true,
+                                                    onTap: (){
+                                                      Navigator.pop(context);
+                                                      _searchScreenMonthRangeDatePicker(context);
+                                                    }
+                                                  ),
+                                                  Divider(height: 1,),
+                                                  ListTile(
+                                                    leading: Text('Year'),
+                                                    title: Text('연도별'),
+                                                    dense: true,
+                                                    onTap: (){
+                                                      Navigator.pop(context);
+                                                      print('아직 못만듬');
+                                                    }
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: size.width*0.1,
+                                          height: size.height*0.15,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
   }
 
   Future _searchScreenMonthRangeDatePicker(BuildContext context) {
@@ -412,8 +492,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  _managementScreenSalesPageViewShowTextForm(16, 10.0, Colors.white, '실제매출', actualSales,),
-                                  _managementScreenSalesPageViewShowTextForm(16, 10.0, Colors.white, '총매출', totalSales,),
+                                  _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '실제매출', actualSales,),
+                                  _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '총매출', totalSales,),
                                 ],
                               ),),
                             children: [
@@ -423,14 +503,14 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               Column(
                               children: <Widget>[
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, '할인', discount,),
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, 'Delivery', delivery,),
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, '신용카드', creditCard,),
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, '공급가액', vos,),
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, '세액', vat,),
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, '현금', cash,),
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, '현금영수증', cashReceipt,),
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, 'Gift card', giftCard,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '할인', discount,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, 'Delivery', delivery,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '신용카드', creditCard,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '공급가액', vos,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '세액', vat,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '현금', cash,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '현금영수증', cashReceipt,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, 'Gift card', giftCard,),
                               ],
                               ),
                             ],),
@@ -467,7 +547,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ],
                               ),
                             ),
-                                  _managementScreenSalesPageViewShowTextForm(16, 10.0, Colors.white, '식자재', foodProvisionExpanse,),
+                                  _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '식자재', foodProvisionExpanse,),
                                 ],
                               ),),
                             children: [
@@ -477,8 +557,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               Column(
                               children: <Widget>[
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, '음료', beverageExpanse,),
-                                _managementScreenSalesPageViewShowTextForm(null, 25.0 ,null, '주류', alcoholExpanse,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '음료', beverageExpanse,),
+                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '주류', alcoholExpanse,),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 15),
                                   child: Container(width: size.width*0.7, height: 2, color: Colors.white24,),
@@ -526,41 +606,44 @@ class _SearchScreenState extends State<SearchScreen> {
                                         context: context,
                                         builder: (BuildContext context){
                                           return Container(
-                                            height: size.height*0.25,
-                                            child: ListView.separated(
-                                              itemCount: showExpenseAddList.length,
-                                              itemBuilder: (BuildContext context, int index) {
-                                                return Column(
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(left: 40, top: 5),
-                                                      child: Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: <Widget>[
-                                                          Container(
-                                                            width: size.width*0.5,
-                                                            child: Text(
-                                                              showExpenseAddList[index]['title'].toString(), style: TextStyle(
-                                                                color: Colors.white),
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            child: Container(
-                                                              width: size.width*0.2,
+                                            height: size.height*0.3,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 15),
+                                              child: ListView.separated(
+                                                itemCount: showExpenseAddList.length,
+                                                itemBuilder: (BuildContext context, int index) {
+                                                  return Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left: 40, top: 5),
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              width: size.width*0.5,
                                                               child: Text(
-                                                                showExpenseAddList[index]['expenseAmount'].toString(), style: TextStyle(
-                                                                  color: Colors.white),),
+                                                                showExpenseAddList[index]['title'].toString(), style: TextStyle(
+                                                                  color: Colors.white),
+                                                              ),
                                                             ),
-                                                          ),
+                                                            Expanded(
+                                                              child: Container(
+                                                                width: size.width*0.2,
+                                                                child: Text(
+                                                                  showExpenseAddList[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                    color: Colors.white),),
+                                                              ),
+                                                            ),
 
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                );
-                                              }, separatorBuilder: (BuildContext context, int index) {
-                                              return Container(height: 15,);
-                                            },
+                                                    ],
+                                                  );
+                                                }, separatorBuilder: (BuildContext context, int index) {
+                                                return Container(height: 15,);
+                                              },
+                                              ),
                                             ),
                                           );
                                         });
@@ -574,7 +657,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     );
   }
 
-  Padding _managementScreenSalesPageViewShowTextForm(double fontSize, double paddingDouble, Color color, String hint, data) {
+  Padding _searchScreenPageViewShowTextForm(double fontSize, double paddingDouble, Color color, String hint, data) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: paddingDouble ?? 0.0),
       child: Row(

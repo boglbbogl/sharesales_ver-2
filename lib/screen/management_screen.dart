@@ -107,7 +107,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
             icon: Icon(
               Icons.create,
               color: Colors.deepPurpleAccent,
-              size: 30,
             ),
             onPressed: () {
               Navigator.push(

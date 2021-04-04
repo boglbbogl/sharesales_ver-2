@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/screen/auth_screen.dart';
+import 'package:sharesales_ver2/screen/create_management_screen.dart';
 
 class AdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: blackColor,
+        elevation: 0,
+        backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
           'share sales',
@@ -17,16 +19,22 @@ class AdScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
             fontSize: fontSize,
-            foreground: Paint()..shader = mainColor,
+            foreground: Paint()..shader = secondMainColor,
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.cloud),
+          icon: Icon(Icons.logout, color: Colors.pink,),
           onPressed: () {
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => AuthScreen()));
           },
         ),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.create, color: Colors.deepPurple,), onPressed: ()=>CreateManagementScreen()),
+          IconButton(
+              icon: Icon(Icons.account_circle, color: Colors.deepPurple,), onPressed: (){}),
+        ],
       ),
       body: SingleChildScrollView(
         child: SafeArea(

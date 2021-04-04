@@ -39,25 +39,27 @@ class _AccountScreenBodyState extends State<AccountScreenBody>
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.deepPurple[50],
         appBar: AppBar(
+          backgroundColor: Colors.deepPurple[50],
           elevation: 0,
-          backgroundColor: Colors.amberAccent,
           title: Center(
             child: Text('돈까스상회',
                 style: TextStyle(
               fontWeight: FontWeight.bold,
               fontStyle: FontStyle.italic,
-              foreground: Paint()..shader = subColor,
+              fontSize: 28,
+              foreground: Paint()..shader = secondMainColor,
             ),),
           ),
           leading: IconButton(
-            color: Colors.amberAccent,
+            color: Colors.white,
             onPressed: (){},
             icon: Icon(Icons.add),
           ),
           actions: [
                   IconButton(
-                    color: Colors.black,
+                    color: Colors.deepPurple,
                       icon: AnimatedIcon(
                         icon: AnimatedIcons.menu_close,
                         progress: _iconAniController,
