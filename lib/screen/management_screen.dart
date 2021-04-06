@@ -556,8 +556,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                           var upDateExpenseAddList = [];
                                                           upDateExpenseAddList.addAll(snapshotData.data()['expenseAddList'],);
 
-                                                          List<int> upDateExpenseTotalAmount = [];
-
                                                           bool _titleBadge = false;
                                                           bool _amountBadge = false;
 
@@ -668,8 +666,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                       borderRadius: BorderRadius.circular(30),
                                                                                     ),
                                                                                     closeProgressThreshold: 5.0,
-                                                                                    isDismissible: false,
-                                                                                    enableDrag: false,
+                                                                                    isDismissible: true,
+                                                                                    enableDrag: true,
                                                                                     elevation: 90.0,
                                                                                     animationCurve: Curves.fastOutSlowIn,
                                                                                     duration: Duration(milliseconds: 1500),
@@ -680,8 +678,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                       return StatefulBuilder(
                                                                                           builder: (BuildContext context, StateSetter setState){
 
-
-
                                                                                             return Padding(
                                                                                               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                                                                               child: Container(
@@ -691,36 +687,35 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                   children: <Widget>[
                                                                                                     Stack(
                                                                                                       children: [
-                                                                                                        Positioned(left: 15, top: 15,
-                                                                                                          child: InkWell(
-                                                                                                            child: IconButton(
-                                                                                                              icon: Icon(Icons.arrow_downward_outlined, color: Colors.pink, size: 30,),
-                                                                                                              onPressed: () {
-                                                                                                                Navigator.of(context).pop();
-                                                                                                              },
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Positioned(right: 15, top: 30,
-                                                                                                          child: InkWell(
-                                                                                                            child: Text('Save',
-                                                                                                              style: TextStyle(
-                                                                                                                color: Colors.pink, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                            onTap: () async{
-                                                                                                              int test = upDateExpenseTotalAmount.reduce((v, e) => v+e);
-
-                                                                                                              await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
-                                                                                                                  .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                                                               'expenseAddTotalAmount': FieldValue.increment(test.isNaN?int.parse('0'):test),
-                                                                                                                'expenseAddList': FieldValue.arrayUnion(
-                                                                                                                  upDateExpenseAddList)
-                                                                                                              });
-                                                                                                              Navigator.of(context).pop();
-                                                                                                            },
-                                                                                                          ),
-                                                                                                        ),
+                                                                                                        // Positioned(left: 15, top: 15,
+                                                                                                        //   child: InkWell(
+                                                                                                        //     child: IconButton(
+                                                                                                        //       icon: Icon(Icons.arrow_downward_outlined, color: Colors.pink, size: 30,),
+                                                                                                        //       onPressed: () {
+                                                                                                        //         Navigator.of(context).pop();
+                                                                                                        //       },
+                                                                                                        //     ),
+                                                                                                        //   ),
+                                                                                                        // ),
+                                                                                                        // Positioned(right: 15, top: 30,
+                                                                                                        //   child: InkWell(
+                                                                                                        //     child: Text('Save',
+                                                                                                        //       style: TextStyle(
+                                                                                                        //         color: Colors.pink, fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
+                                                                                                        //       ),
+                                                                                                        //     ),
+                                                                                                        //     onTap: () async{
+                                                                                                        //
+                                                                                                        //       // await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
+                                                                                                        //       //     .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                        //       //  'expenseAddTotalAmount': FieldValue.increment(test.isNaN?int.parse('0'):test),
+                                                                                                        //       //   'expenseAddList': FieldValue.arrayUnion(
+                                                                                                        //       //     upDateExpenseAddList)
+                                                                                                        //       // });
+                                                                                                        //       // Navigator.of(context).pop();
+                                                                                                        //     },
+                                                                                                        //   ),
+                                                                                                        // ),
                                                                                                         Column(
                                                                                                           crossAxisAlignment: CrossAxisAlignment.center,
                                                                                                           mainAxisAlignment: MainAxisAlignment.start,
@@ -780,7 +775,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                       height: 30,
                                                                                                       width: size.width * 0.6,
                                                                                                       child: RaisedButton(
-                                                                                                        onPressed: () {
+                                                                                                        onPressed: () async{
+
                                                                                                           setState(() {
                                                                                                             if (_editAddExpenseTitleController.text.isEmpty) {
                                                                                                               _titleBadge = true;
@@ -796,8 +792,15 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                               'title': _editAddExpenseTitleController.text.trim(),
                                                                                                               'expenseAmount': int.parse(_editAddExpenseAmountController.text.replaceAll(",", "")),
                                                                                                             }]);
-                                                                                                            upDateExpenseTotalAmount.add(int.parse(_editAddExpenseAmountController.text.replaceAll(",", "")));
                                                                                                             });
+                                                                                                          await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
+                                                                                                              .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                            'expenseAddTotalAmount': FieldValue.increment(int.parse(_editAddExpenseAmountController.text.replaceAll(',', ""))),
+                                                                                                            'expenseAddList': FieldValue.arrayUnion([{
+                                                                                                              'title': _editAddExpenseTitleController.text.trim(),
+                                                                                                              'expenseAmount': int.parse(_editAddExpenseAmountController.text.replaceAll(",", "")),
+                                                                                                          }]),
+                                                                                                          });
                                                                                                           if(_titleBadge == false && _amountBadge == false)
                                                                                                             _editAddExpenseTitleController.clear();
                                                                                                           _editAddExpenseAmountController.clear();
