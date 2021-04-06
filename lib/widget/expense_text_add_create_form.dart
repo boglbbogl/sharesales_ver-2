@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
+import 'package:sharesales_ver2/screen/management_screen.dart';
 
-List<Map<String, String>> expenseAddMapList = [];
+List<Map<dynamic, dynamic>> expenseAddMapList = [];
+List<int> expenseAmountTotal = [];
 
 class ExpenseTextAddCreateForm extends StatefulWidget {
   @override
@@ -102,8 +104,9 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
 
                     expenseAddMapList.addAll([{
                       'title': expenseTitleController.text.trim(),
-                      'expenseAmount': expenseAmountController.text.trim(),
+                      'expenseAmount': int.parse(expenseAmountController.text.replaceAll(",", "")),
                     }]);
+                    expenseAmountTotal.add(int.parse(expenseAmountController.text.replaceAll(",", "")));
                   });
 
                   if(_titleBadge == false && _amountBadge == false)
@@ -182,7 +185,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
       );
   }
 
-  Widget _expenseTextAddListView(Map<String, String> expense){
+  Widget _expenseTextAddListView(Map<dynamic, dynamic> expense,){
    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -192,7 +195,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
           padding: const EdgeInsets.only(bottom: 19, left: 10),
           child: Text(
             '내용 : ',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black54),
           ),
         ),
         Flexible(
@@ -201,7 +204,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
               // _toggleExpense(addText);123123
             },
           title: Text(
-              expense.values.first, style: TextStyle(color: Colors.white),
+              expense.values.first, style: TextStyle(color: Colors.black),
               ),
             ),
         ),
@@ -209,7 +212,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
           padding: const EdgeInsets.only(bottom: 19, left: 10),
           child: Text(
             '/ ',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
           ),
         ),
         Flexible(
@@ -218,17 +221,19 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
               // _toggleExpense(addText);123123
             },
             title: Text(
-              expense.values.last, style: TextStyle(color: Colors.white),
+              koFormatMoney.format(expense.values.last),
+              style: TextStyle(color: Colors.black),
             ),
             trailing: SizedBox(
               width: 35,
               child: IconButton(
-                color: Colors.white,
+                color: Colors.black54,
                 icon: Icon(Icons.delete_forever),
                 onPressed: () {
                   setState(() {
                     print(expense.values.last);
                     expenseAddMapList.remove(expense);
+                    expenseAmountTotal.remove(expense.values.last);
                   });
                   // print(expense);
                 },

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
+import 'package:sharesales_ver2/widget/expense_text_add_create_form.dart';
 
 class ManagementModel {
   final String userKey;
@@ -16,6 +17,7 @@ class ManagementModel {
   final DateTime stdDate;
   final String selectedDate;
   final List<dynamic> expenseAddList;
+  final int expenseAddTotalAmount;
   final int foodProvisionExpense;
   final int beverageExpense;
   final int alcoholExpense;
@@ -36,6 +38,7 @@ class ManagementModel {
         delivery = map[KEY_DELIVERY],
         giftCard = map[KEY_GIFTCARD],
         expenseAddList = map[KEY_EXPENSEADDLIST],
+        expenseAddTotalAmount = map[KEY_EXPENSEADDTOTALAMOUNT],
         foodProvisionExpense = map[KEY_FOODPROVISION],
         beverageExpense = map[KEY_BEVERAGE],
         alcoholExpense = map[KEY_ALCOHOL];
@@ -59,6 +62,7 @@ class ManagementModel {
     int delivery,
     int giftCard,
     List<dynamic> expenseAddList,
+    int expenseAddTotalAmount,
     int foodProvisionExpense,
     int beverageExpense,
     int alcoholExpense,
@@ -78,6 +82,7 @@ class ManagementModel {
     map[KEY_SELECTEDDATE] = selectedDate;
     map[KEY_STDDATE] = stdDate;
     map[KEY_EXPENSEADDLIST] = expenseAddList;
+    map[KEY_EXPENSEADDTOTALAMOUNT] = expenseAddTotalAmount;
     map[KEY_FOODPROVISION] = foodProvisionExpense;
     map[KEY_BEVERAGE] = beverageExpense;
     map[KEY_ALCOHOL] = alcoholExpense;

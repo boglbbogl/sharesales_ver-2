@@ -100,6 +100,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
          int monthChangeExpenseList = monthExpenseTotalShow.isEmpty ? int.parse('0') : monthExpenseTotalShow.reduce((v, e) => v + e);
          int monthTotalExpenseShowTextIntType = monthChangeAddExpenseList + monthChangeExpenseList;
 
+
         return SafeArea(
           child: Scaffold(
             backgroundColor: Colors.white,
@@ -555,6 +556,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                           var upDateExpenseAddList = [];
                                                           upDateExpenseAddList.addAll(snapshotData.data()['expenseAddList'],);
 
+                                                          List<int> upDateExpenseTotalAmount = [];
+
                                                           bool _titleBadge = false;
                                                           bool _amountBadge = false;
 
@@ -677,6 +680,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                       return StatefulBuilder(
                                                                                           builder: (BuildContext context, StateSetter setState){
 
+
+
                                                                                             return Padding(
                                                                                               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                                                                               child: Container(
@@ -704,8 +709,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                               ),
                                                                                                             ),
                                                                                                             onTap: () async{
-                                                                                                             await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
+                                                                                                              int test = upDateExpenseTotalAmount.reduce((v, e) => v+e);
+
+                                                                                                              await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
                                                                                                                   .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                               'expenseAddTotalAmount': FieldValue.increment(test),
                                                                                                                 'expenseAddList': FieldValue.arrayUnion(
                                                                                                                   upDateExpenseAddList)
                                                                                                               });
@@ -786,9 +794,10 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                             _titleBadge = false;
                                                                                                             upDateExpenseAddList.addAll([{
                                                                                                               'title': _editAddExpenseTitleController.text.trim(),
-                                                                                                              'expenseAmount': _editAddExpenseAmountController.text.trim(),
+                                                                                                              'expenseAmount': int.parse(_editAddExpenseAmountController.text.replaceAll(",", "")),
                                                                                                             }]);
-                                                                                                          });
+                                                                                                            upDateExpenseTotalAmount.add(int.parse(_editAddExpenseAmountController.text.replaceAll(",", "")));
+                                                                                                            });
                                                                                                           if(_titleBadge == false && _amountBadge == false)
                                                                                                             _editAddExpenseTitleController.clear();
                                                                                                           _editAddExpenseAmountController.clear();
@@ -816,6 +825,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                           child: ListView.separated(
                                                                                                             itemCount: upDateExpenseAddList.length,
                                                                                                             itemBuilder: (BuildContext context, int index) {
+
+                                                                                                              int _showExpenseAmountFormat = upDateExpenseAddList[index]['expenseAmount'];
                                                                                                               return Column(
                                                                                                                 children: [
                                                                                                                   Row(
@@ -832,7 +843,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                                                         child: Container(
                                                                                                                           width: size.width*0.2,
                                                                                                                           child: Text(
-                                                                                                                            upDateExpenseAddList[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                                                                            koFormatMoney.format(_showExpenseAmountFormat) + ' \\', style: TextStyle(
                                                                                                                               color: Colors.white),),
                                                                                                                         ),
                                                                                                                       ),
@@ -842,14 +853,15 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
                                                                                                                           await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
                                                                                                                               .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                                            'expenseAddTotalAmount': FieldValue.increment(-_showExpenseAmountFormat),
                                                                                                                             'expenseAddList': FieldValue.arrayRemove([
                                                                                                                               upDateExpenseAddList[index]]),
                                                                                                                           });
 
                                                                                                                           mySetState((){
-                                                                                                                            print(upDateExpenseAddList);
                                                                                                                             upDateExpenseAddList.removeAt(index);
-                                                                                                                            print(upDateExpenseAddList);
+                                                                                                                            // print(upDateExpenseAddList[index]['expenseAmount']);
+                                                                                                                            print(_showExpenseAmountFormat);
                                                                                                                           });
                                                                                                                         },
                                                                                                                       ),
@@ -876,12 +888,16 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                       ),
                                                                       StatefulBuilder(
                                                                         builder: (BuildContext context, StateSetter mySetState) {
+
                                                                           return Container(
                                                                             height: size.height * 0.17,
                                                                             width: size.width*0.9,
                                                                             child: ListView.separated(
                                                                               itemCount: addListToExpense.length,
                                                                               itemBuilder: (BuildContext context, int index) {
+
+                                                                                int _showAddListToExpenseFormat = addListToExpense[index]['expenseAmount'];
+
                                                                                 return Column(
                                                                                   children: [
                                                                                     Row(
@@ -898,7 +914,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                                                           child: Container(
                                                                                             width: size.width*0.2,
                                                                                             child: Text(
-                                                                                              addListToExpense[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                                              koFormatMoney.format(_showAddListToExpenseFormat) + ' \\', style: TextStyle(
                                                                                                 color: Colors.black54),),
                                                                                           ),
                                                                                         ),
@@ -1286,6 +1302,9 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                       child: ListView.separated(
                                         itemCount: showBottomSheetExpenseAddShow.length,
                                         itemBuilder: (BuildContext context, int index) {
+
+                                          int _showBottomExpenseAmountFormat = showBottomSheetExpenseAddShow[index]['expenseAmount'];
+
                                           return Column(
                                             children: [
                                               Row(
@@ -1305,7 +1324,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                                     child: Container(
                                                       width: size.width*0.2,
                                                       child: Text(
-                                                        showBottomSheetExpenseAddShow[index]['expenseAmount'].toString() +' 원', style: TextStyle(
+                                                        koFormatMoney.format(_showBottomExpenseAmountFormat) +'   \\', style: TextStyle(
                                                           color: Colors.white),),
                                                     ),
                                                   ),

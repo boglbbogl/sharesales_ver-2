@@ -22,6 +22,7 @@ const KEY_DELIVERY = 'delivery';
 const KEY_GIFTCARD = 'giftCard';
 
 const KEY_EXPENSEADDLIST = 'expenseAddList';
+const KEY_EXPENSEADDTOTALAMOUNT = 'expenseAddTotalAmount';
 const KEY_FOODPROVISION = 'foodProvisionExpense';
 const KEY_BEVERAGE = 'beverageExpense';
 const KEY_ALCOHOL = 'alcoholExpense';

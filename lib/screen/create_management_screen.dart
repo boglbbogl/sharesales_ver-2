@@ -3,7 +3,6 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
@@ -54,6 +53,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
   @override
   void initState() {
     expenseAddMapList.clear();
+    expenseAmountTotal.clear();
     super.initState();
   }
 
@@ -314,14 +314,13 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                               giftCard: _giftCardController.text.isEmpty ? int.parse('0') : int.parse(_giftCardController.text.replaceAll(",", "")),
                               selectedDate: pickerDate.toUtc().toString().substring(0, 10),
                               expenseAddList: expenseAddMapList,
+                              expenseAddTotalAmount: expenseAmountTotal.reduce((v, e) => v+e),
                               stdDate: pickerDate.toUtc(),
                               foodProvisionExpense: _foodProvisionController.text.isEmpty ? int.parse('0') : int.parse(_foodProvisionController.text.replaceAll(",", "")),
                               beverageExpense: _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
                               alcoholExpense: _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_alcoholController.text.replaceAll(",", "")),
                             ),);
-
                       }
-
                   },
                 ),
               ),

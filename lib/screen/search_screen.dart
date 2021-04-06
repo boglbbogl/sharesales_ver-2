@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:expansion_card/expansion_card.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -18,12 +17,16 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'management_screen.dart';
 
 class ChartData{
-  final String xValue;
-  final int yValue;
+  final String selectedDateXValue;
+  final int actualSalesYValue;
+  final int expenseTotalYValue;
+  // final int test;
 
   ChartData.fromMap(Map<dynamic, dynamic> dataMap)
-    :xValue = dataMap ['selectedDate'],
-    yValue = dataMap['actualSales'];
+    : selectedDateXValue = dataMap['selectedDate'],
+        actualSalesYValue = dataMap['actualSales'],
+  // test = dataMap['expenseAddList']['expenseAmount'],
+      expenseTotalYValue = dataMap['foodProvisionExpense'] + dataMap['alcoholExpense'] + dataMap['beverageExpense'] + dataMap['expenseAddTotalAmount'];
 }
 
 class SearchScreen extends StatefulWidget {
@@ -93,7 +96,6 @@ class _SearchScreenState extends State<SearchScreen> {
         final expenseAmountOnlyResult = [];
         var showExpenseAddList = [];
 
-
         snapshot.data.docs.forEach((element) {
           var docQuery = element.data();
           totalSales.add(docQuery['totalSales']);
@@ -128,15 +130,13 @@ class _SearchScreenState extends State<SearchScreen> {
           List<ChartData> chartData = [];
           for(int index=0;index<snapshot.data.docs.length;index++) {
             DocumentSnapshot document = snapshot.data.docs[index];
-            chartData.add(ChartData.fromMap(document.data()));
+            chartData.add(ChartData.fromMap(document.data() ));
           }
-
-
 
         return SafeArea(
           child: GestureDetector(
             onTap: (){
-              print(expenseAmountOnlyResult);
+              print(totalResultExpenseGroup);
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -177,30 +177,96 @@ class _SearchScreenState extends State<SearchScreen> {
                         width: size.width*0.8,
                         height: size.height*0.3,
                         child: SfCartesianChart(
-                          title: ChartTitle(text: '매출',),
+                          plotAreaBorderWidth: 0,
+                          title: ChartTitle(text: '실제매출', textStyle: TextStyle(color: Colors.deepPurple, fontFamily: 'Yanolja')),
                           primaryXAxis: CategoryAxis(
                             labelStyle: TextStyle(color: Colors.black54),
                             labelPosition: ChartDataLabelPosition.outside,
                           ),
                           primaryYAxis: NumericAxis(
+                            isVisible: false,
+                            numberFormat: NumberFormat.decimalPattern(),
+                            axisLine: AxisLine(width: 0),
+                            majorGridLines: MajorGridLines(width: 0),
+                            majorTickLines: MajorTickLines(size: 0),
                           ),
                           series: <ChartSeries<ChartData, dynamic>>[
                             ColumnSeries<ChartData, dynamic>(
                                 dataSource: chartData,
-                                xValueMapper: (ChartData data, _)=>data.xValue.toString(),
-                                yValueMapper: (ChartData data, _)=>data.yValue,
+                                xValueMapper: (ChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
+                                // xValueMapper: (ChartData data, _)=>data.test.toString(),
+                                yValueMapper: (ChartData data, _)=>data.actualSalesYValue,
                               isVisible: true,
-                              borderRadius: BorderRadius.circular(30),
+                              isTrackVisible: true,
+                              // trackBorderColor: Colors.black45,
+                              trackColor: Colors.black26,
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                               gradient: LinearGradient(
                                 begin: Alignment.topRight,
                                 end: Alignment.bottomLeft,
-                                colors: [Colors.deepPurple,Colors.deepPurple[400], Colors.deepPurple[200]],
-                              )
+                                colors: [Colors.deepPurple[600],Colors.deepPurple[400], Colors.deepPurple[300]],
+                              ),
                             ),
                           ],
+                          tooltipBehavior: TooltipBehavior(
+                            borderColor: Colors.pink[400],
+                            color: Colors.pink[300],
+                            canShowMarker: false,
+                            tooltipPosition: TooltipPosition.pointer,
+                            borderWidth: 2,
+                            enable: true,
+                            header: '',
+                            textStyle: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'Yanolja'),
+                          ),
                         ),
                       ),
-                      InkWell(onTap:()=>print(chartData.toList().first),child: Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),)),
+                      Container(
+                        width: size.width*0.8,
+                        height: size.height*0.3,
+                        child: SfCartesianChart(
+                          plotAreaBorderWidth: 0,
+                          title: ChartTitle(text: '총지출', textStyle: TextStyle(color: Colors.pink, fontFamily: 'Yanolja')),
+                          primaryXAxis: CategoryAxis(
+                            labelStyle: TextStyle(color: Colors.black54),
+                            labelPosition: ChartDataLabelPosition.outside,
+                          ),
+                          primaryYAxis: NumericAxis(
+                            isVisible: false,
+                            numberFormat: NumberFormat.decimalPattern(),
+                            axisLine: AxisLine(width: 0),
+                            majorGridLines: MajorGridLines(width: 0),
+                            majorTickLines: MajorTickLines(size: 0),
+                          ),
+                          series: <ChartSeries<ChartData, dynamic>>[
+                            ColumnSeries<ChartData, dynamic>(
+                              dataSource: chartData,
+                              xValueMapper: (ChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
+                              yValueMapper: (ChartData data, _)=>data.expenseTotalYValue,
+                              isVisible: true,
+                              isTrackVisible: true,
+                              // trackBorderColor: Colors.black45,
+                              trackColor: Colors.black26,
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [Colors.pink[600],Colors.pink[400], Colors.pink[300]],
+                              ),
+                            ),
+                          ],
+                          tooltipBehavior: TooltipBehavior(
+                            borderColor: Colors.deepPurple[600],
+                            color: Colors.deepPurple[400],
+                            canShowMarker: false,
+                            tooltipPosition: TooltipPosition.pointer,
+                            borderWidth: 2,
+                            enable: true,
+                            header: '',
+                            textStyle: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'Yanolja'),
+                          ),
+                        ),
+                      ),
+                      InkWell(onTap:(){},child: Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),)),
                     ],
                   ),
                 ),
@@ -612,6 +678,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                               child: ListView.separated(
                                                 itemCount: showExpenseAddList.length,
                                                 itemBuilder: (BuildContext context, int index) {
+
+                                                  int _showExpenseAmountFormat = showExpenseAddList[index]['expenseAmount'];
+
                                                   return Column(
                                                     children: [
                                                       Padding(
@@ -630,7 +699,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                               child: Container(
                                                                 width: size.width*0.2,
                                                                 child: Text(
-                                                                  showExpenseAddList[index]['expenseAmount'].toString(), style: TextStyle(
+                                                                  koFormatMoney.format(_showExpenseAmountFormat) + '  \\', style: TextStyle(
                                                                     color: Colors.white),),
                                                               ),
                                                             ),
