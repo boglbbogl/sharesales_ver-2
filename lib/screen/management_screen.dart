@@ -713,7 +713,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
                                                                                                               await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
                                                                                                                   .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                                                               'expenseAddTotalAmount': FieldValue.increment(test),
+                                                                                                               'expenseAddTotalAmount': FieldValue.increment(test.isNaN?int.parse('0'):test),
                                                                                                                 'expenseAddList': FieldValue.arrayUnion(
                                                                                                                   upDateExpenseAddList)
                                                                                                               });

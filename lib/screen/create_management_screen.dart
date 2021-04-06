@@ -314,7 +314,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                               giftCard: _giftCardController.text.isEmpty ? int.parse('0') : int.parse(_giftCardController.text.replaceAll(",", "")),
                               selectedDate: pickerDate.toUtc().toString().substring(0, 10),
                               expenseAddList: expenseAddMapList,
-                              expenseAddTotalAmount: expenseAmountTotal.reduce((v, e) => v+e),
+                              expenseAddTotalAmount: expenseAmountTotal.isEmpty?int.parse('0') : expenseAmountTotal.reduce((v, e) => v+e),
                               stdDate: pickerDate.toUtc(),
                               foodProvisionExpense: _foodProvisionController.text.isEmpty ? int.parse('0') : int.parse(_foodProvisionController.text.replaceAll(",", "")),
                               beverageExpense: _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
