@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:expansion_card/expansion_card.dart';
@@ -18,15 +19,18 @@ import 'management_screen.dart';
 
 class ChartData{
   final String selectedDateXValue;
+  final int totalSalesYValue;
   final int actualSalesYValue;
   final int expenseTotalYValue;
+  final int foodProvisionExpenseYValue;
   // final int test;
 
   ChartData.fromMap(Map<dynamic, dynamic> dataMap)
     : selectedDateXValue = dataMap['selectedDate'],
-        actualSalesYValue = dataMap['actualSales'],
-  // test = dataMap['expenseAddList']['expenseAmount'],
-      expenseTotalYValue = dataMap['foodProvisionExpense'] + dataMap['alcoholExpense'] + dataMap['beverageExpense'] + dataMap['expenseAddTotalAmount'];
+      totalSalesYValue = dataMap['totalSales'],
+      actualSalesYValue = dataMap['actualSales'],
+      expenseTotalYValue = dataMap['foodProvisionExpense'] + dataMap['alcoholExpense'] + dataMap['beverageExpense'] + dataMap['expenseAddTotalAmount'],
+      foodProvisionExpenseYValue = dataMap['foodProvisionExpense'];
 }
 
 class SearchScreen extends StatefulWidget {
@@ -40,7 +44,8 @@ class _SearchScreenState extends State<SearchScreen> {
   DateRangePickerController _dayRangePickerController = DateRangePickerController();
   DateRangePickerController _monthRangePickerController = DateRangePickerController();
 
-  PageController _pageController = PageController(viewportFraction: 0.8);
+  PageController _pageTextViewController = PageController(viewportFraction: 0.8);
+  PageController _pageBarChartViewController = PageController(viewportFraction: 0.8, initialPage: 1);
 
   String rangePickerStartDate;
   String rangePickerEndDate;
@@ -52,7 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     _dayRangePickerController.dispose();
-    _pageController.dispose();
+    _pageTextViewController.dispose();
     super.dispose();
   }
 
@@ -173,98 +178,32 @@ class _SearchScreenState extends State<SearchScreen> {
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
                           totalResultExpenseGroup, foodProvisionExpanse, beverageExpanse, alcoholExpanse, expenseAmountOnlyResult,
                           context, showExpenseAddList),
-                      Container(
+                      SizedBox(height: 30,),
+                      rangePickerStartDate==null ? Container(): Container(
                         width: size.width*0.8,
-                        height: size.height*0.3,
-                        child: SfCartesianChart(
-                          plotAreaBorderWidth: 0,
-                          title: ChartTitle(text: '실제매출', textStyle: TextStyle(color: Colors.deepPurple, fontFamily: 'Yanolja')),
-                          primaryXAxis: CategoryAxis(
-                            labelStyle: TextStyle(color: Colors.black54),
-                            labelPosition: ChartDataLabelPosition.outside,
-                          ),
-                          primaryYAxis: NumericAxis(
-                            isVisible: false,
-                            numberFormat: NumberFormat.decimalPattern(),
-                            axisLine: AxisLine(width: 0),
-                            majorGridLines: MajorGridLines(width: 0),
-                            majorTickLines: MajorTickLines(size: 0),
-                          ),
-                          series: <ChartSeries<ChartData, dynamic>>[
-                            ColumnSeries<ChartData, dynamic>(
-                                dataSource: chartData,
-                                xValueMapper: (ChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
-                                // xValueMapper: (ChartData data, _)=>data.test.toString(),
-                                yValueMapper: (ChartData data, _)=>data.actualSalesYValue,
-                              isVisible: true,
-                              isTrackVisible: true,
-                              // trackBorderColor: Colors.black45,
-                              trackColor: Colors.black26,
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomLeft,
-                                colors: [Colors.deepPurple[600],Colors.deepPurple[400], Colors.deepPurple[300]],
-                              ),
-                            ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _searchScreenChartLegendForm(Colors.deepPurple[600], ' 실제매출'),
+                            _searchScreenChartLegendForm(Colors.pink[600], ' 총 지출'),
+                            _searchScreenChartLegendForm(Colors.amber[600], ' 총 매출'),
+                            _searchScreenChartLegendForm(Colors.lightBlue[600], ' 식자재'),
                           ],
-                          tooltipBehavior: TooltipBehavior(
-                            borderColor: Colors.pink[400],
-                            color: Colors.pink[300],
-                            canShowMarker: false,
-                            tooltipPosition: TooltipPosition.pointer,
-                            borderWidth: 2,
-                            enable: true,
-                            header: '',
-                            textStyle: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'Yanolja'),
-                          ),
                         ),
                       ),
-                      Container(
-                        width: size.width*0.8,
-                        height: size.height*0.3,
-                        child: SfCartesianChart(
-                          plotAreaBorderWidth: 0,
-                          title: ChartTitle(text: '총지출', textStyle: TextStyle(color: Colors.pink, fontFamily: 'Yanolja')),
-                          primaryXAxis: CategoryAxis(
-                            labelStyle: TextStyle(color: Colors.black54),
-                            labelPosition: ChartDataLabelPosition.outside,
-                          ),
-                          primaryYAxis: NumericAxis(
-                            isVisible: false,
-                            numberFormat: NumberFormat.decimalPattern(),
-                            axisLine: AxisLine(width: 0),
-                            majorGridLines: MajorGridLines(width: 0),
-                            majorTickLines: MajorTickLines(size: 0),
-                          ),
-                          series: <ChartSeries<ChartData, dynamic>>[
-                            ColumnSeries<ChartData, dynamic>(
-                              dataSource: chartData,
-                              xValueMapper: (ChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
-                              yValueMapper: (ChartData data, _)=>data.expenseTotalYValue,
-                              isVisible: true,
-                              isTrackVisible: true,
-                              // trackBorderColor: Colors.black45,
-                              trackColor: Colors.black26,
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomLeft,
-                                colors: [Colors.pink[600],Colors.pink[400], Colors.pink[300]],
-                              ),
-                            ),
-                          ],
-                          tooltipBehavior: TooltipBehavior(
-                            borderColor: Colors.deepPurple[600],
-                            color: Colors.deepPurple[400],
-                            canShowMarker: false,
-                            tooltipPosition: TooltipPosition.pointer,
-                            borderWidth: 2,
-                            enable: true,
-                            header: '',
-                            textStyle: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'Yanolja'),
-                          ),
-                        ),
+                      ExpandablePageView(
+                        controller: _pageBarChartViewController,
+                        children: [
+                          _searchScreenBarChartToSalesAndExpense(chartData, '실제매출', '총 지출', Colors.deepOrange,[Colors.deepPurple[600], Colors.deepPurple[400], Colors.deepPurple[300]] ,
+                              [Colors.pink[500], Colors.pink[400], Colors.pink[200]],
+                                  (ChartData data, _)=>data.actualSalesYValue, (ChartData data, _)=>data.expenseTotalYValue),
+                          _searchScreenBarChartToSalesAndExpense(chartData, '총 매출', '실제매출', Colors.deepPurple, [Colors.amber[700], Colors.amber[500], Colors.amber[400]],
+                              [Colors.deepPurple[500],Colors.deepPurple[400], Colors.deepPurple[200]],
+                             (ChartData data, _)=>data.totalSalesYValue, (ChartData data, _)=>data.actualSalesYValue),
+                          _searchScreenBarChartToSalesAndExpense(chartData, '총 지출', '식자재', Colors.pink, [Colors.pink[600],Colors.pink[400], Colors.pink[300]],
+                              [Colors.lightBlue[600], Colors.lightBlue[400], Colors.lightBlue[300]],
+                               (ChartData data, _)=>data.expenseTotalYValue, (ChartData data, _)=>data.foodProvisionExpenseYValue),
+                        ],
                       ),
                       InkWell(onTap:(){},child: Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),)),
                     ],
@@ -276,6 +215,87 @@ class _SearchScreenState extends State<SearchScreen> {
         );
       }
     );
+  }
+
+  Row _searchScreenChartLegendForm(Color badgeColor, String title) {
+    return Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Badge(badgeColor: badgeColor,),
+                            Container(
+                              child: Text(title, style: TextStyle(color: Colors.black54),),
+                            ),
+                          ],
+                        );
+  }
+
+  Container _searchScreenBarChartToSalesAndExpense(List<ChartData> chartData, String firstTitle, String secondTitle, Color col, List<Color> firstColor, List<Color> secondColor
+      , firstData, secondData) {
+    return Container(
+                      width: size.width*0.7, height: size.height*0.3,
+                      child: SfCartesianChart(
+                        enableSideBySideSeriesPlacement: false,
+                        plotAreaBorderWidth: 0,
+                        primaryXAxis: CategoryAxis(
+                          majorGridLines: MajorGridLines(width: 0,),
+                          majorTickLines: MajorTickLines(width: 0,),
+                          axisLine: AxisLine(width: 0,),
+                          labelStyle: TextStyle(color: Colors.black54),
+                          labelPosition: ChartDataLabelPosition.outside,
+                        ),
+                        primaryYAxis: NumericAxis(
+                          isVisible: false,
+                          numberFormat: NumberFormat.decimalPattern(),
+                          axisLine: AxisLine(width: 0),
+                          majorGridLines: MajorGridLines(width: 0),
+                          majorTickLines: MajorTickLines(size: 0),
+                        ),
+                        series: <ChartSeries<ChartData, dynamic>>[
+                          ColumnSeries<ChartData, dynamic>(
+                              dataSource: chartData,
+                              width: 0.8,
+                              xValueMapper: (ChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
+                              yValueMapper: firstData,
+                            isVisible: true,
+                            trackColor: Colors.black12,
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(5), topLeft: Radius.circular(5)),
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: firstColor,
+                            ),
+                            name: firstTitle,
+                          ),
+                          ColumnSeries<ChartData, dynamic>(
+                            dataSource: chartData,
+                            width: 0.5,
+                            xValueMapper: (ChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
+                            yValueMapper: secondData,
+                            isVisible: true,
+                            trackColor: Colors.black12,
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(5), topLeft: Radius.circular(5)),
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: secondColor,
+                            ),
+                            name: secondTitle,
+                          ),
+                        ],
+                        legend: Legend(isVisible: false,),
+                        tooltipBehavior: TooltipBehavior(
+                          borderColor: Colors.white,
+                          color: Colors.white,
+                          canShowMarker: true,
+                          tooltipPosition: TooltipPosition.pointer,
+                          borderWidth: 2,
+                          enable: true,
+                          elevation: 9,
+                          textStyle: TextStyle(color: Colors.black54, fontSize: 17, fontFamily: 'Yanolja'),
+                        ),
+                      ),
+                    );
   }
 
   Future _searchScreenShowBottomSheetRangeDatePickerList(BuildContext context) {
@@ -539,7 +559,7 @@ class _SearchScreenState extends State<SearchScreen> {
       List creditCard, List vos, List vat, List cash, List cashReceipt, List giftCard, int totalResultExpenseGroup, List foodProvisionExpanse,
       List beverageExpanse, List alcoholExpanse, List expenseAmountOnlyResult, BuildContext context, List showExpenseAddList) {
     return ExpandablePageView(
-                      controller: _pageController,
+                      controller: _pageTextViewController,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right:12),
