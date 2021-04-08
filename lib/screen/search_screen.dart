@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:expansion_card/expansion_card.dart';
@@ -11,27 +10,13 @@ import 'package:sharesales_ver2/constant/app_bar.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
+import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
+import 'package:sharesales_ver2/widget/search_screen_chart_form.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'management_screen.dart';
-
-class ChartData{
-  final String selectedDateXValue;
-  final int totalSalesYValue;
-  final int actualSalesYValue;
-  final int expenseTotalYValue;
-  final int foodProvisionExpenseYValue;
-  // final int test;
-
-  ChartData.fromMap(Map<dynamic, dynamic> dataMap)
-    : selectedDateXValue = dataMap['selectedDate'],
-      totalSalesYValue = dataMap['totalSales'],
-      actualSalesYValue = dataMap['actualSales'],
-      expenseTotalYValue = dataMap['foodProvisionExpense'] + dataMap['alcoholExpense'] + dataMap['beverageExpense'] + dataMap['expenseAddTotalAmount'],
-      foodProvisionExpenseYValue = dataMap['foodProvisionExpense'];
-}
 
 class SearchScreen extends StatefulWidget {
 
@@ -45,7 +30,6 @@ class _SearchScreenState extends State<SearchScreen> {
   DateRangePickerController _monthRangePickerController = DateRangePickerController();
 
   PageController _pageTextViewController = PageController(viewportFraction: 0.8);
-  PageController _pageBarChartViewController = PageController(viewportFraction: 0.8, initialPage: 1);
 
   String rangePickerStartDate;
   String rangePickerEndDate;
@@ -99,6 +83,7 @@ class _SearchScreenState extends State<SearchScreen> {
         final beverageExpanse = [];
         final alcoholExpanse = [];
         final expenseAmountOnlyResult = [];
+        final expenseAddTotalAmount = [];
         var showExpenseAddList = [];
 
         snapshot.data.docs.forEach((element) {
@@ -117,6 +102,7 @@ class _SearchScreenState extends State<SearchScreen> {
           foodProvisionExpanse.add(docQuery['foodProvisionExpense']);
           beverageExpanse.add(docQuery['beverageExpense']);
           alcoholExpanse.add(docQuery['alcoholExpense']);
+          expenseAddTotalAmount.add(docQuery['expenseAddTotalAmount']);
           showExpenseAddList.addAll(docQuery['expenseAddList']);
           List<dynamic> expenseAddListInExpenseAmount = docQuery['expenseAddList'];
           expenseAddListInExpenseAmount.forEach((element) {
@@ -132,16 +118,41 @@ class _SearchScreenState extends State<SearchScreen> {
         int alcoholExpense = alcoholExpanse.isEmpty ? int.parse('0') : alcoholExpanse.reduce((v, e) => v+e);
         int totalResultExpenseGroup = expenseAddListTotalAmount + foodProvisionExpensePlus + beverageExpensePlus + alcoholExpense;
 
-          List<ChartData> chartData = [];
+
+          List<BarChartData> barChartData = [];
           for(int index=0;index<snapshot.data.docs.length;index++) {
             DocumentSnapshot document = snapshot.data.docs[index];
-            chartData.add(ChartData.fromMap(document.data() ));
-          }
+            barChartData.add(BarChartData.fromMap(document.data() ));}
+
+          List<CircularChartData> radialChartData = [
+            CircularChartData("Delivery", Colors.lightBlue, sales: delivery.isEmpty ? int.parse('0') : delivery.reduce((v, e) => v+e),
+            ),
+            CircularChartData("실제매출", Colors.deepOrange, sales: actualSales.isEmpty ? int.parse('0') : actualSales.reduce((v, e) => v+e),
+            ),
+            CircularChartData("할인", Colors.amber, sales: discount.isEmpty ? int.parse('0') : discount.reduce((v, e) => v+e),
+            ),
+            CircularChartData("총매출", Colors.deepPurple, sales: totalSales.isEmpty ? int.parse('0') : totalSales.reduce((v, e) => v+e),
+            ),
+            CircularChartData("음료+주류", Colors.purpleAccent, expense: beverageExpanse.isEmpty || alcoholExpanse.isEmpty ? int.parse('0') :
+                                beverageExpanse.reduce((v, e) => v+e) + alcoholExpanse.reduce((v, e) => v+e),
+            ),
+            CircularChartData("추가지출", Colors.pinkAccent, expense: expenseAddTotalAmount.isEmpty ? int.parse('0') : expenseAddTotalAmount.reduce((v, e) => v+e),
+            ),
+            CircularChartData("식자재", Colors.orange, expense: foodProvisionExpanse.isEmpty ? int.parse('0') : foodProvisionExpanse.reduce((v, e) => v+e),
+            ),
+            CircularChartData("총지출", Colors.teal, expense: totalResultExpenseGroup.isNaN ? int.parse('0') : totalResultExpenseGroup,
+            ),
+            CircularChartData("총지출", Colors.deepPurple, mainShow: totalResultExpenseGroup.isNaN ? int.parse('0') : totalResultExpenseGroup,
+            ),
+            CircularChartData("식자재", Colors.green, mainShow: foodProvisionExpanse.isEmpty ? int.parse('0') : foodProvisionExpanse.reduce((v, e) => v+e),
+            ),
+            CircularChartData("실제매출", Colors.redAccent, mainShow: actualSales.isEmpty ? int.parse('0') : actualSales.reduce((v, e) => v+e),
+            ),
+          ];
 
         return SafeArea(
           child: GestureDetector(
             onTap: (){
-              print(totalResultExpenseGroup);
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -178,31 +189,20 @@ class _SearchScreenState extends State<SearchScreen> {
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
                           totalResultExpenseGroup, foodProvisionExpanse, beverageExpanse, alcoholExpanse, expenseAmountOnlyResult,
                           context, showExpenseAddList),
-                      SizedBox(height: 30,),
-                      rangePickerStartDate==null ? Container(): Container(
-                        width: size.width*0.8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _searchScreenChartLegendForm(Colors.deepPurple[600], ' 실제매출'),
-                            _searchScreenChartLegendForm(Colors.pink[600], ' 총 지출'),
-                            _searchScreenChartLegendForm(Colors.amber[600], ' 총 매출'),
-                            _searchScreenChartLegendForm(Colors.lightBlue[600], ' 식자재'),
-                          ],
-                        ),
-                      ),
-                      ExpandablePageView(
-                        controller: _pageBarChartViewController,
-                        children: [
-                          _searchScreenBarChartToSalesAndExpense(chartData, '실제매출', '총 지출', Colors.deepOrange,[Colors.deepPurple[600], Colors.deepPurple[400], Colors.deepPurple[300]] ,
-                              [Colors.pink[500], Colors.pink[400], Colors.pink[200]],
-                                  (ChartData data, _)=>data.actualSalesYValue, (ChartData data, _)=>data.expenseTotalYValue),
-                          _searchScreenBarChartToSalesAndExpense(chartData, '총 매출', '실제매출', Colors.deepPurple, [Colors.amber[700], Colors.amber[500], Colors.amber[400]],
-                              [Colors.deepPurple[500],Colors.deepPurple[400], Colors.deepPurple[200]],
-                             (ChartData data, _)=>data.totalSalesYValue, (ChartData data, _)=>data.actualSalesYValue),
-                          _searchScreenBarChartToSalesAndExpense(chartData, '총 지출', '식자재', Colors.pink, [Colors.pink[600],Colors.pink[400], Colors.pink[300]],
-                              [Colors.lightBlue[600], Colors.lightBlue[400], Colors.lightBlue[300]],
-                               (ChartData data, _)=>data.expenseTotalYValue, (ChartData data, _)=>data.foodProvisionExpenseYValue),
+                      SearchScreenChartForm(barChartData, radialChartData, totalSales, totalResultExpenseGroup),
+                      SfCircularChart(
+                        series: <PieSeries<CircularChartData, dynamic>>[
+                          PieSeries<CircularChartData, dynamic>(
+                            explode: true,
+                            explodeIndex: 0,
+                            explodeOffset: '10%',
+                            dataSource: radialChartData,
+                            xValueMapper: (CircularChartData data, _)=>data.title,
+                            yValueMapper: (CircularChartData data, _)=>data.expense,
+                            enableTooltip: true,
+                            enableSmartLabels: true,
+                            dataLabelSettings: DataLabelSettings(isVisible: true)
+                          ),
                         ],
                       ),
                       InkWell(onTap:(){},child: Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),)),
@@ -215,87 +215,6 @@ class _SearchScreenState extends State<SearchScreen> {
         );
       }
     );
-  }
-
-  Row _searchScreenChartLegendForm(Color badgeColor, String title) {
-    return Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Badge(badgeColor: badgeColor,),
-                            Container(
-                              child: Text(title, style: TextStyle(color: Colors.black54),),
-                            ),
-                          ],
-                        );
-  }
-
-  Container _searchScreenBarChartToSalesAndExpense(List<ChartData> chartData, String firstTitle, String secondTitle, Color col, List<Color> firstColor, List<Color> secondColor
-      , firstData, secondData) {
-    return Container(
-                      width: size.width*0.7, height: size.height*0.3,
-                      child: SfCartesianChart(
-                        enableSideBySideSeriesPlacement: false,
-                        plotAreaBorderWidth: 0,
-                        primaryXAxis: CategoryAxis(
-                          majorGridLines: MajorGridLines(width: 0,),
-                          majorTickLines: MajorTickLines(width: 0,),
-                          axisLine: AxisLine(width: 0,),
-                          labelStyle: TextStyle(color: Colors.black54),
-                          labelPosition: ChartDataLabelPosition.outside,
-                        ),
-                        primaryYAxis: NumericAxis(
-                          isVisible: false,
-                          numberFormat: NumberFormat.decimalPattern(),
-                          axisLine: AxisLine(width: 0),
-                          majorGridLines: MajorGridLines(width: 0),
-                          majorTickLines: MajorTickLines(size: 0),
-                        ),
-                        series: <ChartSeries<ChartData, dynamic>>[
-                          ColumnSeries<ChartData, dynamic>(
-                              dataSource: chartData,
-                              width: 0.8,
-                              xValueMapper: (ChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
-                              yValueMapper: firstData,
-                            isVisible: true,
-                            trackColor: Colors.black12,
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(5), topLeft: Radius.circular(5)),
-                            gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: firstColor,
-                            ),
-                            name: firstTitle,
-                          ),
-                          ColumnSeries<ChartData, dynamic>(
-                            dataSource: chartData,
-                            width: 0.5,
-                            xValueMapper: (ChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
-                            yValueMapper: secondData,
-                            isVisible: true,
-                            trackColor: Colors.black12,
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(5), topLeft: Radius.circular(5)),
-                            gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: secondColor,
-                            ),
-                            name: secondTitle,
-                          ),
-                        ],
-                        legend: Legend(isVisible: false,),
-                        tooltipBehavior: TooltipBehavior(
-                          borderColor: Colors.white,
-                          color: Colors.white,
-                          canShowMarker: true,
-                          tooltipPosition: TooltipPosition.pointer,
-                          borderWidth: 2,
-                          enable: true,
-                          elevation: 9,
-                          textStyle: TextStyle(color: Colors.black54, fontSize: 17, fontFamily: 'Yanolja'),
-                        ),
-                      ),
-                    );
   }
 
   Future _searchScreenShowBottomSheetRangeDatePickerList(BuildContext context) {
