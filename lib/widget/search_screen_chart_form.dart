@@ -10,10 +10,10 @@ class SearchScreenChartForm extends StatelessWidget {
 
   final List<BarChartData> barChartData;
   final List<CircularChartData> radialChartData;
-  final List totalSales;
-  final int totalResultExpenseGroup;
+  final int totalSales;
+  final int totalExpense;
 
-  const SearchScreenChartForm(this.barChartData,this.radialChartData, this.totalSales, this.totalResultExpenseGroup, {Key key}) : super(key: key);
+  const SearchScreenChartForm(this.barChartData,this.radialChartData, this.totalSales, this.totalExpense, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +26,12 @@ class SearchScreenChartForm extends StatelessWidget {
       ExpandablePageView(
         controller: _pageRadialChartViewController,
         children: [
-          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.mainShow,
-          totalSales.isEmpty ? double.parse('0.0') : totalSales.reduce((v, e) => v+e)*1.1+.0),
-          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.sales,
-          totalSales.isEmpty ? double.parse('0.0') : totalSales.reduce((v, e) => v+e)*1.1+.0),
-          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.expense,
-              totalResultExpenseGroup.isNaN ? double.parse('0') : totalResultExpenseGroup.toDouble()*1.1+.0),
+          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.radialMainShow,
+          totalSales.toDouble()*1.1+.0),
+          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.radialSales,
+          totalSales.toDouble()*1.1+.0),
+          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.radialExpense,
+              totalExpense.toDouble()*1.1+.0),
         ],
       ),
         ExpandablePageView(
@@ -94,7 +94,7 @@ class SearchScreenChartForm extends StatelessWidget {
           child: SfCartesianChart(
             enableSideBySideSeriesPlacement: false,
             plotAreaBorderWidth: 0,
-            margin: EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 10),
+            margin: EdgeInsets.only(top: 0, left: 15, right: 15, bottom: 10),
             primaryXAxis: CategoryAxis(
               majorGridLines: MajorGridLines(width: 0,),
               majorTickLines: MajorTickLines(width: 0,),

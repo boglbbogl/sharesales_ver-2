@@ -17,10 +17,12 @@ class BarChartData {
 
 class CircularChartData{
   final String title;
-  final int sales;
-  final int expense;
-  final int mainShow;
+  final int radialSales;
+  final int radialExpense;
+  final int radialMainShow;
+  final int pieSales;
+  final double pieMain;
   final Color color;
 
-  CircularChartData(this.title, this.color,{this.expense, this.sales, this.mainShow,});
+  CircularChartData(this.title, this.color,{this.radialExpense, this.radialSales, this.radialMainShow, this.pieSales, this.pieMain});
 }

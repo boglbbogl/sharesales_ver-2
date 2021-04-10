@@ -31,10 +31,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   PageController _pageTextViewController = PageController(viewportFraction: 0.8);
 
-  String rangePickerStartDate;
-  String rangePickerEndDate;
-  DateTime rangePickerStartDateTime;
-  DateTime rangePickerEndDateTime;
+  String _rangePickerStartDate;
+  String _rangePickerEndDate;
+  DateTime _rangePickerStartDateTime;
+  DateTime _rangePickerEndDateTime;
 
   bool _isExpanded = false;
 
@@ -47,8 +47,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
-    rangePickerStartDateTime=DateTime(1000,01,01);
-    rangePickerEndDateTime=DateTime(1000,01,02);
+    _rangePickerStartDateTime=DateTime(1000,01,01);
+    _rangePickerEndDateTime=DateTime(1000,01,02);
     super.initState();
   }
 
@@ -60,64 +60,66 @@ class _SearchScreenState extends State<SearchScreen> {
 
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName)
-      .where('stdDate', isGreaterThanOrEqualTo: rangePickerStartDateTime,
-          isLessThanOrEqualTo: rangePickerEndDateTime==null?rangePickerStartDateTime.add(Duration(days: 1)):rangePickerEndDateTime.add(Duration(days: 1)))
+      .where('stdDate', isGreaterThanOrEqualTo: _rangePickerStartDateTime,
+          isLessThanOrEqualTo: _rangePickerEndDateTime==null?_rangePickerStartDateTime.add(Duration(days: 1)):_rangePickerEndDateTime.add(Duration(days: 1)))
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
         if(!snapshot.hasData || snapshot.data == null || snapshot.hasError) {
           return MyProgressIndicator();
         }
-        final List<dynamic> stdDate = [];
-        final totalSales = [];
-        final actualSales = [];
-        final discount = [];
-        final delivery = [];
-        final creditCard = [];
-        final giftCard = [];
-        final vos = [];
-        final vat = [];
-        final cash = [];
-        final cashReceipt = [];
-        final foodProvisionExpanse = [];
-        final beverageExpanse = [];
-        final alcoholExpanse = [];
-        final expenseAmountOnlyResult = [];
-        final expenseAddTotalAmount = [];
-        var showExpenseAddList = [];
+        final List<dynamic> listStdDate = [];
+        final listTotalSales = [];
+        final listActualSales = [];
+        final listDiscount = [];
+        final listDelivery = [];
+        final listCreditCard = [];
+        final listGiftCard = [];
+        final listVos = [];
+        final listVat = [];
+        final listCash = [];
+        final listCashReceipt = [];
+        final listFoodProvisionExpanse = [];
+        final listBeverageExpanse = [];
+        final listAlcoholExpanse = [];
+        final listExpenseAddTotalAmount = [];
+        var listShowExpenseAddList = [];
 
         snapshot.data.docs.forEach((element) {
           var docQuery = element.data();
-          totalSales.add(docQuery['totalSales']);
-          actualSales.add(docQuery['actualSales']);
-          discount.add(docQuery['discount']);
-          delivery.add(docQuery['delivery']);
-          creditCard.add(docQuery['creditCard']);
-          giftCard.add(docQuery['giftCard']);
-          vos.add(docQuery['vos']);
-          vat.add(docQuery['vat']);
-          cash.add(docQuery['cash']);
-          cashReceipt.add(docQuery['cashReceipt']);
-          stdDate.add(docQuery['stdDate']);
-          foodProvisionExpanse.add(docQuery['foodProvisionExpense']);
-          beverageExpanse.add(docQuery['beverageExpense']);
-          alcoholExpanse.add(docQuery['alcoholExpense']);
-          expenseAddTotalAmount.add(docQuery['expenseAddTotalAmount']);
-          showExpenseAddList.addAll(docQuery['expenseAddList']);
-          List<dynamic> expenseAddListInExpenseAmount = docQuery['expenseAddList'];
-          expenseAddListInExpenseAmount.forEach((element) {
-            var expenseAmount = element['expenseAmount'];
-            int expenseAmountIntType = int.parse(expenseAmount.toString().replaceAll(",", ''));
-            expenseAmountOnlyResult.add(expenseAmountIntType);
-          });
+          listTotalSales.add(docQuery['totalSales']);
+          listActualSales.add(docQuery['actualSales']);
+          listDiscount.add(docQuery['discount']);
+          listDelivery.add(docQuery['delivery']);
+          listCreditCard.add(docQuery['creditCard']);
+          listGiftCard.add(docQuery['giftCard']);
+          listVos.add(docQuery['vos']);
+          listVat.add(docQuery['vat']);
+          listCash.add(docQuery['cash']);
+          listCashReceipt.add(docQuery['cashReceipt']);
+          listStdDate.add(docQuery['stdDate']);
+          listFoodProvisionExpanse.add(docQuery['foodProvisionExpense']);
+          listBeverageExpanse.add(docQuery['beverageExpense']);
+          listAlcoholExpanse.add(docQuery['alcoholExpense']);
+          listExpenseAddTotalAmount.add(docQuery['expenseAddTotalAmount']);
+          listShowExpenseAddList.addAll(docQuery['expenseAddList']);
         });
 
-        int expenseAddListTotalAmount = expenseAmountOnlyResult.isEmpty ? int.parse('0') : expenseAmountOnlyResult.reduce((v, e) => v+e);
-        int foodProvisionExpensePlus = foodProvisionExpanse.isEmpty ? int.parse('0') : foodProvisionExpanse.reduce((v, e) => v+e);
-        int beverageExpensePlus = beverageExpanse.isEmpty ? int.parse('0') : beverageExpanse.reduce((v, e) => v+e);
-        int alcoholExpense = alcoholExpanse.isEmpty ? int.parse('0') : alcoholExpanse.reduce((v, e) => v+e);
-        int totalResultExpenseGroup = expenseAddListTotalAmount + foodProvisionExpensePlus + beverageExpensePlus + alcoholExpense;
-
+        int totalSales = listTotalSales.isEmpty ? int.parse('0') : _listDataNullCheckForm(listTotalSales);
+        int actualSales = listActualSales.isEmpty ? int.parse('0') : _listDataNullCheckForm(listActualSales);
+        int vos = listVos.isEmpty ? int.parse('0') : _listDataNullCheckForm(listVos);
+        int vat = listVat.isEmpty ? int.parse('0') : _listDataNullCheckForm(listVat);
+        int discount = listDiscount.isEmpty ? int.parse('0') : _listDataNullCheckForm(listDiscount);
+        int creditCard = listCreditCard.isEmpty ? int.parse('0') : _listDataNullCheckForm(listCreditCard);
+        int cash = listCash.isEmpty ? int.parse('0') : _listDataNullCheckForm(listCash);
+        int cashReceipt = listCashReceipt.isEmpty ? int.parse('0') : _listDataNullCheckForm(listCashReceipt);
+        int delivery = listDelivery.isEmpty ? int.parse('0') : _listDataNullCheckForm(listDelivery);
+        int giftCard = listGiftCard.isEmpty ? int.parse('0') : _listDataNullCheckForm(listGiftCard);
+        int expenseAddTotalAmount = listExpenseAddTotalAmount.isEmpty ? int.parse('0') : _listDataNullCheckForm(listExpenseAddTotalAmount);
+        int foodProvisionExpense = listFoodProvisionExpanse.isEmpty ? int.parse('0') : _listDataNullCheckForm(listFoodProvisionExpanse);
+        int beverageExpense = listBeverageExpanse.isEmpty ? int.parse('0') : _listDataNullCheckForm(listBeverageExpanse);
+        int alcoholExpense = listAlcoholExpanse.isEmpty ? int.parse('0') : _listDataNullCheckForm(listAlcoholExpanse);
+        int totalExpense = expenseAddTotalAmount + foodProvisionExpense + alcoholExpense;
 
           List<BarChartData> barChartData = [];
           for(int index=0;index<snapshot.data.docs.length;index++) {
@@ -125,29 +127,26 @@ class _SearchScreenState extends State<SearchScreen> {
             barChartData.add(BarChartData.fromMap(document.data() ));}
 
           List<CircularChartData> radialChartData = [
-            CircularChartData("Delivery", Colors.lightBlue, sales: delivery.isEmpty ? int.parse('0') : delivery.reduce((v, e) => v+e),
-            ),
-            CircularChartData("실제매출", Colors.deepOrange, sales: actualSales.isEmpty ? int.parse('0') : actualSales.reduce((v, e) => v+e),
-            ),
-            CircularChartData("할인", Colors.amber, sales: discount.isEmpty ? int.parse('0') : discount.reduce((v, e) => v+e),
-            ),
-            CircularChartData("총매출", Colors.deepPurple, sales: totalSales.isEmpty ? int.parse('0') : totalSales.reduce((v, e) => v+e),
-            ),
-            CircularChartData("음료+주류", Colors.purpleAccent, expense: beverageExpanse.isEmpty || alcoholExpanse.isEmpty ? int.parse('0') :
-                                beverageExpanse.reduce((v, e) => v+e) + alcoholExpanse.reduce((v, e) => v+e),
-            ),
-            CircularChartData("추가지출", Colors.pinkAccent, expense: expenseAddTotalAmount.isEmpty ? int.parse('0') : expenseAddTotalAmount.reduce((v, e) => v+e),
-            ),
-            CircularChartData("식자재", Colors.orange, expense: foodProvisionExpanse.isEmpty ? int.parse('0') : foodProvisionExpanse.reduce((v, e) => v+e),
-            ),
-            CircularChartData("총지출", Colors.teal, expense: totalResultExpenseGroup.isNaN ? int.parse('0') : totalResultExpenseGroup,
-            ),
-            CircularChartData("총지출", Colors.deepPurple, mainShow: totalResultExpenseGroup.isNaN ? int.parse('0') : totalResultExpenseGroup,
-            ),
-            CircularChartData("식자재", Colors.green, mainShow: foodProvisionExpanse.isEmpty ? int.parse('0') : foodProvisionExpanse.reduce((v, e) => v+e),
-            ),
-            CircularChartData("실제매출", Colors.redAccent, mainShow: actualSales.isEmpty ? int.parse('0') : actualSales.reduce((v, e) => v+e),
-            ),
+            CircularChartData("Delivery", Colors.lightBlue, radialSales: delivery),
+            CircularChartData("실제매출", Colors.deepOrange, radialSales: actualSales),
+            CircularChartData("할인", Colors.amber, radialSales: discount),
+            CircularChartData("총매출", Colors.deepPurple, radialSales: totalSales),
+            CircularChartData("음료+주류", Colors.purpleAccent, radialExpense: beverageExpense+alcoholExpense),
+            CircularChartData("추가지출", Colors.pinkAccent, radialExpense: expenseAddTotalAmount),
+            CircularChartData("식자재", Colors.orange, radialExpense: foodProvisionExpense),
+            CircularChartData("총지출", Colors.teal, radialExpense: totalExpense),
+            CircularChartData("총지출", Colors.deepPurple, radialMainShow: totalExpense),
+            CircularChartData("식자재", Colors.green, radialMainShow: foodProvisionExpense),
+            CircularChartData("실제매출", Colors.redAccent, radialMainShow: actualSales),
+            CircularChartData("공급가액", Colors.redAccent, pieSales: vos),
+            CircularChartData("세액", Colors.redAccent, pieSales: vat),
+            CircularChartData("신용카드", Colors.redAccent, pieSales: creditCard),
+            CircularChartData("현금", Colors.redAccent, pieSales: cash),
+            CircularChartData("현금영수증", Colors.redAccent, pieSales: cashReceipt),
+            CircularChartData("Delivery", Colors.lightBlue, pieSales: delivery),
+            CircularChartData("Gift Card", Colors.lightBlue, pieSales: giftCard),
+            CircularChartData("실제매출", Colors.deepPurple, pieMain: actualSales.toDouble()),
+            CircularChartData("총지출", Colors.pink, pieMain: totalExpense.toDouble()),
           ];
 
         return SafeArea(
@@ -172,11 +171,11 @@ class _SearchScreenState extends State<SearchScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Text(rangePickerStartDate == null ? '기간을 선택해주세요' : rangePickerStartDate.replaceAll(".", ''),
+                                Text(_rangePickerStartDate == null ? '기간을 선택해주세요' : _rangePickerStartDate.replaceAll(".", ''),
                                   style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
-                                Text(rangePickerStartDate == rangePickerEndDate ? '' : '   -   ', style: TextStyle(
+                                Text(_rangePickerStartDate == _rangePickerEndDate ? '' : '   -   ', style: TextStyle(
                                     fontSize: 22, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic, color: Colors.black54),),
-                                Text(rangePickerEndDate == null || rangePickerEndDate==rangePickerStartDate ? '' : rangePickerEndDate.replaceAll(".", ""),
+                                Text(_rangePickerEndDate == null || _rangePickerEndDate==_rangePickerStartDate ? '' : _rangePickerEndDate.replaceAll(".", ""),
                                   style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
                               ],
                             ),
@@ -187,10 +186,21 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       _searchScreenPageViewSalesAndExpenseTextList(
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
-                          totalResultExpenseGroup, foodProvisionExpanse, beverageExpanse, alcoholExpanse, expenseAmountOnlyResult,
-                          context, showExpenseAddList),
-                      SearchScreenChartForm(barChartData, radialChartData, totalSales, totalResultExpenseGroup),
+                          expenseAddTotalAmount, foodProvisionExpense, beverageExpense, alcoholExpense, listShowExpenseAddList,
+                          context, listShowExpenseAddList, totalExpense),
+                      SearchScreenChartForm(barChartData, radialChartData, totalSales, totalExpense),
                       SfCircularChart(
+                        tooltipBehavior: TooltipBehavior(
+                          format: 'point.x : point.y  \\',
+                          borderColor: Colors.white,
+                          color: Colors.white,
+                          canShowMarker: true,
+                          tooltipPosition: TooltipPosition.pointer,
+                          borderWidth: 2,
+                          enable: true,
+                          elevation: 9,
+                          textStyle: TextStyle(color: Colors.black54, fontSize: 14, fontFamily: 'Yanolja'),
+                        ),
                         series: <PieSeries<CircularChartData, dynamic>>[
                           PieSeries<CircularChartData, dynamic>(
                             explode: true,
@@ -198,10 +208,12 @@ class _SearchScreenState extends State<SearchScreen> {
                             explodeOffset: '10%',
                             dataSource: radialChartData,
                             xValueMapper: (CircularChartData data, _)=>data.title,
-                            yValueMapper: (CircularChartData data, _)=>data.expense,
+                            yValueMapper: (CircularChartData data, _)=>data.pieMain,
+                            dataLabelMapper: (CircularChartData data, _)=>data.title,
+                            pointColorMapper: (CircularChartData data, _)=>data.color,
                             enableTooltip: true,
                             enableSmartLabels: true,
-                            dataLabelSettings: DataLabelSettings(isVisible: true)
+                            dataLabelSettings: DataLabelSettings(isVisible: true,),
                           ),
                         ],
                       ),
@@ -361,15 +373,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                         (DateRangePickerSelectionChangedArgs args) {
                                       setState(() {
                                         if (args.value is PickerDateRange) {
-                                          rangePickerStartDate = DateFormat.yM('ko_KO')
+                                          _rangePickerStartDate = DateFormat.yM('ko_KO')
                                               .format(args.value.startDate)
                                               .toString();
-                                          rangePickerEndDate = DateFormat.yM('ko_KO')
+                                          _rangePickerEndDate = DateFormat.yM('ko_KO')
                                               .format(
                                               args.value.endDate ?? args.value.startDate)
                                               .toString();
-                                          rangePickerStartDateTime = args.value.startDate;
-                                          rangePickerEndDateTime = args.value.endDate;
+                                          _rangePickerStartDateTime = args.value.startDate;
+                                          _rangePickerEndDateTime = args.value.endDate;
                                         }  else{
                                           return MyProgressIndicator();
                                         }
@@ -451,15 +463,15 @@ class _SearchScreenState extends State<SearchScreen> {
                           (DateRangePickerSelectionChangedArgs args) {
                         setState(() {
                           if (args.value is PickerDateRange) {
-                            rangePickerStartDate = DateFormat.yMEd('ko_KO')
+                            _rangePickerStartDate = DateFormat.yMEd('ko_KO')
                                 .format(args.value.startDate)
                                 .toString();
-                            rangePickerEndDate = DateFormat.yMEd('ko_KO')
+                            _rangePickerEndDate = DateFormat.yMEd('ko_KO')
                                 .format(
                                     args.value.endDate ?? args.value.startDate)
                                 .toString();
-                            rangePickerStartDateTime = args.value.startDate;
-                            rangePickerEndDateTime = args.value.endDate;
+                            _rangePickerStartDateTime = args.value.startDate;
+                            _rangePickerEndDateTime = args.value.endDate;
                           } else {
                             return MyProgressIndicator();
                           }
@@ -474,9 +486,9 @@ class _SearchScreenState extends State<SearchScreen> {
         });
   }
 
-  ExpandablePageView _searchScreenPageViewSalesAndExpenseTextList(List actualSales, List totalSales, List discount, List delivery,
-      List creditCard, List vos, List vat, List cash, List cashReceipt, List giftCard, int totalResultExpenseGroup, List foodProvisionExpanse,
-      List beverageExpanse, List alcoholExpanse, List expenseAmountOnlyResult, BuildContext context, List showExpenseAddList) {
+  ExpandablePageView _searchScreenPageViewSalesAndExpenseTextList(int actualSales, int totalSales, int discount, int delivery,
+      int creditCard, int vos, int vat, int cash, int cashReceipt, int giftCard, int totalExpenseAddTotalAmount, int foodProvisionExpanse,
+      int beverageExpanse, int alcoholExpanse, List listShowExpenseAddList, BuildContext context, List showExpenseAddList, int totalExpense ) {
     return ExpandablePageView(
                       controller: _pageTextViewController,
                       children: [
@@ -543,7 +555,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('총지출     ' + koFormatMoney.format(totalResultExpenseGroup),
+                                  Text('총지출     ' + koFormatMoney.format(totalExpense),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16, height: 1.1),
@@ -580,11 +592,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                             Text('추가지출       ',style: TextStyle(color: Colors.white, fontSize: 13),),
                                             Column(
                                               children: <Widget>[
-                                                Text(expenseAmountOnlyResult.length.toString() + ' 건', style: TextStyle(color: Colors.white, fontSize: 13),),
+                                                Text(listShowExpenseAddList.length.toString() + ' 건', style: TextStyle(color: Colors.white, fontSize: 13),),
                                                 Padding(
                                                   padding: const EdgeInsets.only(top: 5),
-                                                  child: Text(koFormatMoney.format(expenseAmountOnlyResult.isEmpty || rangePickerStartDateTime == null ?
-                                                  int.parse('0') : expenseAmountOnlyResult.reduce((v, e) => v+e)), style: TextStyle(color: Colors.white, fontSize: 13),),
+                                                  child: Text(koFormatMoney.format(totalExpenseAddTotalAmount), style: TextStyle(color: Colors.white, fontSize: 13),),
                                                 ),
                                               ],
                                             ),
@@ -674,10 +685,7 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Text(
             '$hint     ' +
-                koFormatMoney.format(
-                    data.isEmpty || rangePickerStartDateTime == null
-                        ? int.parse('0')
-                        : data.reduce((v, e) => v + e)),
+                koFormatMoney.format(data),
             style: TextStyle(
                 color: color == null? Colors.white : color,
                 fontSize: fontSize == null ? 13 : fontSize, height: 1.1),
@@ -686,6 +694,11 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
     );
+  }
+
+  dynamic _listDataNullCheckForm(data){
+    int dataIntForm = data.isEmpty || _rangePickerStartDateTime == null ? int.parse('0') : data.reduce((v, e) => v+e);
+    return(dataIntForm);
   }
 
   BoxDecoration _decorationContainerPageView(List<Color> colorsList) {

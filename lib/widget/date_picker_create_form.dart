@@ -51,12 +51,12 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
             DatePicker.showDatePicker(
               context,
               theme: DatePickerTheme(
-                itemStyle: TextStyle(color: Colors.white),
-                backgroundColor: Colors.deepOrangeAccent,
-                headerColor: Colors.deepOrangeAccent,
-                doneStyle: TextStyle(color: Colors.white),
-                cancelStyle: TextStyle(color: Colors.white),
-                containerHeight: size.height * 0.3,
+                itemStyle: TextStyle(color: Colors.white, fontFamily: 'Yanolja'),
+                backgroundColor: Colors.black,
+                headerColor: Colors.black,
+                doneStyle: TextStyle(color: Colors.deepOrangeAccent, fontFamily: 'Yanolja'),
+                cancelStyle: TextStyle(color: Colors.deepOrangeAccent, fontFamily: 'Yanolja'),
+                containerHeight: size.height * 0.2,
               ),
               showTitleActions: true,
               minTime: DateTime(2000, 1, 1),
