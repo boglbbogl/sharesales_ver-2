@@ -1,44 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
-class Example extends StatelessWidget {
+class Example extends StatefulWidget {
+
+  @override
+  _ExampleState createState() => _ExampleState();
+}
+
+class _ExampleState extends State<Example> {
+  int a;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          SizedBox(height: 100,),
-          SfCartesianChart(
-            primaryYAxis: NumericAxis(),
-            primaryXAxis: CategoryAxis(),
-            series: <ChartSeries>[
-              ColumnSeries<SalesData, String>(
-                dataSource: getColumnData(),
-                xValueMapper: (SalesData sales,_)=>sales.x,
-                yValueMapper: (SalesData sales,_)=>sales.y,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return Container();
   }
 }
 
-class SalesData{
-  String x;
-  double y;
-  SalesData(this.x, this.y);
-}
 
-dynamic getColumnData(){
-  List<SalesData> columnData = <SalesData>[
-    SalesData('test1', 10),
-    SalesData('test2', 12),
-    SalesData('test3', 14),
-    SalesData('test4', 15),
-    SalesData('test5', 12),
-  ];
-  return columnData;
-}
-
+// class Example2 extends StatefulWidget {
+//   final a;
+//
+//   const Example2( this.a, {Key key,}) : super(key: key);
+//   @override
+//   _Example2State createState() => _Example2State();
+// }
+//
+// class _Example2State extends State<Example2> {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//
+//     return Container(
+//       child: Text(widget.a),
+//     );
+//   }
+// }

@@ -12,14 +12,16 @@ class SearchScreenChartForm extends StatelessWidget {
   final List<CircularChartData> radialChartData;
   final int totalSales;
   final int totalExpense;
+  final _pageBarChartViewController;
+  final _pageRadialChartViewController;
 
-  const SearchScreenChartForm(this.barChartData,this.radialChartData, this.totalSales, this.totalExpense, {Key key}) : super(key: key);
+  const SearchScreenChartForm(this.barChartData,this.radialChartData, this.totalSales, this.totalExpense,
+      this._pageBarChartViewController, this._pageRadialChartViewController,{Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
-    PageController _pageBarChartViewController = PageController(viewportFraction: 0.7, initialPage: 1);
-    PageController _pageRadialChartViewController = PageController(viewportFraction: 0.7, initialPage: 1);
+
 
     return Column(
       children: [

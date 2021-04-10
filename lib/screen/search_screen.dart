@@ -29,6 +29,8 @@ class _SearchScreenState extends State<SearchScreen> {
   DateRangePickerController _dayRangePickerController = DateRangePickerController();
   DateRangePickerController _monthRangePickerController = DateRangePickerController();
 
+  PageController _pageBarChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
+  PageController _pageRadialChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageTextViewController = PageController(viewportFraction: 0.8);
 
   String _rangePickerStartDate;
@@ -41,6 +43,9 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     _dayRangePickerController.dispose();
+    _pageTextViewController.dispose();
+    _pageBarChartViewController.dispose();
+    _pageRadialChartViewController.dispose();
     _pageTextViewController.dispose();
     super.dispose();
   }
@@ -105,20 +110,20 @@ class _SearchScreenState extends State<SearchScreen> {
           listShowExpenseAddList.addAll(docQuery['expenseAddList']);
         });
 
-        int totalSales = listTotalSales.isEmpty ? int.parse('0') : _listDataNullCheckForm(listTotalSales);
-        int actualSales = listActualSales.isEmpty ? int.parse('0') : _listDataNullCheckForm(listActualSales);
-        int vos = listVos.isEmpty ? int.parse('0') : _listDataNullCheckForm(listVos);
-        int vat = listVat.isEmpty ? int.parse('0') : _listDataNullCheckForm(listVat);
-        int discount = listDiscount.isEmpty ? int.parse('0') : _listDataNullCheckForm(listDiscount);
-        int creditCard = listCreditCard.isEmpty ? int.parse('0') : _listDataNullCheckForm(listCreditCard);
-        int cash = listCash.isEmpty ? int.parse('0') : _listDataNullCheckForm(listCash);
-        int cashReceipt = listCashReceipt.isEmpty ? int.parse('0') : _listDataNullCheckForm(listCashReceipt);
-        int delivery = listDelivery.isEmpty ? int.parse('0') : _listDataNullCheckForm(listDelivery);
-        int giftCard = listGiftCard.isEmpty ? int.parse('0') : _listDataNullCheckForm(listGiftCard);
-        int expenseAddTotalAmount = listExpenseAddTotalAmount.isEmpty ? int.parse('0') : _listDataNullCheckForm(listExpenseAddTotalAmount);
-        int foodProvisionExpense = listFoodProvisionExpanse.isEmpty ? int.parse('0') : _listDataNullCheckForm(listFoodProvisionExpanse);
-        int beverageExpense = listBeverageExpanse.isEmpty ? int.parse('0') : _listDataNullCheckForm(listBeverageExpanse);
-        int alcoholExpense = listAlcoholExpanse.isEmpty ? int.parse('0') : _listDataNullCheckForm(listAlcoholExpanse);
+        int totalSales = _listDataNullCheckForm(listTotalSales);
+        int actualSales = _listDataNullCheckForm(listActualSales);
+        int vos = _listDataNullCheckForm(listVos);
+        int vat = _listDataNullCheckForm(listVat);
+        int discount = _listDataNullCheckForm(listDiscount);
+        int creditCard = _listDataNullCheckForm(listCreditCard);
+        int cash = _listDataNullCheckForm(listCash);
+        int cashReceipt = _listDataNullCheckForm(listCashReceipt);
+        int delivery = _listDataNullCheckForm(listDelivery);
+        int giftCard = _listDataNullCheckForm(listGiftCard);
+        int expenseAddTotalAmount = _listDataNullCheckForm(listExpenseAddTotalAmount);
+        int foodProvisionExpense = _listDataNullCheckForm(listFoodProvisionExpanse);
+        int beverageExpense = _listDataNullCheckForm(listBeverageExpanse);
+        int alcoholExpense = _listDataNullCheckForm(listAlcoholExpanse);
         int totalExpense = expenseAddTotalAmount + foodProvisionExpense + alcoholExpense;
 
           List<BarChartData> barChartData = [];
@@ -126,27 +131,34 @@ class _SearchScreenState extends State<SearchScreen> {
             DocumentSnapshot document = snapshot.data.docs[index];
             barChartData.add(BarChartData.fromMap(document.data() ));}
 
+        // double doughnutMainTotalExpense = (totalExpense/actualSales)*100;
+        // double doughnutMainTotalActualSales = ((actualSales-totalExpense)/actualSales)*100;
+
           List<CircularChartData> radialChartData = [
-            CircularChartData("Delivery", Colors.lightBlue, radialSales: delivery),
-            CircularChartData("실제매출", Colors.deepOrange, radialSales: actualSales),
-            CircularChartData("할인", Colors.amber, radialSales: discount),
-            CircularChartData("총매출", Colors.deepPurple, radialSales: totalSales),
-            CircularChartData("음료+주류", Colors.purpleAccent, radialExpense: beverageExpense+alcoholExpense),
-            CircularChartData("추가지출", Colors.pinkAccent, radialExpense: expenseAddTotalAmount),
-            CircularChartData("식자재", Colors.orange, radialExpense: foodProvisionExpense),
-            CircularChartData("총지출", Colors.teal, radialExpense: totalExpense),
-            CircularChartData("총지출", Colors.deepPurple, radialMainShow: totalExpense),
-            CircularChartData("식자재", Colors.green, radialMainShow: foodProvisionExpense),
-            CircularChartData("실제매출", Colors.redAccent, radialMainShow: actualSales),
-            CircularChartData("공급가액", Colors.redAccent, pieSales: vos),
-            CircularChartData("세액", Colors.redAccent, pieSales: vat),
-            CircularChartData("신용카드", Colors.redAccent, pieSales: creditCard),
-            CircularChartData("현금", Colors.redAccent, pieSales: cash),
-            CircularChartData("현금영수증", Colors.redAccent, pieSales: cashReceipt),
-            CircularChartData("Delivery", Colors.lightBlue, pieSales: delivery),
-            CircularChartData("Gift Card", Colors.lightBlue, pieSales: giftCard),
-            CircularChartData("실제매출", Colors.deepPurple, pieMain: actualSales.toDouble()),
-            CircularChartData("총지출", Colors.pink, pieMain: totalExpense.toDouble()),
+            CircularChartData(title: "Delivery", color: Colors.lightBlue, radialSales: delivery),
+            CircularChartData(title: "실제매출", color: Colors.deepOrange, radialSales: actualSales),
+            CircularChartData(title: "할인", color: Colors.amber, radialSales: discount),
+            CircularChartData(title: "총매출", color: Colors.deepPurple, radialSales: totalSales),
+            CircularChartData(title: "음료+주류", color: Colors.purpleAccent, radialExpense: beverageExpense+alcoholExpense),
+            CircularChartData(title: "추가지출", color: Colors.pinkAccent, radialExpense: expenseAddTotalAmount),
+            CircularChartData(title: "식자재", color: Colors.orange, radialExpense: foodProvisionExpense),
+            CircularChartData(title: "총지출", color: Colors.teal, radialExpense: totalExpense),
+            CircularChartData(title: "총지출", color: Colors.deepPurple, radialMainShow: totalExpense),
+            CircularChartData(title: "식자재", color: Colors.green, radialMainShow: foodProvisionExpense),
+            CircularChartData(title: "실제매출", color: Colors.redAccent, radialMainShow: actualSales),
+            CircularChartData(title: "공급가액", color: Colors.redAccent, pieSales: vos),
+            CircularChartData(title: "세액", color: Colors.redAccent, pieSales: vat),
+            CircularChartData(title: "신용카드", color: Colors.redAccent, pieSales: creditCard),
+            CircularChartData(title: "현금", color: Colors.redAccent, pieSales: cash),
+            CircularChartData(title: "현금영수증", color: Colors.redAccent, pieSales: cashReceipt),
+            CircularChartData(title: "Delivery", color: Colors.lightBlue, pieSales: delivery),
+            CircularChartData(title: "Gift Card", color: Colors.lightBlue, pieSales: giftCard),
+            // CircularChartData(title: "매출 ${double.parse(doughnutMainTotalActualSales.toStringAsFixed(1))}%",
+            //     labelTitle: koFormatMoney.format(actualSales)+' \\',
+            //     color: Colors.deepPurple, doughnutMain: doughnutMainTotalActualSales),
+            // CircularChartData(title: "지출 ${double.parse(doughnutMainTotalExpense.toStringAsFixed(1))}%",
+            //     labelTitle: koFormatMoney.format(totalExpense)+' \\',
+            //     color: Colors.pink, doughnutMain: doughnutMainTotalExpense),
           ];
 
         return SafeArea(
@@ -188,10 +200,12 @@ class _SearchScreenState extends State<SearchScreen> {
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
                           expenseAddTotalAmount, foodProvisionExpense, beverageExpense, alcoholExpense, listShowExpenseAddList,
                           context, listShowExpenseAddList, totalExpense),
-                      SearchScreenChartForm(barChartData, radialChartData, totalSales, totalExpense),
+                      _rangePickerStartDate == null ? MyProgressIndicator()
+                          : SearchScreenChartForm(barChartData, radialChartData, totalSales, totalExpense,
+                          _pageBarChartViewController, _pageRadialChartViewController),
                       SfCircularChart(
                         tooltipBehavior: TooltipBehavior(
-                          format: 'point.x : point.y  \\',
+                          format: 'point.x',
                           borderColor: Colors.white,
                           color: Colors.white,
                           canShowMarker: true,
@@ -208,8 +222,8 @@ class _SearchScreenState extends State<SearchScreen> {
                             explodeOffset: '10%',
                             dataSource: radialChartData,
                             xValueMapper: (CircularChartData data, _)=>data.title,
-                            yValueMapper: (CircularChartData data, _)=>data.pieMain,
-                            dataLabelMapper: (CircularChartData data, _)=>data.title,
+                            yValueMapper: (CircularChartData data, _)=>data.doughnutMain,
+                            dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
                             pointColorMapper: (CircularChartData data, _)=>data.color,
                             enableTooltip: true,
                             enableSmartLabels: true,
