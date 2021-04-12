@@ -57,7 +57,7 @@ class SearchScreenChartForm extends StatelessWidget {
     return SfCircularChart(
       margin: EdgeInsets.only(bottom: -15),
       tooltipBehavior: TooltipBehavior(
-        format: 'point.x : point.y  \\',
+        format: 'point.x',
         borderColor: Colors.white,
         color: Colors.white,
         canShowMarker: true,
@@ -70,12 +70,12 @@ class SearchScreenChartForm extends StatelessWidget {
       series: <RadialBarSeries<CircularChartData, dynamic>>[
         RadialBarSeries<CircularChartData, dynamic>(
           gap: '10%',
-          radius: '90%',
+          radius: '85%',
           cornerStyle: CornerStyle.bothCurve,
           dataSource: radialChartData,
           xValueMapper: (CircularChartData data, _)=>data.title,
           yValueMapper: yData,
-          dataLabelMapper: (CircularChartData data, _)=>data.title,
+          dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
           pointColorMapper: (CircularChartData data, _)=>data.color,
           enableTooltip: true,
           enableSmartLabels: true,

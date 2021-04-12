@@ -29,6 +29,7 @@ class _SearchScreenState extends State<SearchScreen> {
   DateRangePickerController _dayRangePickerController = DateRangePickerController();
   DateRangePickerController _monthRangePickerController = DateRangePickerController();
 
+  PageController _pageDoughnutChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageBarChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageRadialChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageTextViewController = PageController(viewportFraction: 0.8);
@@ -131,39 +132,39 @@ class _SearchScreenState extends State<SearchScreen> {
             DocumentSnapshot document = snapshot.data.docs[index];
             barChartData.add(BarChartData.fromMap(document.data() ));}
 
-        // double doughnutMainTotalExpense = (totalExpense/actualSales)*100;
-        // double doughnutMainTotalActualSales = ((actualSales-totalExpense)/actualSales)*100;
+        double doughnutMainTotalExpense = (totalExpense/actualSales)*100;
+        double doughnutMainTotalActualSales = ((actualSales-totalExpense)/actualSales)*100;
 
-          List<CircularChartData> radialChartData = [
-            CircularChartData(title: "Delivery", color: Colors.lightBlue, radialSales: delivery),
-            CircularChartData(title: "실제매출", color: Colors.deepOrange, radialSales: actualSales),
-            CircularChartData(title: "할인", color: Colors.amber, radialSales: discount),
-            CircularChartData(title: "총매출", color: Colors.deepPurple, radialSales: totalSales),
-            CircularChartData(title: "음료+주류", color: Colors.purpleAccent, radialExpense: beverageExpense+alcoholExpense),
-            CircularChartData(title: "추가지출", color: Colors.pinkAccent, radialExpense: expenseAddTotalAmount),
-            CircularChartData(title: "식자재", color: Colors.orange, radialExpense: foodProvisionExpense),
-            CircularChartData(title: "총지출", color: Colors.teal, radialExpense: totalExpense),
-            CircularChartData(title: "총지출", color: Colors.deepPurple, radialMainShow: totalExpense),
-            CircularChartData(title: "식자재", color: Colors.green, radialMainShow: foodProvisionExpense),
-            CircularChartData(title: "실제매출", color: Colors.redAccent, radialMainShow: actualSales),
-            CircularChartData(title: "공급가액", color: Colors.redAccent, pieSales: vos),
-            CircularChartData(title: "세액", color: Colors.redAccent, pieSales: vat),
-            CircularChartData(title: "신용카드", color: Colors.redAccent, pieSales: creditCard),
-            CircularChartData(title: "현금", color: Colors.redAccent, pieSales: cash),
-            CircularChartData(title: "현금영수증", color: Colors.redAccent, pieSales: cashReceipt),
-            CircularChartData(title: "Delivery", color: Colors.lightBlue, pieSales: delivery),
-            CircularChartData(title: "Gift Card", color: Colors.lightBlue, pieSales: giftCard),
-            // CircularChartData(title: "매출 ${double.parse(doughnutMainTotalActualSales.toStringAsFixed(1))}%",
-            //     labelTitle: koFormatMoney.format(actualSales)+' \\',
-            //     color: Colors.deepPurple, doughnutMain: doughnutMainTotalActualSales),
-            // CircularChartData(title: "지출 ${double.parse(doughnutMainTotalExpense.toStringAsFixed(1))}%",
-            //     labelTitle: koFormatMoney.format(totalExpense)+' \\',
-            //     color: Colors.pink, doughnutMain: doughnutMainTotalExpense),
+
+          List<CircularChartData> circularChartData = [
+            CircularChartData(title: "Delivery : " + koFormatMoney.format(delivery) + ' \\', color: Colors.lightBlue, labelTitle: "Delivery",radialSales: delivery),
+            CircularChartData(title: "실제매출 : " + koFormatMoney.format(actualSales) + ' \\', color: Colors.deepOrange, labelTitle: "실제매출",radialSales: actualSales),
+            CircularChartData(title: "할인 : " + koFormatMoney.format(discount) + ' \\', color: Colors.amber, labelTitle: "할인",radialSales: discount),
+            CircularChartData(title: "총 매출 : " + koFormatMoney.format(totalSales) + ' \\', color: Colors.deepPurple, labelTitle: "총 매출",radialSales: totalSales),
+            CircularChartData(title: "음료+주류 : " + koFormatMoney.format(beverageExpense+alcoholExpense) + ' \\', color: Colors.purpleAccent, labelTitle: "음료+주류",radialExpense: beverageExpense+alcoholExpense),
+            CircularChartData(title: "식자재 : " + koFormatMoney.format(foodProvisionExpense) + ' \\', color: Colors.orange, labelTitle: "식자재",radialExpense: foodProvisionExpense),
+            CircularChartData(title: "총 지출 : " + koFormatMoney.format(totalExpense) + ' \\', color: Colors.teal, labelTitle: "총 지출",radialExpense: totalExpense),
+            CircularChartData(title: "총 지출 : " + koFormatMoney.format(totalExpense) + ' \\', color: Colors.deepPurple, labelTitle: "총 지출",radialMainShow: totalExpense),
+            CircularChartData(title: "식자재 : " + koFormatMoney.format(foodProvisionExpense) + ' \\', color: Colors.green, labelTitle: "식자재",radialMainShow: foodProvisionExpense),
+            CircularChartData(title: "실제매출 : " + koFormatMoney.format(actualSales) + ' \\', color: Colors.redAccent, labelTitle: "실제매출",radialMainShow: actualSales),
+            CircularChartData(title: '매출 : '  + koFormatMoney.format(actualSales) +' \\', color: Colors.grey[200], labelTitle: "",
+                doughnutMain: doughnutMainTotalActualSales.isNaN ? 0.0 : doughnutMainTotalActualSales),
+            CircularChartData(title: '지출 : ' + koFormatMoney.format(totalExpense) + ' \\', color: Colors.pink, labelTitle: "지출",
+                doughnutMain: doughnutMainTotalExpense.isNaN ? 0.0 : doughnutMainTotalExpense),
+            // CircularChartData(title: doughnutMainTotalActualSales.isNaN ? double.nan.toString()
+            //     : "매출 ${double.parse(doughnutMainTotalActualSales.toStringAsFixed(1)).toString()} %",
+            //     labelTitle: koFormatMoney.format(actualSales).toString()+' 원',
+            //     color: Colors.deepPurple, doughnutMain: doughnutMainTotalActualSales.isNaN ? 0.0 : doughnutMainTotalActualSales),
+            // CircularChartData(title: doughnutMainTotalExpense.isNaN ? double.nan.toString()
+            //     : "지출 ${double.parse(doughnutMainTotalExpense.toStringAsFixed(1).toString())} %",
+            //     labelTitle: koFormatMoney.format(totalExpense).toString()+' 원',
+            //     color: Colors.pink, doughnutMain: doughnutMainTotalExpense.isNaN ? 0.0 : doughnutMainTotalExpense),
           ];
 
         return SafeArea(
           child: GestureDetector(
             onTap: (){
+              FocusScope.of(context).unfocus();
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -200,9 +201,59 @@ class _SearchScreenState extends State<SearchScreen> {
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
                           expenseAddTotalAmount, foodProvisionExpense, beverageExpense, alcoholExpense, listShowExpenseAddList,
                           context, listShowExpenseAddList, totalExpense),
-                      _rangePickerStartDate == null ? MyProgressIndicator()
-                          : SearchScreenChartForm(barChartData, radialChartData, totalSales, totalExpense,
+                      SearchScreenChartForm(barChartData, circularChartData, totalSales, totalExpense,
                           _pageBarChartViewController, _pageRadialChartViewController),
+                      ExpandablePageView(
+                        controller: _pageDoughnutChartViewController,
+                        children: [
+                          SfCircularChart(
+                            annotations: <CircularChartAnnotation>[
+                              CircularChartAnnotation(
+                                height: '100%',
+                                width: '100%',
+                                widget: Container(
+                                  child: PhysicalModel(
+                                    shape: BoxShape.circle,
+                                    elevation: 10,
+                                    color: Colors.grey[200],
+                                    child: Container(),
+                                  ),
+                                )
+                              ),
+                              CircularChartAnnotation(
+                                widget: Container(
+                                  child: Text("${double.parse(doughnutMainTotalExpense.toStringAsFixed(1).toString())} %",
+                                  style: TextStyle(color: Colors.pink, fontFamily: 'Yanolja', fontWeight: FontWeight.bold, fontSize: 20),),
+                                ),
+                              ),
+                            ],
+                            tooltipBehavior: TooltipBehavior(
+                              format: 'point.x',
+                              borderColor: Colors.white,
+                              color: Colors.white,
+                              canShowMarker: true,
+                              tooltipPosition: TooltipPosition.pointer,
+                              borderWidth: 2,
+                              enable: true,
+                              elevation: 9,
+                              textStyle: TextStyle(color: Colors.black54, fontSize: 14, fontFamily: 'Yanolja'),
+                            ),
+                            series: <DoughnutSeries<CircularChartData, dynamic>>[
+                              DoughnutSeries<CircularChartData, dynamic>(
+                                dataSource: circularChartData,
+                                xValueMapper: (CircularChartData data, _)=>data.title,
+                                yValueMapper: (CircularChartData data, _)=>data.doughnutMain,
+                                dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
+                                pointColorMapper: (CircularChartData data, _)=>data.color,
+                                enableTooltip: true,
+                                enableSmartLabels: true,
+                                dataLabelSettings: DataLabelSettings(isVisible: true, textStyle: TextStyle(fontFamily: 'Yanolja')),
+                              ),
+                            ],
+                          ),
+
+                        ],
+                      ),
                       SfCircularChart(
                         tooltipBehavior: TooltipBehavior(
                           format: 'point.x',
@@ -219,8 +270,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           PieSeries<CircularChartData, dynamic>(
                             explode: true,
                             explodeIndex: 0,
-                            explodeOffset: '10%',
-                            dataSource: radialChartData,
+                            // explodeOffset: '10%',
+                            dataSource: circularChartData,
                             xValueMapper: (CircularChartData data, _)=>data.title,
                             yValueMapper: (CircularChartData data, _)=>data.doughnutMain,
                             dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
@@ -251,17 +302,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                 animationCurve: Curves.fastOutSlowIn,
                                 duration: Duration(milliseconds: 300),
                                 barrierColor: Colors.white12,
-                                backgroundColor: Colors.white,
+                                backgroundColor: Colors.white12,
                                 context: context,
                                 builder: (BuildContext context){
                                   return Container(
                                     height: size.height*0.2,
                                     child: Row(
                                       children: <Widget>[
-                                        Container(
-                                          width: size.width*0.1,
-                                          height: size.height*0.25,
-                                          color: Colors.white,
+                                        Opacity(
+                                          opacity: 0,
+                                          child: Container(
+                                            width: size.width*0.1,
+                                            height: size.height*0.25,
+                                          ),
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
@@ -285,43 +338,45 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: <Widget>[
                                                   ListTile(
-                                                    leading: Text('Day'),
-                                                    title: Text('일자별',),
-                                                    dense: true,
-                                                    onTap: (){
-                                                      Navigator.pop(context);
-                                                      _searchScreenDayRangeDatePicker(context);
-                                                    }
+                                                      leading: Text('Day'),
+                                                      title: Text('일자별',),
+                                                      dense: true,
+                                                      onTap: (){
+                                                        Navigator.pop(context);
+                                                        _searchScreenDayRangeDatePicker(context);
+                                                      }
                                                   ),
                                                   Divider(height: 1,),
                                                   ListTile(
                                                       leading: Text('Month'),
-                                                    title: Text('월별'),
-                                                    dense: true,
-                                                    onTap: (){
-                                                      Navigator.pop(context);
-                                                      _searchScreenMonthRangeDatePicker(context);
-                                                    }
+                                                      title: Text('월별'),
+                                                      dense: true,
+                                                      onTap: (){
+                                                        Navigator.pop(context);
+                                                        _searchScreenMonthRangeDatePicker(context);
+                                                      }
                                                   ),
                                                   Divider(height: 1,),
                                                   ListTile(
-                                                    leading: Text('Year'),
-                                                    title: Text('연도별'),
-                                                    dense: true,
-                                                    onTap: (){
-                                                      Navigator.pop(context);
-                                                      print('아직 못만듬');
-                                                    }
+                                                      leading: Text('Year'),
+                                                      title: Text('연도별'),
+                                                      dense: true,
+                                                      onTap: (){
+                                                        Navigator.pop(context);
+                                                        print('아직 못만듬');
+                                                      }
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ),
                                         ),
-                                        Container(
-                                          width: size.width*0.1,
-                                          height: size.height*0.15,
-                                          color: Colors.white,
+                                        Opacity(
+                                          opacity: 0,
+                                          child: Container(
+                                            width: size.width*0.1,
+                                            height: size.height*0.15,
+                                          ),
                                         ),
                                       ],
                                     ),
