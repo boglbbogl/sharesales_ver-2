@@ -7,31 +7,26 @@ class Example extends StatefulWidget {
 }
 
 class _ExampleState extends State<Example> {
-  int a;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          title: Text('테스트1'),
+        ),
+        SliverAppBar(
+          title: Text('테스트1'),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index){
+                return Container();
+              }
+          ),
+
+        ),
+      ],
+    );
   }
 }
-
-
-// class Example2 extends StatefulWidget {
-//   final a;
-//
-//   const Example2( this.a, {Key key,}) : super(key: key);
-//   @override
-//   _Example2State createState() => _Example2State();
-// }
-//
-// class _Example2State extends State<Example2> {
-//
-//   @override
-//   Widget build(BuildContext context) {
-//
-//
-//     return Container(
-//       child: Text(widget.a),
-//     );
-//   }
-// }

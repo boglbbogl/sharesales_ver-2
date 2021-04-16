@@ -23,7 +23,9 @@ class CircularChartData{
   final int radialMainShow;
   final int pieSales;
   final double doughnutMain;
+  final double doughnutExpense;
   final Color color;
 
-  CircularChartData({this.title, this.color,this.radialExpense, this.radialSales, this.radialMainShow, this.pieSales, this.doughnutMain, this.labelTitle});
+  CircularChartData({this.title, this.color,this.radialExpense, this.radialSales, this.radialMainShow, this.pieSales,
+    this.doughnutMain, this.doughnutExpense, this.labelTitle});
 }

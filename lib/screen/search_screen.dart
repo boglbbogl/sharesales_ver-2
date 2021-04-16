@@ -29,7 +29,7 @@ class _SearchScreenState extends State<SearchScreen> {
   DateRangePickerController _dayRangePickerController = DateRangePickerController();
   DateRangePickerController _monthRangePickerController = DateRangePickerController();
 
-  PageController _pageDoughnutChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
+  PageController _pageDoughnutChartViewController = PageController(viewportFraction: 0.7);
   PageController _pageBarChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageRadialChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageTextViewController = PageController(viewportFraction: 0.8);
@@ -125,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
         int foodProvisionExpense = _listDataNullCheckForm(listFoodProvisionExpanse);
         int beverageExpense = _listDataNullCheckForm(listBeverageExpanse);
         int alcoholExpense = _listDataNullCheckForm(listAlcoholExpanse);
-        int totalExpense = expenseAddTotalAmount + foodProvisionExpense + alcoholExpense;
+        int totalExpense = expenseAddTotalAmount + foodProvisionExpense + alcoholExpense + beverageExpense;
 
           List<BarChartData> barChartData = [];
           for(int index=0;index<snapshot.data.docs.length;index++) {
@@ -134,6 +134,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
         double doughnutMainTotalExpense = (totalExpense/actualSales)*100;
         double doughnutMainTotalActualSales = ((actualSales-totalExpense)/actualSales)*100;
+
+        double doughnutExpenseFood = (foodProvisionExpense/totalExpense)*100;
+        double doughnutExpenseBeverage = (beverageExpense/totalExpense)*100;
+        double doughnutExpenseAlcohol = (alcoholExpense/totalExpense)*100;
+        double doughnutExpenseAddAmount = (expenseAddTotalAmount/totalExpense)*100;
 
 
           List<CircularChartData> circularChartData = [
@@ -151,14 +156,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 doughnutMain: doughnutMainTotalActualSales.isNaN ? 0.0 : doughnutMainTotalActualSales),
             CircularChartData(title: '지출 : ' + koFormatMoney.format(totalExpense) + ' \\', color: Colors.pink, labelTitle: "지출",
                 doughnutMain: doughnutMainTotalExpense.isNaN ? 0.0 : doughnutMainTotalExpense),
-            // CircularChartData(title: doughnutMainTotalActualSales.isNaN ? double.nan.toString()
-            //     : "매출 ${double.parse(doughnutMainTotalActualSales.toStringAsFixed(1)).toString()} %",
-            //     labelTitle: koFormatMoney.format(actualSales).toString()+' 원',
-            //     color: Colors.deepPurple, doughnutMain: doughnutMainTotalActualSales.isNaN ? 0.0 : doughnutMainTotalActualSales),
-            // CircularChartData(title: doughnutMainTotalExpense.isNaN ? double.nan.toString()
-            //     : "지출 ${double.parse(doughnutMainTotalExpense.toStringAsFixed(1).toString())} %",
-            //     labelTitle: koFormatMoney.format(totalExpense).toString()+' 원',
-            //     color: Colors.pink, doughnutMain: doughnutMainTotalExpense.isNaN ? 0.0 : doughnutMainTotalExpense),
+            CircularChartData(title: "식자재", color: Colors.pink, labelTitle: doughnutExpenseFood.toStringAsFixed(1)+' %',
+                doughnutExpense: doughnutExpenseFood.isNaN ? 0.0 : doughnutExpenseFood),
+            CircularChartData(title: "음료", color: Colors.orange, labelTitle: doughnutExpenseBeverage.toStringAsFixed(1)+' %',
+                doughnutExpense: doughnutExpenseBeverage.isNaN ? 0.0 : doughnutExpenseBeverage),
+            CircularChartData(title: "주류", color: Colors.deepOrange, labelTitle: doughnutExpenseAlcohol.toStringAsFixed(1)+' %',
+                doughnutExpense: doughnutExpenseAlcohol.isNaN ? 0.0 : doughnutExpenseAlcohol),
+            CircularChartData(title: "추가지출", color: Colors.green, labelTitle: doughnutExpenseAddAmount.toStringAsFixed(1)+' %',
+                doughnutExpense: doughnutExpenseAddAmount.isNaN ? 0.0 : doughnutExpenseAddAmount),
           ];
 
         return SafeArea(
@@ -251,37 +256,46 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             ],
                           ),
-
-                        ],
-                      ),
-                      SfCircularChart(
-                        tooltipBehavior: TooltipBehavior(
-                          format: 'point.x',
-                          borderColor: Colors.white,
-                          color: Colors.white,
-                          canShowMarker: true,
-                          tooltipPosition: TooltipPosition.pointer,
-                          borderWidth: 2,
-                          enable: true,
-                          elevation: 9,
-                          textStyle: TextStyle(color: Colors.black54, fontSize: 14, fontFamily: 'Yanolja'),
-                        ),
-                        series: <PieSeries<CircularChartData, dynamic>>[
-                          PieSeries<CircularChartData, dynamic>(
-                            explode: true,
-                            explodeIndex: 0,
-                            // explodeOffset: '10%',
-                            dataSource: circularChartData,
-                            xValueMapper: (CircularChartData data, _)=>data.title,
-                            yValueMapper: (CircularChartData data, _)=>data.doughnutMain,
-                            dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
-                            pointColorMapper: (CircularChartData data, _)=>data.color,
-                            enableTooltip: true,
-                            enableSmartLabels: true,
-                            dataLabelSettings: DataLabelSettings(isVisible: true,),
+                          SfCircularChart(
+                            legend: Legend(
+                              isVisible: true,
+                              position: LegendPosition.bottom,
+                              overflowMode: LegendItemOverflowMode.wrap,
+                              iconBorderWidth: 1,
+                              iconBorderColor: Colors.pink,
+                            ),
+                            annotations: [
+                              CircularChartAnnotation(
+                                height: '55%',
+                                width: '55%',
+                                widget: Container(
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: Center(child: Text(koFormatMoney.format(totalExpense), style: TextStyle(fontSize: 9, color: Colors.black54),)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            series: <CircularSeries<CircularChartData, dynamic>>[
+                              DoughnutSeries<CircularChartData, dynamic>(
+                                radius: '100%',
+                                dataSource: circularChartData,
+                                xValueMapper: (CircularChartData data, _)=>data.title,
+                                yValueMapper: (CircularChartData data, _)=>data.doughnutExpense,
+                                dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
+                                pointColorMapper: (CircularChartData data, _)=>data.color,
+                                strokeWidth: 2,
+                                strokeColor: Colors.white,
+                                enableTooltip: true,
+                                enableSmartLabels: true,
+                                dataLabelSettings: DataLabelSettings(isVisible: true, textStyle: TextStyle(color: Colors.white, fontSize: 10)),
+                              ),
+                            ],
                           ),
                         ],
                       ),
+
                       InkWell(onTap:(){},child: Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),)),
                     ],
                   ),
