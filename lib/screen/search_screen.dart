@@ -14,7 +14,6 @@ import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'package:sharesales_ver2/widget/search_screen_chart_form.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'management_screen.dart';
 
@@ -40,6 +39,9 @@ class _SearchScreenState extends State<SearchScreen> {
   DateTime _rangePickerEndDateTime;
 
   bool _isExpanded = false;
+  bool circularChartSwitcher = true;
+
+  Duration duration = Duration(milliseconds: 10000);
 
   @override
   void dispose() {
@@ -152,18 +154,12 @@ class _SearchScreenState extends State<SearchScreen> {
             CircularChartData(title: "총 지출 : " + koFormatMoney.format(totalExpense) + ' \\', color: Colors.deepPurple, labelTitle: "총 지출",radialMainShow: totalExpense),
             CircularChartData(title: "식자재 : " + koFormatMoney.format(foodProvisionExpense) + ' \\', color: Colors.green, labelTitle: "식자재",radialMainShow: foodProvisionExpense),
             CircularChartData(title: "실제매출 : " + koFormatMoney.format(actualSales) + ' \\', color: Colors.redAccent, labelTitle: "실제매출",radialMainShow: actualSales),
-            CircularChartData(title: '매출 : '  + koFormatMoney.format(actualSales) +' \\', color: Colors.grey[200], labelTitle: "",
-                doughnutMain: doughnutMainTotalActualSales.isNaN ? 0.0 : doughnutMainTotalActualSales),
-            CircularChartData(title: '지출 : ' + koFormatMoney.format(totalExpense) + ' \\', color: Colors.pink, labelTitle: "지출",
-                doughnutMain: doughnutMainTotalExpense.isNaN ? 0.0 : doughnutMainTotalExpense),
-            CircularChartData(title: "식자재", color: Colors.pink, labelTitle: doughnutExpenseFood.toStringAsFixed(1)+' %',
-                doughnutExpense: doughnutExpenseFood.isNaN ? 0.0 : doughnutExpenseFood),
-            CircularChartData(title: "음료", color: Colors.orange, labelTitle: doughnutExpenseBeverage.toStringAsFixed(1)+' %',
-                doughnutExpense: doughnutExpenseBeverage.isNaN ? 0.0 : doughnutExpenseBeverage),
-            CircularChartData(title: "주류", color: Colors.deepOrange, labelTitle: doughnutExpenseAlcohol.toStringAsFixed(1)+' %',
-                doughnutExpense: doughnutExpenseAlcohol.isNaN ? 0.0 : doughnutExpenseAlcohol),
-            CircularChartData(title: "추가지출", color: Colors.green, labelTitle: doughnutExpenseAddAmount.toStringAsFixed(1)+' %',
-                doughnutExpense: doughnutExpenseAddAmount.isNaN ? 0.0 : doughnutExpenseAddAmount),
+            CircularChartData(title: '매출 : '  + koFormatMoney.format(actualSales) +' \\', color: Colors.grey[200], labelTitle: "", doughnutMain: doughnutMainTotalActualSales.isNaN ? 0.0 : doughnutMainTotalActualSales),
+            CircularChartData(title: '지출 : ' + koFormatMoney.format(totalExpense) + ' \\', color: Colors.pink, labelTitle: "지출", doughnutMain: doughnutMainTotalExpense.isNaN ? 0.0 : doughnutMainTotalExpense),
+            CircularChartData(title: "식자재", color: Colors.pink, labelTitle: doughnutExpenseFood.toStringAsFixed(1)+' %', doughnutExpense: doughnutExpenseFood.isNaN ? 0.0 : doughnutExpenseFood),
+            CircularChartData(title: "음료", color: Colors.orange, labelTitle: doughnutExpenseBeverage.toStringAsFixed(1)+' %', doughnutExpense: doughnutExpenseBeverage.isNaN ? 0.0 : doughnutExpenseBeverage),
+            CircularChartData(title: "주류", color: Colors.deepOrange, labelTitle: doughnutExpenseAlcohol.toStringAsFixed(1)+' %', doughnutExpense: doughnutExpenseAlcohol.isNaN ? 0.0 : doughnutExpenseAlcohol),
+            CircularChartData(title: "추가지출", color: Colors.green, labelTitle: doughnutExpenseAddAmount.toStringAsFixed(1)+' %', doughnutExpense: doughnutExpenseAddAmount.isNaN ? 0.0 : doughnutExpenseAddAmount),
           ];
 
         return SafeArea(
@@ -174,7 +170,23 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: mainAppBar(context, IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
-                  onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),)),
+                  onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
+                appBarBottom: PreferredSize(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: InkWell(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                        Text(_rangePickerStartDate == null ? '기간을 선택해주세요' : _rangePickerStartDate.replaceAll(".", ''), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
+                        Text(_rangePickerStartDate == _rangePickerEndDate ? '' : '   -   ', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic, color: Colors.black54),),
+                        Text(_rangePickerEndDate == null || _rangePickerEndDate==_rangePickerStartDate ? '' : _rangePickerEndDate.replaceAll(".", ""), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
+                      ],
+                    ),
+                    onTap: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),
+                  ),
+                ), preferredSize: Size(size.width*0.8, 50)),),
               body: SingleChildScrollView(
                 child: Center(
                   child: Column(
@@ -182,116 +194,23 @@ class _SearchScreenState extends State<SearchScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        child: InkWell(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(_rangePickerStartDate == null ? '기간을 선택해주세요' : _rangePickerStartDate.replaceAll(".", ''),
-                                  style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
-                                Text(_rangePickerStartDate == _rangePickerEndDate ? '' : '   -   ', style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic, color: Colors.black54),),
-                                Text(_rangePickerEndDate == null || _rangePickerEndDate==_rangePickerStartDate ? '' : _rangePickerEndDate.replaceAll(".", ""),
-                                  style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
-                              ],
-                            ),
-                            onTap: (){
-                              _searchScreenShowBottomSheetRangeDatePickerList(context);
-                            },
-                          ),
-                        ),
                       _searchScreenPageViewSalesAndExpenseTextList(
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
                           expenseAddTotalAmount, foodProvisionExpense, beverageExpense, alcoholExpense, listShowExpenseAddList,
                           context, listShowExpenseAddList, totalExpense),
-                      SearchScreenChartForm(barChartData, circularChartData, totalSales, totalExpense,
-                          _pageBarChartViewController, _pageRadialChartViewController),
-                      ExpandablePageView(
-                        controller: _pageDoughnutChartViewController,
+                      Stack(
                         children: [
-                          SfCircularChart(
-                            annotations: <CircularChartAnnotation>[
-                              CircularChartAnnotation(
-                                height: '100%',
-                                width: '100%',
-                                widget: Container(
-                                  child: PhysicalModel(
-                                    shape: BoxShape.circle,
-                                    elevation: 10,
-                                    color: Colors.grey[200],
-                                    child: Container(),
-                                  ),
-                                )
-                              ),
-                              CircularChartAnnotation(
-                                widget: Container(
-                                  child: Text("${double.parse(doughnutMainTotalExpense.toStringAsFixed(1).toString())} %",
-                                  style: TextStyle(color: Colors.pink, fontFamily: 'Yanolja', fontWeight: FontWeight.bold, fontSize: 20),),
-                                ),
-                              ),
-                            ],
-                            tooltipBehavior: TooltipBehavior(
-                              format: 'point.x',
-                              borderColor: Colors.white,
-                              color: Colors.white,
-                              canShowMarker: true,
-                              tooltipPosition: TooltipPosition.pointer,
-                              borderWidth: 2,
-                              enable: true,
-                              elevation: 9,
-                              textStyle: TextStyle(color: Colors.black54, fontSize: 14, fontFamily: 'Yanolja'),
-                            ),
-                            series: <DoughnutSeries<CircularChartData, dynamic>>[
-                              DoughnutSeries<CircularChartData, dynamic>(
-                                dataSource: circularChartData,
-                                xValueMapper: (CircularChartData data, _)=>data.title,
-                                yValueMapper: (CircularChartData data, _)=>data.doughnutMain,
-                                dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
-                                pointColorMapper: (CircularChartData data, _)=>data.color,
-                                enableTooltip: true,
-                                enableSmartLabels: true,
-                                dataLabelSettings: DataLabelSettings(isVisible: true, textStyle: TextStyle(fontFamily: 'Yanolja')),
-                              ),
-                            ],
-                          ),
-                          SfCircularChart(
-                            legend: Legend(
-                              isVisible: true,
-                              position: LegendPosition.bottom,
-                              overflowMode: LegendItemOverflowMode.wrap,
-                              iconBorderWidth: 1,
-                              iconBorderColor: Colors.pink,
-                            ),
-                            annotations: [
-                              CircularChartAnnotation(
-                                height: '55%',
-                                width: '55%',
-                                widget: Container(
-                                  child: SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: Center(child: Text(koFormatMoney.format(totalExpense), style: TextStyle(fontSize: 9, color: Colors.black54),)),
-                                  ),
-                                ),
-                              ),
-                            ],
-                            series: <CircularSeries<CircularChartData, dynamic>>[
-                              DoughnutSeries<CircularChartData, dynamic>(
-                                radius: '100%',
-                                dataSource: circularChartData,
-                                xValueMapper: (CircularChartData data, _)=>data.title,
-                                yValueMapper: (CircularChartData data, _)=>data.doughnutExpense,
-                                dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
-                                pointColorMapper: (CircularChartData data, _)=>data.color,
-                                strokeWidth: 2,
-                                strokeColor: Colors.white,
-                                enableTooltip: true,
-                                enableSmartLabels: true,
-                                dataLabelSettings: DataLabelSettings(isVisible: true, textStyle: TextStyle(color: Colors.white, fontSize: 10)),
-                              ),
-                            ],
+                          SearchScreenChartForm(duration, barChartData, circularChartData, totalSales, totalExpense, doughnutMainTotalExpense,
+                              _pageBarChartViewController, _pageRadialChartViewController,_pageDoughnutChartViewController, circularChartSwitcher),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30),
+                            child: IconButton(
+                                icon: Icon(Icons.autorenew_rounded),
+                                onPressed: (){
+                                  setState(() {
+                                    circularChartSwitcher =!circularChartSwitcher;
+                                  });
+                                }),
                           ),
                         ],
                       ),

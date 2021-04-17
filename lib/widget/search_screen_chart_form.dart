@@ -8,15 +8,20 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class SearchScreenChartForm extends StatelessWidget {
 
+  final Duration duration;
   final List<BarChartData> barChartData;
-  final List<CircularChartData> radialChartData;
+  final List<CircularChartData> circularChartData;
   final int totalSales;
   final int totalExpense;
+  final double doughnutMainTotalExpense;
   final _pageBarChartViewController;
   final _pageRadialChartViewController;
+  final _pageDoughnutChartViewController;
+  final bool circularChartSwitcher;
 
-  const SearchScreenChartForm(this.barChartData,this.radialChartData, this.totalSales, this.totalExpense,
-      this._pageBarChartViewController, this._pageRadialChartViewController,{Key key}) : super(key: key);
+  const SearchScreenChartForm(this.duration, this.barChartData,this.circularChartData, this.totalSales, this.totalExpense, this.doughnutMainTotalExpense,
+      this._pageBarChartViewController, this._pageRadialChartViewController, this._pageDoughnutChartViewController, this.circularChartSwitcher, {Key key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,37 +30,138 @@ class SearchScreenChartForm extends StatelessWidget {
 
     return Column(
       children: [
-      ExpandablePageView(
-        controller: _pageRadialChartViewController,
-        children: [
-          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.radialMainShow,
-          totalSales.toDouble()*1.1+.0),
-          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.radialSales,
-          totalSales.toDouble()*1.1+.0),
-          _searchScreenRadialChartToSalesAndExpense(radialChartData, (CircularChartData data, _)=>data.radialExpense,
-              totalExpense.toDouble()*1.1+.0),
-        ],
-      ),
-        ExpandablePageView(
-          controller: _pageBarChartViewController,
-          children: [
-            _searchScreenBarChartToSalesAndExpense(barChartData, '실제매출', '총 지출',[Colors.deepPurple[600], Colors.deepPurple[400], Colors.deepPurple[300]] ,
-                [Colors.pink[500], Colors.pink[400], Colors.pink[200]],
-                    (BarChartData data, _)=>data.actualSalesYValue, (BarChartData data, _)=>data.expenseTotalYValue, Colors.deepPurple, Colors.pink),
-            _searchScreenBarChartToSalesAndExpense(barChartData, '총 매출', '실제매출', [Colors.amber[700], Colors.amber[500], Colors.amber[400]],
-                [Colors.deepPurple[500],Colors.deepPurple[400], Colors.deepPurple[200]],
-                    (BarChartData data, _)=>data.totalSalesYValue, (BarChartData data, _)=>data.actualSalesYValue, Colors.amber, Colors.deepPurple),
-            _searchScreenBarChartToSalesAndExpense(barChartData, '총 지출', '식자재', [Colors.pink[600],Colors.pink[400], Colors.pink[300]],
-                [Colors.lightBlue[600], Colors.lightBlue[400], Colors.lightBlue[300]],
-                    (BarChartData data, _)=>data.expenseTotalYValue, (BarChartData data, _)=>data.foodProvisionExpenseYValue, Colors.pink, Colors.lightBlue),
-          ],
-        ),
+        AnimatedSwitcher(
+            duration: duration,
+        child: circularChartSwitcher ? _searchScreenToggleRadialChart():_searchScreenToggleDoughnutChart()),
+        _searchScreenToggleBarChart(),
       ],
     );
   }
+
+  ExpandablePageView _searchScreenToggleDoughnutChart() {
+    return ExpandablePageView(
+        controller: _pageDoughnutChartViewController,
+        children: [
+          SfCircularChart(
+            annotations: <CircularChartAnnotation>[
+              CircularChartAnnotation(
+                  height: '100%',
+                  width: '100%',
+                  widget: Container(
+                    child: PhysicalModel(
+                      shape: BoxShape.circle,
+                      elevation: 10,
+                      color: Colors.grey[200],
+                      child: Container(),
+                    ),
+                  )
+              ),
+              CircularChartAnnotation(
+                widget: Container(
+                  child: Text("${double.parse(doughnutMainTotalExpense.toStringAsFixed(1).toString())} %",
+                    style: TextStyle(color: Colors.pink, fontFamily: 'Yanolja', fontWeight: FontWeight.bold, fontSize: 20),),
+                ),
+              ),
+            ],
+            tooltipBehavior: TooltipBehavior(
+              format: 'point.x',
+              borderColor: Colors.white,
+              color: Colors.white,
+              canShowMarker: true,
+              tooltipPosition: TooltipPosition.pointer,
+              borderWidth: 2,
+              enable: true,
+              elevation: 9,
+              textStyle: TextStyle(color: Colors.black54, fontSize: 14, fontFamily: 'Yanolja'),
+            ),
+            series: <DoughnutSeries<CircularChartData, dynamic>>[
+              DoughnutSeries<CircularChartData, dynamic>(
+                radius: '90%',
+                dataSource: circularChartData,
+                xValueMapper: (CircularChartData data, _)=>data.title,
+                yValueMapper: (CircularChartData data, _)=>data.doughnutMain,
+                dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
+                pointColorMapper: (CircularChartData data, _)=>data.color,
+                enableTooltip: true,
+                enableSmartLabels: true,
+                dataLabelSettings: DataLabelSettings(isVisible: true, textStyle: TextStyle(fontFamily: 'Yanolja')),
+              ),
+            ],
+          ),
+          SfCircularChart(
+            legend: Legend(
+              isVisible: true,
+              position: LegendPosition.bottom,
+              overflowMode: LegendItemOverflowMode.wrap,
+              iconBorderWidth: 1,
+              iconBorderColor: Colors.pink,
+            ),
+            annotations: [
+              CircularChartAnnotation(
+                height: '55%',
+                width: '55%',
+                widget: Container(
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: Center(child: Text('지출', style: TextStyle(fontSize: 14, color: Colors.black54, fontFamily: 'Yanolja'),)),
+                  ),
+                ),
+              ),
+            ],
+            series: <CircularSeries<CircularChartData, dynamic>>[
+              DoughnutSeries<CircularChartData, dynamic>(
+                radius: '100%',
+                dataSource: circularChartData,
+                xValueMapper: (CircularChartData data, _)=>data.title,
+                yValueMapper: (CircularChartData data, _)=>data.doughnutExpense,
+                dataLabelMapper: (CircularChartData data, _)=>data.labelTitle,
+                pointColorMapper: (CircularChartData data, _)=>data.color,
+                strokeWidth: 2,
+                strokeColor: Colors.white,
+                enableTooltip: true,
+                enableSmartLabels: true,
+                dataLabelSettings: DataLabelSettings(isVisible: true, textStyle: TextStyle(color: Colors.white, fontSize: 10)),
+              ),
+            ],
+          ),
+        ],
+      );
+  }
+
+  ExpandablePageView _searchScreenToggleBarChart() {
+    return ExpandablePageView(
+        controller: _pageBarChartViewController,
+        children: [
+          _searchScreenBarChartToSalesAndExpense(barChartData, '실제매출', '총 지출',[Colors.deepPurple[600], Colors.deepPurple[400], Colors.deepPurple[300]] ,
+              [Colors.pink[500], Colors.pink[400], Colors.pink[200]],
+                  (BarChartData data, _)=>data.actualSalesYValue, (BarChartData data, _)=>data.expenseTotalYValue, Colors.deepPurple, Colors.pink),
+          _searchScreenBarChartToSalesAndExpense(barChartData, '총 매출', '실제매출', [Colors.amber[700], Colors.amber[500], Colors.amber[400]],
+              [Colors.deepPurple[500],Colors.deepPurple[400], Colors.deepPurple[200]],
+                  (BarChartData data, _)=>data.totalSalesYValue, (BarChartData data, _)=>data.actualSalesYValue, Colors.amber, Colors.deepPurple),
+          _searchScreenBarChartToSalesAndExpense(barChartData, '총 지출', '식자재', [Colors.pink[600],Colors.pink[400], Colors.pink[300]],
+              [Colors.lightBlue[600], Colors.lightBlue[400], Colors.lightBlue[300]],
+                  (BarChartData data, _)=>data.expenseTotalYValue, (BarChartData data, _)=>data.foodProvisionExpenseYValue, Colors.pink, Colors.lightBlue),
+        ],
+      );
+  }
+
+  ExpandablePageView _searchScreenToggleRadialChart() {
+    return ExpandablePageView(
+      controller: _pageRadialChartViewController,
+      children: [
+        _searchScreenRadialChartToSalesAndExpense(circularChartData, (CircularChartData data, _)=>data.radialMainShow,
+        totalSales.toDouble()*1.1+.0),
+        _searchScreenRadialChartToSalesAndExpense(circularChartData, (CircularChartData data, _)=>data.radialSales,
+        totalSales.toDouble()*1.1+.0),
+        _searchScreenRadialChartToSalesAndExpense(circularChartData, (CircularChartData data, _)=>data.radialExpense,
+            totalExpense.toDouble()*1.1+.0),
+      ],
+    );
+  }
+
   SfCircularChart _searchScreenRadialChartToSalesAndExpense(List<CircularChartData> radialChartData, yData, double maximumValue) {
     return SfCircularChart(
-      margin: EdgeInsets.only(bottom: -15),
       tooltipBehavior: TooltipBehavior(
         format: 'point.x',
         borderColor: Colors.white,
@@ -70,7 +176,7 @@ class SearchScreenChartForm extends StatelessWidget {
       series: <RadialBarSeries<CircularChartData, dynamic>>[
         RadialBarSeries<CircularChartData, dynamic>(
           gap: '10%',
-          radius: '85%',
+          radius: '90%',
           cornerStyle: CornerStyle.bothCurve,
           dataSource: radialChartData,
           xValueMapper: (CircularChartData data, _)=>data.title,

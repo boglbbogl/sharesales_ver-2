@@ -158,6 +158,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
       },
     );
   }
+
   Container _managementScreenMonthPicker() {
     return Container(
       width: size.width*0.8,

@@ -59,20 +59,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         color: (currentWidget is SignUpForm) ? Colors.black : Colors.amberAccent),
                   ),
                 ),
-                // child: RichText(
-                //   text: TextSpan(
-                //     text: (currentWidget is SignUpForm) ? '로그인 하실래요?':'회원가입 하실래요?',
-                //     children: [
-                //       TextSpan(
-                //         text: (currentWidget is SignUpForm) ? 'Sign In' : 'Sign UP',
-                //         style: TextStyle(color: (currentWidget is SignUpForm) ? Colors.blue : Colors.redAccent),
-                //       ),
-                //       TextSpan(
-                //         text: (currentWidget is SignUpForm) ? '테스트1' : 'test2',
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ),
             ),
           ),
