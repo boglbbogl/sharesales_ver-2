@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'color.dart';
 
-AppBar mainAppBar(BuildContext context, Widget icon, {appBarBottom}) {
+AppBar mainAppBar(BuildContext context, Widget actionIcon, {appBarBottom, Widget leadingIcon}) {
   return AppBar(
     backgroundColor: Colors.white,
     elevation: 0,
@@ -17,8 +17,9 @@ AppBar mainAppBar(BuildContext context, Widget icon, {appBarBottom}) {
       ),
     ),
     actions: [
-      icon,
+      actionIcon,
     ],
+    leading: leadingIcon,
     bottom: appBarBottom
   );
 }

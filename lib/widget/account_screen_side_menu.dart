@@ -4,7 +4,6 @@ import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 
 class AccountScreenSideMenu extends StatelessWidget {
 
-  // final double
 
   @override
   Widget build(BuildContext context) {

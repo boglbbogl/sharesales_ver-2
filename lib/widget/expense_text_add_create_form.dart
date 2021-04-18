@@ -42,10 +42,6 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                 width: size.width*0.8,
                 height: size.height*0.05,
                 child: Text('추가 지출', style: TextStyle(color: Colors.black54, fontSize: 20), textAlign: TextAlign.center,),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
               ),
             ],
           ),

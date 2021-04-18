@@ -14,7 +14,6 @@ import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'package:sharesales_ver2/widget/search_screen_chart_form.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'management_screen.dart';
 
@@ -42,6 +41,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   bool _isExpanded = false;
   bool circularChartSwitcher = true;
+  bool timeSeriesChartSwitcher = true;
 
   Duration duration = Duration(milliseconds: 10000);
 
@@ -174,6 +174,14 @@ class _SearchScreenState extends State<SearchScreen> {
               backgroundColor: Colors.white,
               appBar: mainAppBar(context, IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
                   onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
+                leadingIcon: IconButton(icon: Icon(Icons.autorenew_rounded),
+                  color: circularChartSwitcher ? Colors.pinkAccent : Colors.green,
+                onPressed: (){
+                  setState(() {
+                   circularChartSwitcher = !circularChartSwitcher;
+                   timeSeriesChartSwitcher = !timeSeriesChartSwitcher;
+                  });
+                },),
                 appBarBottom: PreferredSize(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -201,23 +209,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
                           expenseAddTotalAmount, foodProvisionExpense, beverageExpense, alcoholExpense, listShowExpenseAddList,
                           context, listShowExpenseAddList, totalExpense),
-                      Stack(
-                        children: [
-                          SearchScreenChartForm(duration, barChartData, circularChartData, totalSales, totalExpense, doughnutMainTotalExpense,
-                              _pageBarChartViewController, _pageRadialChartViewController,_pageDoughnutChartViewController, _pageLinearChartViewController,circularChartSwitcher),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30),
-                            child: IconButton(
-                                icon: Icon(Icons.autorenew_rounded),
-                                onPressed: (){
-                                  setState(() {
-                                    circularChartSwitcher =!circularChartSwitcher;
-                                  });
-                                }),
-                          ),
-                        ],
-                      ),
-                      InkWell(onTap:(){},child: Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),)),
+                      _rangePickerStartDate == null ? Container() : SearchScreenChartForm(duration, barChartData, circularChartData, totalSales, totalExpense, doughnutMainTotalExpense,
+                          _pageBarChartViewController, _pageRadialChartViewController,_pageDoughnutChartViewController, _pageLinearChartViewController,
+                          circularChartSwitcher, timeSeriesChartSwitcher),
                     ],
                   ),
                 ),
@@ -298,6 +292,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                       dense: true,
                                                       onTap: (){
                                                         Navigator.pop(context);
+                                                        _searchScreenYearRangeDatePicker(context);
                                                         print('아직 못만듬');
                                                       }
                                                   ),
@@ -317,6 +312,87 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ),
                                   );
                                 });
+  }
+
+  Future _searchScreenYearRangeDatePicker(BuildContext context){
+    return showMaterialModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        closeProgressThreshold: 5.0,
+        enableDrag: true,
+        animationCurve: Curves.fastOutSlowIn,
+        duration: Duration(milliseconds: 300),
+        barrierColor: Colors.black87,
+        backgroundColor: Colors.lightGreen,
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.dark(),
+            ),
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter fulSetState) {
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  height: size.height * 0.35,
+                  // color: Colors.deepOrange,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: SfDateRangePicker(
+                      minDate: DateTime(2000, 01, 01),
+                      maxDate: DateTime(2100, 01, 01),
+                      yearCellStyle: DateRangePickerYearCellStyle(
+                        textStyle: TextStyle(color: Colors.white),
+                        todayTextStyle: TextStyle(color: Colors.white),
+                      ),
+                      startRangeSelectionColor: Colors.lightBlue,
+                      endRangeSelectionColor: Colors.lightBlue,
+                      rangeSelectionColor: Colors.lightBlue,
+                      selectionTextStyle: TextStyle(color: Colors.white),
+                      todayHighlightColor: Colors.white,
+                      selectionColor: Colors.lightGreen,
+                      backgroundColor: Colors.lightGreen,
+                      controller: _monthRangePickerController,
+                      allowViewNavigation: false,
+                      view: DateRangePickerView.decade,
+                      selectionMode: DateRangePickerSelectionMode.range,
+                      headerStyle: DateRangePickerHeaderStyle(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontStyle: FontStyle.italic)),
+                      monthViewSettings: DateRangePickerMonthViewSettings(
+                        enableSwipeSelection: false,
+                      ),
+                      onSelectionChanged:
+                          (DateRangePickerSelectionChangedArgs args) {
+                        setState(() {
+                          if (args.value is PickerDateRange) {
+                            _rangePickerStartDate = DateFormat.yM('ko_KO')
+                                .format(args.value.startDate)
+                                .toString();
+                            _rangePickerEndDate = DateFormat.yM('ko_KO')
+                                .format(
+                                args.value.endDate ?? args.value.startDate)
+                                .toString();
+                            _rangePickerStartDateTime = args.value.startDate;
+                            _rangePickerEndDateTime = args.value.endDate;
+                          }  else{
+                            return MyProgressIndicator();
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        });
   }
 
   Future _searchScreenMonthRangeDatePicker(BuildContext context) {

@@ -67,10 +67,10 @@ class _SignInFormState extends State<SignInForm> {
                   controller: _pwController,
                   decoration: blackInputDecor('Password'),
                   validator: (text){
-                    if(text.isNotEmpty && text.length > 3){
+                    if(text.isNotEmpty && text.length > 6){
                       return null;
                     } else {
-                      return '3자리 이상으로 해';
+                      return '6자리 이상으로 해';
                     }
                   },
                 ),

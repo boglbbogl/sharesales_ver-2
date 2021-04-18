@@ -1,4 +1,3 @@
-import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 
@@ -11,64 +10,95 @@ class _ExampleState extends State<Example> {
 
   PageController pageController = PageController(viewportFraction: 0.8, initialPage: 0);
 
-  bool test;
+  bool test = true;
+  bool test2 = true;
 
-  @override
-  void initState() {
-    test=true;
-    super.initState();
-  }
-
+  var now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: Text('TEST'),
       ),
-      body: Stack(
-        children: [
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 2000),
-            child: test ? firstTest():secondTest(),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(100),
-            child: SizedBox(
-              height: size.height*0.2,
-              width: size.width*0.5,
-              child: RaisedButton(onPressed: (){
-                print('click');
+      body: Center(
+        child: Column(
+          children: [
+            Text(DateTime.now().toString().substring(0,7)),
+            Text(DateTime(now.year, now.month-4).toString().substring(0,7)),
+            InkWell(
+              onTap: (){
                 setState(() {
                   test = !test;
                 });
-              }),
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey[300],
+                ),
+                height: size.height*0.05,
+                width: size.width*0.2,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: size.width*0.1,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: test ? Colors.lightBlueAccent : Colors.grey[300],
+                      ),
+                    ),
+                    Container(
+                      width: size.width*0.1,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: test ? Colors.grey[300] : Colors.lightBlueAccent,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+            InkWell(
+              onTap: (){
+                setState(() {
+                  test2 = !test2;
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey[300],
+                ),
+                height: size.height*0.05,
+                width: size.width*0.2,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: size.width*0.1,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: test2 ? Colors.lightBlueAccent : Colors.grey[300],
+                      ),
+                    ),
+                    Container(
+                      width: size.width*0.1,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: test2 ? Colors.grey[300] : Colors.lightBlueAccent,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    );
-  }
-
-  ExpandablePageView secondTest() {
-    return ExpandablePageView(
-      controller: pageController,
-      children: <Widget>[
-        Container(height: size.width*0.5, width: size.width*0.5, color: Colors.green,),
-        Container(height: size.width*0.5, width: size.width*0.5, color: Colors.cyan,),
-      ],
-    );
-  }
-
-  ExpandablePageView firstTest() {
-    return ExpandablePageView(
-      controller: pageController,
-      children: <Widget>[
-        Container(height: size.width*0.5, width: size.width*0.5, color: Colors.amber,),
-        Container(height: size.width*0.5, width: size.width*0.5, color: Colors.red,),
-      ],
     );
   }
 }
