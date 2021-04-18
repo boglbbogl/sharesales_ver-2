@@ -4,15 +4,27 @@ class BarChartData {
   final String selectedDateXValue;
   final int totalSalesYValue;
   final int actualSalesYValue;
+  final int discountSalesYValue;
+  final int deliverySalesYValue;
+  final int vatSalesYValue;
   final int expenseTotalYValue;
   final int foodProvisionExpenseYValue;
+  final int alcoholBeverageExpenseYValue;
+  final int addTotalAmountExpenseYValue;
 
   BarChartData.fromMap(Map<dynamic, dynamic> dataMap)
       : selectedDateXValue = dataMap['selectedDate'],
+
         totalSalesYValue = dataMap['totalSales'],
         actualSalesYValue = dataMap['actualSales'],
+        discountSalesYValue = dataMap['discount'],
+        deliverySalesYValue = dataMap['delivery'],
+        vatSalesYValue = dataMap['vat'],
+
         expenseTotalYValue = dataMap['foodProvisionExpense'] + dataMap['alcoholExpense'] + dataMap['beverageExpense'] + dataMap['expenseAddTotalAmount'],
-        foodProvisionExpenseYValue = dataMap['foodProvisionExpense'];
+        foodProvisionExpenseYValue = dataMap['foodProvisionExpense'],
+        alcoholBeverageExpenseYValue = dataMap['alcoholExpense'] + dataMap['beverageExpense'],
+        addTotalAmountExpenseYValue = dataMap['expenseAddTotalAmount'];
 }
 
 class CircularChartData{

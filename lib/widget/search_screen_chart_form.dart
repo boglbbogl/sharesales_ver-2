@@ -17,16 +17,16 @@ class SearchScreenChartForm extends StatelessWidget {
   final _pageBarChartViewController;
   final _pageRadialChartViewController;
   final _pageDoughnutChartViewController;
+  final _pageLinearChartViewController;
   final bool circularChartSwitcher;
 
   const SearchScreenChartForm(this.duration, this.barChartData,this.circularChartData, this.totalSales, this.totalExpense, this.doughnutMainTotalExpense,
-      this._pageBarChartViewController, this._pageRadialChartViewController, this._pageDoughnutChartViewController, this.circularChartSwitcher, {Key key}) : super(key: key);
+      this._pageBarChartViewController, this._pageRadialChartViewController, this._pageDoughnutChartViewController, this._pageLinearChartViewController,
+      this.circularChartSwitcher, {Key key}) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
-
-
 
     return Column(
       children: [
@@ -34,8 +34,82 @@ class SearchScreenChartForm extends StatelessWidget {
             duration: duration,
         child: circularChartSwitcher ? _searchScreenToggleRadialChart():_searchScreenToggleDoughnutChart()),
         _searchScreenToggleBarChart(),
+        ExpandablePageView(
+          controller: _pageLinearChartViewController,
+          children: [
+            _searchScreenLinearGradientForm('실제매출', '총지출',
+                [Colors.deepPurpleAccent, Colors.blueAccent, Colors.lightBlueAccent], [Colors.pinkAccent, Colors.deepOrange, Colors.orangeAccent],
+                    (BarChartData data, _)=>data.actualSalesYValue, (BarChartData data,_)=>data.expenseTotalYValue ),
+            _searchScreenLinearGradientForm('실제매출', '총지출',
+                [Colors.deepPurpleAccent, Colors.blueAccent, Colors.lightBlueAccent], [Colors.green, Colors.greenAccent, Colors.lightGreen],
+                    (BarChartData data, _)=>data.actualSalesYValue, (BarChartData data,_)=>data.foodProvisionExpenseYValue ),
+          ],
+        ),
       ],
     );
+  }
+
+  Container _searchScreenLinearGradientForm(String firstTitle, String secondTitle, List<Color> firstColor, List<Color> secondColor
+      , firstData, secondData ) {
+    return Container(
+        width: size.width*0.7, height: size.height*0.25,
+        child: SfCartesianChart(
+          enableSideBySideSeriesPlacement: false,
+          plotAreaBorderWidth: 0,
+          margin: EdgeInsets.only(top: 0, left: 15, right: 15, bottom: 10),
+          primaryXAxis: CategoryAxis(
+            majorGridLines: MajorGridLines(width: 0,),
+            majorTickLines: MajorTickLines(width: 0,),
+            axisLine: AxisLine(width: 0,),
+            labelStyle: TextStyle(color: Colors.black54),
+            labelPosition: ChartDataLabelPosition.outside,
+          ),
+          primaryYAxis: NumericAxis(
+            isVisible: false,
+            numberFormat: NumberFormat.decimalPattern(),
+            axisLine: AxisLine(width: 0),
+            majorGridLines: MajorGridLines(width: 0),
+            majorTickLines: MajorTickLines(size: 0),
+          ),
+          series: <ChartSeries<BarChartData, dynamic>>[
+            SplineAreaSeries<BarChartData, dynamic>(
+              dataSource: barChartData,
+              xValueMapper: (BarChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
+              yValueMapper: firstData,
+              isVisible: true,
+              name: firstTitle,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: firstColor,
+              ),
+            ),
+            SplineAreaSeries<BarChartData, dynamic>(
+              dataSource: barChartData,
+              xValueMapper: (BarChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
+              yValueMapper: secondData,
+              isVisible: true,
+              name: secondTitle,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: secondColor,
+              ),
+            ),
+          ],
+          legend: Legend(isVisible: false,),
+          tooltipBehavior: TooltipBehavior(
+            borderColor: Colors.white,
+            color: Colors.white,
+            canShowMarker: true,
+            tooltipPosition: TooltipPosition.pointer,
+            borderWidth: 2,
+            enable: true,
+            elevation: 9,
+            textStyle: TextStyle(color: Colors.black54, fontSize: 17, fontFamily: 'Yanolja'),
+          ),
+        ),
+      );
   }
 
   ExpandablePageView _searchScreenToggleDoughnutChart() {
@@ -133,13 +207,13 @@ class SearchScreenChartForm extends StatelessWidget {
     return ExpandablePageView(
         controller: _pageBarChartViewController,
         children: [
-          _searchScreenBarChartToSalesAndExpense(barChartData, '실제매출', '총 지출',[Colors.deepPurple[600], Colors.deepPurple[400], Colors.deepPurple[300]] ,
+          _searchScreenBarChartToSalesAndExpense('실제매출', '총 지출',[Colors.deepPurple[600], Colors.deepPurple[400], Colors.deepPurple[300]] ,
               [Colors.pink[500], Colors.pink[400], Colors.pink[200]],
                   (BarChartData data, _)=>data.actualSalesYValue, (BarChartData data, _)=>data.expenseTotalYValue, Colors.deepPurple, Colors.pink),
-          _searchScreenBarChartToSalesAndExpense(barChartData, '총 매출', '실제매출', [Colors.amber[700], Colors.amber[500], Colors.amber[400]],
+          _searchScreenBarChartToSalesAndExpense('총 매출', '실제매출', [Colors.amber[700], Colors.amber[500], Colors.amber[400]],
               [Colors.deepPurple[500],Colors.deepPurple[400], Colors.deepPurple[200]],
                   (BarChartData data, _)=>data.totalSalesYValue, (BarChartData data, _)=>data.actualSalesYValue, Colors.amber, Colors.deepPurple),
-          _searchScreenBarChartToSalesAndExpense(barChartData, '총 지출', '식자재', [Colors.pink[600],Colors.pink[400], Colors.pink[300]],
+          _searchScreenBarChartToSalesAndExpense('총 지출', '식자재', [Colors.pink[600],Colors.pink[400], Colors.pink[300]],
               [Colors.lightBlue[600], Colors.lightBlue[400], Colors.lightBlue[300]],
                   (BarChartData data, _)=>data.expenseTotalYValue, (BarChartData data, _)=>data.foodProvisionExpenseYValue, Colors.pink, Colors.lightBlue),
         ],
@@ -193,7 +267,7 @@ class SearchScreenChartForm extends StatelessWidget {
     );
   }
 
-  Column _searchScreenBarChartToSalesAndExpense(List<BarChartData> chartData, String firstTitle, String secondTitle, List<Color> firstColor, List<Color> secondColor
+  Column _searchScreenBarChartToSalesAndExpense(String firstTitle, String secondTitle, List<Color> firstColor, List<Color> secondColor
       , firstData, secondData, Color firstBadgeColor, Color secondBadgeColor) {
     return Column(
       children: [
@@ -219,7 +293,7 @@ class SearchScreenChartForm extends StatelessWidget {
             ),
             series: <ChartSeries<BarChartData, dynamic>>[
               ColumnSeries<BarChartData, dynamic>(
-                dataSource: chartData,
+                dataSource: barChartData,
                 width: 0.8,
                 xValueMapper: (BarChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
                 yValueMapper: firstData,
@@ -234,7 +308,7 @@ class SearchScreenChartForm extends StatelessWidget {
                 name: firstTitle,
               ),
               ColumnSeries<BarChartData, dynamic>(
-                dataSource: chartData,
+                dataSource: barChartData,
                 width: 0.5,
                 xValueMapper: (BarChartData data, _)=>data.selectedDateXValue.toString().substring(5,10),
                 yValueMapper: secondData,

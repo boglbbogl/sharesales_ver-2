@@ -14,6 +14,7 @@ import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'package:sharesales_ver2/widget/search_screen_chart_form.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'management_screen.dart';
 
@@ -30,6 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   PageController _pageDoughnutChartViewController = PageController(viewportFraction: 0.7);
   PageController _pageBarChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
+  PageController _pageLinearChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageRadialChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageTextViewController = PageController(viewportFraction: 0.8);
 
@@ -49,7 +51,8 @@ class _SearchScreenState extends State<SearchScreen> {
     _pageTextViewController.dispose();
     _pageBarChartViewController.dispose();
     _pageRadialChartViewController.dispose();
-    _pageTextViewController.dispose();
+    _pageDoughnutChartViewController.dispose();
+    _pageLinearChartViewController.dispose();
     super.dispose();
   }
 
@@ -201,7 +204,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Stack(
                         children: [
                           SearchScreenChartForm(duration, barChartData, circularChartData, totalSales, totalExpense, doughnutMainTotalExpense,
-                              _pageBarChartViewController, _pageRadialChartViewController,_pageDoughnutChartViewController, circularChartSwitcher),
+                              _pageBarChartViewController, _pageRadialChartViewController,_pageDoughnutChartViewController, _pageLinearChartViewController,circularChartSwitcher),
                           Padding(
                             padding: const EdgeInsets.only(left: 30),
                             child: IconButton(
@@ -214,7 +217,6 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         ],
                       ),
-
                       InkWell(onTap:(){},child: Text("UNDER PAGE VIEW WIDGET",style: TextStyle(color: Colors.black, fontSize: 13),)),
                     ],
                   ),
