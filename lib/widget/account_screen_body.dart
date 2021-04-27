@@ -10,21 +10,21 @@ import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
 
 class AccountScreenBody extends StatefulWidget {
-  final Function onPageChanged;
-  final int nowActualSales;
-  final int nowTotalExpense;
-  final int lastActualSales;
-  final int lastTotalExpense;
+  final Function? onPageChanged;
+  final int? nowActualSales;
+  final int? nowTotalExpense;
+  final int? lastActualSales;
+  final int? lastTotalExpense;
 
   const AccountScreenBody(this.nowActualSales, this.nowTotalExpense, this.lastActualSales, this.lastTotalExpense,
-      {Key key, this.onPageChanged}) : super(key: key);
+      {Key? key, this.onPageChanged}) : super(key: key);
 
   @override
   _AccountScreenBodyState createState() => _AccountScreenBodyState();
 }
 
 class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTickerProviderStateMixin {
-  AnimationController _iconAniController;
+  late AnimationController _iconAniController;
 
   @override
   void initState() {
@@ -46,13 +46,13 @@ class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTicker
 
 
     DateTime now = DateTime.now();
-    int nowActualSales = widget.nowActualSales==null ? int.parse('0') : widget.nowActualSales;
-    int nowTotalExpense = widget.nowTotalExpense==null ? int.parse('0') : widget.nowTotalExpense;
-    int lastActualSales = widget.lastActualSales==null ? int.parse('0') : widget.lastActualSales;
-    int lastTotalExpense = widget.lastTotalExpense==null ? int.parse('0') : widget.lastTotalExpense;
+    int nowActualSales = widget.nowActualSales==null ? int.parse('0') : widget.nowActualSales!;
+    int nowTotalExpense = widget.nowTotalExpense==null ? int.parse('0') : widget.nowTotalExpense!;
+    int lastActualSales = widget.lastActualSales==null ? int.parse('0') : widget.lastActualSales!;
+    int lastTotalExpense = widget.lastTotalExpense==null ? int.parse('0') : widget.lastTotalExpense!;
 
     UserModel userModel =
-        Provider.of<UserModelState>(context, listen: false).userModel;
+        Provider.of<UserModelState>(context, listen: false).userModel!;
 
     return SafeArea(
       child: Scaffold(
@@ -109,8 +109,9 @@ class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTicker
                             children: <Widget>[
                               _accountScreenSalesAndExpenseLeftForm('매출',BorderRadius.vertical(top: Radius.circular(20))),
                               Container(
-                                width: size.width*0.6,
-                                  child: Text(koFormatMoney.format(nowActualSales-lastActualSales))),
+                                width: size.width*0.55,
+                                  child: Center(
+                                      child: Text(koFormatMoney.format(nowActualSales-lastActualSales)))),
                             ],
                           ),),
                           Container(
@@ -118,6 +119,9 @@ class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTicker
                           child: Row(
                             children: [
                               _accountScreenSalesAndExpenseLeftForm('지출',BorderRadius.vertical(bottom: Radius.circular(20))),
+                              Container(
+                                  width: size.width*0.55,
+                                  child: Text(koFormatMoney.format(nowTotalExpense-lastTotalExpense))),
                             ],
                           ),),
                         ],
@@ -134,7 +138,7 @@ class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTicker
   }
 
   Container _accountScreenSalesAndExpenseLeftForm(String title, radius) {
-    return Container(width: size.width*0.2,
+    return Container(width: size.width*0.25,
                             decoration: BoxDecoration(
                             color: Colors.redAccent,
                               borderRadius: radius
@@ -148,7 +152,7 @@ class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTicker
         backgroundColor: Colors.deepPurple[50],
         elevation: 0,
         title: Center(
-          child: Text(userModel.userName,
+          child: Text(userModel.userName!,
               style: TextStyle(
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
@@ -170,7 +174,7 @@ class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTicker
                     ),
                     onPressed: () {
                       setState(() {
-                        widget.onPageChanged();
+                        widget.onPageChanged!();
                         _iconAniController.status == AnimationStatus.completed ? _iconAniController.reverse() : _iconAniController.forward();
                       });
                     }),

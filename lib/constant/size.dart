@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-Size size;
+late Size size;
 
 
 const double fontSize = 32.0;

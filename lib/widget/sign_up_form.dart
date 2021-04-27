@@ -57,7 +57,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     controller: _emailController,
                     decoration: amberInputDecor('Email'),
                     validator: (text){
-                      if(text.isNotEmpty && text.contains('@')){
+                      if(text!.isNotEmpty && text.contains('@')){
                         return null;
                       } else {
                         return '정확한 이메일 입력해라';
@@ -68,7 +68,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     controller: _pwController,
                     decoration: amberInputDecor('Password'),
                     validator: (text){
-                      if(text.isNotEmpty && text.length > 5){
+                      if(text!.isNotEmpty && text.length > 5){
                         return null;
                       } else {
                         return '3자리 이상으로 해';
@@ -79,7 +79,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     controller: _cpwController,
                     decoration: amberInputDecor('Confirm Password'),
                     validator: (text){
-                      if(text.isNotEmpty && _pwController.text == text){
+                      if(text!.isNotEmpty && _pwController.text == text){
                         return null;
                       } else {
                         return '비밀번호 불일치용';
@@ -91,7 +91,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     child: FlatButton(
                       color: Colors.black,
                         onPressed: (){
-                          if(_formKey.currentState.validate()){
+                          if(_formKey.currentState!.validate()){
                             print('기능잘 작동합니다');
                             Provider.of<FirebaseAuthState>(context, listen: false).registerUser(context, email: _emailController.text, password: _pwController.text);
                           }

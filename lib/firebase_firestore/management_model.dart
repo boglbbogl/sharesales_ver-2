@@ -4,24 +4,24 @@ import 'package:sharesales_ver2/widget/expense_text_add_create_form.dart';
 
 class ManagementModel {
   final String userKey;
-  final int totalSales;
-  final int actualSales;
-  final int vos;
-  final int vat;
-  final int discount;
-  final int creditCard;
-  final int cash;
-  final int cashReceipt;
-  final int delivery;
-  final int giftCard;
+  final int? totalSales;
+  final int? actualSales;
+  final int? vos;
+  final int? vat;
+  final int? discount;
+  final int? creditCard;
+  final int? cash;
+  final int? cashReceipt;
+  final int? delivery;
+  final int? giftCard;
   final DateTime stdDate;
-  final String selectedDate;
-  final List<dynamic> expenseAddList;
-  final int expenseAddTotalAmount;
-  final int foodProvisionExpense;
-  final int beverageExpense;
-  final int alcoholExpense;
-  final DocumentReference reference;
+  final String? selectedDate;
+  final List<dynamic>? expenseAddList;
+  final int? expenseAddTotalAmount;
+  final int? foodProvisionExpense;
+  final int? beverageExpense;
+  final int? alcoholExpense;
+  final DocumentReference? reference;
 
   ManagementModel.fromMap(Map<String, dynamic> map, this.userKey, {this.reference})
       // : selectedDate = (map[KEY_SELECTEDDATE] as Timestamp).toDate(),
@@ -44,28 +44,28 @@ class ManagementModel {
         alcoholExpense = map[KEY_ALCOHOL];
 
   ManagementModel.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), snapshot.id,
+      : this.fromMap(snapshot.data()!, snapshot.id,
             reference: snapshot.reference);
 
   static Map<dynamic, dynamic> createMapForManagementList({
-    String selectedDate,
-    String userKey,
-    DateTime stdDate,
-    int totalSales,
-    int actualSales,
-    int vos,
-    int vat,
-    int discount,
-    int creditCard,
-    int cash,
-    int cashReceipt,
-    int delivery,
-    int giftCard,
-    List<dynamic> expenseAddList,
-    int expenseAddTotalAmount,
-    int foodProvisionExpense,
-    int beverageExpense,
-    int alcoholExpense,
+    String? selectedDate,
+    String? userKey,
+    DateTime? stdDate,
+    int? totalSales,
+    int? actualSales,
+    int? vos,
+    int? vat,
+    int? discount,
+    int? creditCard,
+    int? cash,
+    int? cashReceipt,
+    int? delivery,
+    int? giftCard,
+    List<dynamic>? expenseAddList,
+    int? expenseAddTotalAmount,
+    int? foodProvisionExpense,
+    int? beverageExpense,
+    int? alcoholExpense,
   }) {
     Map<String, dynamic> map = Map();
     map[KEY_USERKEY] = userKey;

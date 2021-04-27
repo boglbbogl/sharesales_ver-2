@@ -66,13 +66,13 @@ class _ManagementScreenState extends State<ManagementScreen> {
   Widget build(BuildContext context) {
 
     UserModel userModel =
-        Provider.of<UserModelState>(context, listen: false).userModel;
+        Provider.of<UserModelState>(context, listen: false).userModel!;
 
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection(COLLECTION_SALES_MANAGEMENT)
           .doc(userModel.userKey)
-          .collection(userModel.userName).orderBy("stdDate", descending: true)
+          .collection(userModel.userName!).orderBy("stdDate", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
@@ -84,7 +84,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
         final monthExpenseTotalShow = [];
         final monthAddExpenseList = [];
 
-         snapshot.data.docs.forEach((element)  {
+         snapshot.data!.docs.forEach((element)  {
            var docQuery = element.data();
            if(docQuery['selectedDate'].toString().substring(0, 7) == pickerMonth.toString().substring(0,7)) {
            List<dynamic> expenseAddListMapArray = docQuery['expenseAddList'];
@@ -127,7 +127,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 Flexible(
                   child: ListView(
                     shrinkWrap: true,
-                    children: snapshot.data.docs.map((snapshotData) {
+                    children: snapshot.data!.docs.map((snapshotData) {
 
                       final expenseAmountOnlyResult = [];
                       List<dynamic> expenseAddListInExpenseAmount = snapshotData.data()['expenseAddList'];
@@ -161,7 +161,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
   Container _managementScreenMonthPicker() {
     return Container(
-      width: size.width*0.8,
+      // width: size.width*0.8,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(40),
       ),
@@ -174,13 +174,13 @@ class _ManagementScreenState extends State<ManagementScreen> {
         height: size.height*0.04,
         viewportFraction: 0.4,
         onMonthChanged: (select){
-          if (select != null || pickerMonth != null) {
+          // if (select != null || pickerMonth != null) {
             setState(() {
               pickerMonth = select;
             });
-          } else {
-            return MyProgressIndicator();
-          }
+          // } else {
+          //   return MyProgressIndicator();
+          // }
         },
         initialMonth: pickerMonth,
       ),
@@ -189,7 +189,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
   Container _managementScreenMonthTotalSalesAndTotalExpense(List monthActualSalesTotalShow, int monthTotalExpenseShowTextIntType) {
     return Container(
-      width: size.width * 0.9,
+      // width: size.width * 0.9,
       height: size.height * 0.05,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

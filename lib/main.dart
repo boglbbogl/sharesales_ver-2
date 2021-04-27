@@ -19,7 +19,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   FirebaseAuthState _firebaseAuthState = FirebaseAuthState();
-  Widget _currentWidget;
+  Widget? _currentWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         ),
         home: Consumer(
           builder: (BuildContext context, FirebaseAuthState firebaseAuthState,
-              Widget child) {
+              Widget? child) {
             switch (firebaseAuthState.firebaseAuthStatus) {
               case FirebaseAuthStatus.logout:
                 _clearUserModel(context);
@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
     UserModelState userModelState = Provider.of<UserModelState>(context, listen: false);
 
     userModelState.currentStreamSub = userNetworkRepository
-        .getUserModelStream(firebaseAuthState.user.uid)
+        .getUserModelStream(firebaseAuthState.user!.uid)
         .listen((userModel) {
           userModelState.userModel = userModel;
     });

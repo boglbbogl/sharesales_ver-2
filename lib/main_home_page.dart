@@ -30,20 +30,20 @@ class _MainHomePageState extends State<MainHomePage> {
 
   List<Widget> _screenList = [
     AdScreen(),
-    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget child){
+    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
       else
         return SearchScreen();
     }),
-    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget child){
+    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
       else
         return ManagementScreen();
     }),
     Example(),
-    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget child){
+    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
       else
@@ -54,7 +54,8 @@ class _MainHomePageState extends State<MainHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (size == null) size = MediaQuery.of(context).size;
+    //if (size == null) size = MediaQuery.of(context).size;
+     size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: IndexedStack(

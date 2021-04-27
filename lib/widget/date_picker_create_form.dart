@@ -9,7 +9,6 @@ import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
-import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 
 DateTime pickerDate = DateTime.now().toUtc();
 String format = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
@@ -24,7 +23,7 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
   Widget build(BuildContext context) {
     String formatDate = DateFormat('EEE, MMM dd, ' ' yyyy').format(pickerDate);
 
-    UserModel userModel =
+    UserModel? userModel =
         Provider.of<UserModelState>(context, listen: false).userModel;
 
     return Row(
@@ -63,19 +62,18 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
               maxTime: DateTime(2100, 12, 31),
               onChanged: (selectedDate) {
                 setState(() {
-                  if (selectedDate != null || pickerDate != null) {
+                  // if (selectedDate != null || pickerDate != null) {
+
                     pickerDate = selectedDate;
-                  } else {
-                    return MyProgressIndicator();
-                  }
+
                 });
-                FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName)
+                FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel!.userKey).collection(userModel.userName!)
                     .get().then((snap) {
                   snap.docs.forEach((element) {
                     if(!element.exists) {
                       pickerDate = selectedDate;
                     }
-                      String selectedDateInDb = element.data()['selectedDate'];
+                      String? selectedDateInDb = element.data()['selectedDate'];
                       String changePickerDate = selectedDate.toUtc()
                           .toString()
                           .substring(0, 10);

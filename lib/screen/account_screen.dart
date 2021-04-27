@@ -29,12 +29,12 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
 
     UserModel userModel =
-        Provider.of<UserModelState>(context, listen: false).userModel;
+        Provider.of<UserModelState>(context, listen: false).userModel!;
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection(COLLECTION_SALES_MANAGEMENT)
           .doc(userModel.userKey)
-          .collection(userModel.userName)
+          .collection(userModel.userName!)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
         if(!snapshot.hasData || snapshot.data == null || snapshot.hasError) {
@@ -48,7 +48,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
         DateTime now = DateTime.now();
 
-        snapshot.data.docs.forEach((element) {
+        snapshot.data!.docs.forEach((element) {
           if(element['selectedDate'].toString().substring(0,7)==DateTime(now.year, now.month).toString().substring(0,7)) {
             nowActualSalesList.add(element['actualSales']);
             nowTotalExpenseList.add(element['expenseAddTotalAmount'] + element['foodProvisionExpense'] + element['alcoholExpense'] + element['beverageExpense']);
@@ -58,10 +58,10 @@ class _AccountScreenState extends State<AccountScreen> {
           }
         });
 
-        int nowActualSales = nowActualSalesList.reduce((v, e) => v+e);
-        int nowTotalExpense = nowTotalExpenseList.reduce((v, e) => v+e);
-        int lastActualSales = lastActualSalesList.reduce((v, e) => v+e);
-        int lastTotalExpense = lastTotalExpenseList.reduce((v, e) => v+e);
+        int? nowActualSales = nowActualSalesList.reduce((v, e) => v+e);
+        int? nowTotalExpense = nowTotalExpenseList.reduce((v, e) => v+e);
+        int? lastActualSales = lastActualSalesList.reduce((v, e) => v+e);
+        int? lastTotalExpense = lastTotalExpenseList.reduce((v, e) => v+e);
         
         return SafeArea(
           child: Scaffold(

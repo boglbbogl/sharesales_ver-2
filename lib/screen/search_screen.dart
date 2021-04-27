@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
-import 'package:expansion_card/expansion_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -34,10 +33,10 @@ class _SearchScreenState extends State<SearchScreen> {
   PageController _pageRadialChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageTextViewController = PageController(viewportFraction: 0.8);
 
-  String _rangePickerStartDate;
-  String _rangePickerEndDate;
-  DateTime _rangePickerStartDateTime;
-  DateTime _rangePickerEndDateTime;
+  String? _rangePickerStartDate;
+  String? _rangePickerEndDate;
+  DateTime? _rangePickerStartDateTime;
+  DateTime? _rangePickerEndDateTime;
 
   bool _isExpanded = false;
   bool circularChartSwitcher = true;
@@ -67,12 +66,12 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
 
-    UserModel userModel = Provider.of<UserModelState>(context, listen: false).userModel;
+    UserModel userModel = Provider.of<UserModelState>(context, listen: false).userModel!;
 
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName)
+      stream: FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName!)
       .where('stdDate', isGreaterThanOrEqualTo: _rangePickerStartDateTime,
-          isLessThanOrEqualTo: _rangePickerEndDateTime==null?_rangePickerStartDateTime.add(Duration(days: 1)):_rangePickerEndDateTime.add(Duration(days: 1)))
+          isLessThanOrEqualTo: _rangePickerEndDateTime==null?_rangePickerStartDateTime!.add(Duration(days: 1)):_rangePickerEndDateTime!.add(Duration(days: 1)))
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
@@ -96,7 +95,7 @@ class _SearchScreenState extends State<SearchScreen> {
         final listExpenseAddTotalAmount = [];
         var listShowExpenseAddList = [];
 
-        snapshot.data.docs.forEach((element) {
+        snapshot.data!.docs.forEach((element) {
           var docQuery = element.data();
           listTotalSales.add(docQuery['totalSales']);
           listActualSales.add(docQuery['actualSales']);
@@ -116,16 +115,16 @@ class _SearchScreenState extends State<SearchScreen> {
           listShowExpenseAddList.addAll(docQuery['expenseAddList']);
         });
 
-        int totalSales = _listDataNullCheckForm(listTotalSales);
+        int? totalSales = _listDataNullCheckForm(listTotalSales);
         int actualSales = _listDataNullCheckForm(listActualSales);
-        int vos = _listDataNullCheckForm(listVos);
-        int vat = _listDataNullCheckForm(listVat);
-        int discount = _listDataNullCheckForm(listDiscount);
-        int creditCard = _listDataNullCheckForm(listCreditCard);
-        int cash = _listDataNullCheckForm(listCash);
-        int cashReceipt = _listDataNullCheckForm(listCashReceipt);
-        int delivery = _listDataNullCheckForm(listDelivery);
-        int giftCard = _listDataNullCheckForm(listGiftCard);
+        int? vos = _listDataNullCheckForm(listVos);
+        int? vat = _listDataNullCheckForm(listVat);
+        int? discount = _listDataNullCheckForm(listDiscount);
+        int? creditCard = _listDataNullCheckForm(listCreditCard);
+        int? cash = _listDataNullCheckForm(listCash);
+        int? cashReceipt = _listDataNullCheckForm(listCashReceipt);
+        int? delivery = _listDataNullCheckForm(listDelivery);
+        int? giftCard = _listDataNullCheckForm(listGiftCard);
         int expenseAddTotalAmount = _listDataNullCheckForm(listExpenseAddTotalAmount);
         int foodProvisionExpense = _listDataNullCheckForm(listFoodProvisionExpanse);
         int beverageExpense = _listDataNullCheckForm(listBeverageExpanse);
@@ -133,9 +132,9 @@ class _SearchScreenState extends State<SearchScreen> {
         int totalExpense = expenseAddTotalAmount + foodProvisionExpense + alcoholExpense + beverageExpense;
 
           List<BarChartData> barChartData = [];
-          for(int index=0;index<snapshot.data.docs.length;index++) {
-            DocumentSnapshot document = snapshot.data.docs[index];
-            barChartData.add(BarChartData.fromMap(document.data() ));}
+          for(int index=0;index<snapshot.data!.docs.length;index++) {
+            DocumentSnapshot document = snapshot.data!.docs[index];
+            barChartData.add(BarChartData.fromMap(document.data()! ));}
 
         double doughnutMainTotalExpense = (totalExpense/actualSales)*100;
         double doughnutMainTotalActualSales = ((actualSales-totalExpense)/actualSales)*100;
@@ -190,9 +189,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                        Text(_rangePickerStartDate == null ? '기간을 선택해주세요' : _rangePickerStartDate.replaceAll(".", ''), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
+                        Text(_rangePickerStartDate == null ? '기간을 선택해주세요' : _rangePickerStartDate!.replaceAll(".", ''), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
                         Text(_rangePickerStartDate == _rangePickerEndDate ? '' : '   -   ', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic, color: Colors.black54),),
-                        Text(_rangePickerEndDate == null || _rangePickerEndDate==_rangePickerStartDate ? '' : _rangePickerEndDate.replaceAll(".", ""), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
+                        Text(_rangePickerEndDate == null || _rangePickerEndDate==_rangePickerStartDate ? '' : _rangePickerEndDate!.replaceAll(".", ""), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
                       ],
                     ),
                     onTap: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),
@@ -250,7 +249,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                             gradient: LinearGradient(
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
-                                              colors: [Colors.green[500], Colors.green[500], Colors.green[400], Colors.green[300]],
+                                              colors: [Colors.green[500]!, Colors.green[500]!, Colors.green[400]!, Colors.green[300]!],
                                             ),
                                             borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
                                           ),
@@ -381,8 +380,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 .toString();
                             _rangePickerStartDateTime = args.value.startDate;
                             _rangePickerEndDateTime = args.value.endDate;
-                          }  else{
-                            return MyProgressIndicator();
                           }
                         });
                       },
@@ -462,8 +459,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                               .toString();
                                           _rangePickerStartDateTime = args.value.startDate;
                                           _rangePickerEndDateTime = args.value.endDate;
-                                        }  else{
-                                          return MyProgressIndicator();
                                         }
                                       });
                                     },
@@ -552,8 +547,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 .toString();
                             _rangePickerStartDateTime = args.value.startDate;
                             _rangePickerEndDateTime = args.value.endDate;
-                          } else {
-                            return MyProgressIndicator();
                           }
                         });
                       },
@@ -566,199 +559,201 @@ class _SearchScreenState extends State<SearchScreen> {
         });
   }
 
-  ExpandablePageView _searchScreenPageViewSalesAndExpenseTextList(int actualSales, int totalSales, int discount, int delivery,
-      int creditCard, int vos, int vat, int cash, int cashReceipt, int giftCard, int totalExpenseAddTotalAmount, int foodProvisionExpanse,
+  ExpandablePageView _searchScreenPageViewSalesAndExpenseTextList(int actualSales, int? totalSales, int? discount, int? delivery,
+      int? creditCard, int? vos, int? vat, int? cash, int? cashReceipt, int? giftCard, int totalExpenseAddTotalAmount, int foodProvisionExpanse,
       int beverageExpanse, int alcoholExpanse, List listShowExpenseAddList, BuildContext context, List showExpenseAddList, int totalExpense ) {
     return ExpandablePageView(
                       controller: _pageTextViewController,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right:12),
-                          child: ExpansionCard(
-                            initiallyExpanded: _isExpanded,
-                            borderRadius: 30,
-                            background: DecoratedBox(
-                              decoration: _decorationContainerPageView([Colors.deepPurple[400], Colors.deepPurple[400], Colors.deepPurple[500]]),
-                              child: Container(
-                                width: size.width, height: size.height*0.3,
-                              ),
-                            ),
-                            title: Container(
-                              width: size.width,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '실제매출', actualSales,),
-                                  _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '총매출', totalSales,),
-                                ],
-                              ),),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Container(width: size.width*0.7, height: 2, color: Colors.white24,),
-                              ),
-                              Column(
-                              children: <Widget>[
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '할인', discount,),
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, 'Delivery', delivery,),
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '신용카드', creditCard,),
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '공급가액', vos,),
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '세액', vat,),
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '현금', cash,),
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '현금영수증', cashReceipt,),
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, 'Gift card', giftCard,),
-                              ],
-                              ),
-                            ],),
+                          // child: ExpansionCard(
+                          //   initiallyExpanded: _isExpanded,
+                          //   borderRadius: 30,
+                          //   // background: DecoratedBox(
+                          //   //   decoration: _decorationContainerPageView([Colors.deepPurple[400], Colors.deepPurple[400], Colors.deepPurple[500]]),
+                          //   //   child: Container(
+                          //   //     // width: size.width,
+                          //   //     height: size.height*0.3,
+                          //   //   ),
+                          //   // ),
+                          //   title: Container(
+                          //     width: size.width,
+                          //     child: Column(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: <Widget>[
+                          //         _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '실제매출', actualSales,),
+                          //         _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '총매출', totalSales,),
+                          //       ],
+                          //     ),),
+                          //   children: [
+                          //     Padding(
+                          //       padding: const EdgeInsets.only(bottom: 10),
+                          //       child: Container(width: size.width*0.7, height: 2, color: Colors.white24,),
+                          //     ),
+                          //     Column(
+                          //     children: <Widget>[
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, '할인', discount,),
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, 'Delivery', delivery,),
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, '신용카드', creditCard,),
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, '공급가액', vos,),
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, '세액', vat,),
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, '현금', cash,),
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, '현금영수증', cashReceipt,),
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, 'Gift card', giftCard,),
+                          //     ],
+                          //     ),
+                          //   ],),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right:12),
-                          child: ExpansionCard(
-                            initiallyExpanded: _isExpanded,
-                            borderRadius: 30,
-                            background: DecoratedBox(
-                              decoration: _decorationContainerPageView([Colors.pink[400], Colors.pink[400], Colors.pink[500]]),
-                              child: Container(
-                                width: size.width, height: size.height*0.3,
-                              ),
-                            ),
-                            title: Container(
-                              width: size.width,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                              Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('총지출     ' + koFormatMoney.format(totalExpense),
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16, height: 1.1),
-                                  ),
-                                  Expanded(child: Text('   \\', style: TextStyle(color: Colors.white70 , fontSize: 8),))
-                                ],
-                              ),
-                            ),
-                                  _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '식자재', foodProvisionExpanse,),
-                                ],
-                              ),),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Container(width: size.width*0.7, height: 2, color: Colors.white24,),
-                              ),
-                              Column(
-                              children: <Widget>[
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '음료', beverageExpanse,),
-                                _searchScreenPageViewShowTextForm(null, 25.0 ,null, '주류', alcoholExpanse,),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 15),
-                                  child: Container(width: size.width*0.7, height: 2, color: Colors.white24,),
-                                ),
-                                InkWell(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Text('추가지출       ',style: TextStyle(color: Colors.white, fontSize: 13),),
-                                            Column(
-                                              children: <Widget>[
-                                                Text(listShowExpenseAddList.length.toString() + ' 건', style: TextStyle(color: Colors.white, fontSize: 13),),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: 5),
-                                                  child: Text(koFormatMoney.format(totalExpenseAddTotalAmount), style: TextStyle(color: Colors.white, fontSize: 13),),
-                                                ),
-                                              ],
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 20),
-                                              child: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white,),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  onTap: (){
-                                    showMaterialModalBottomSheet(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30),
-                                        ),
-                                        closeProgressThreshold: 5.0,
-                                        elevation: 90.0,
-                                        animationCurve: Curves.fastOutSlowIn,
-                                        duration: Duration(milliseconds: 1500),
-                                        barrierColor: Colors.black87,
-                                        backgroundColor: Colors.deepOrangeAccent,
-                                        context: context,
-                                        builder: (BuildContext context){
-                                          return Container(
-                                            height: size.height*0.3,
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 15),
-                                              child: ListView.separated(
-                                                itemCount: showExpenseAddList.length,
-                                                itemBuilder: (BuildContext context, int index) {
-
-                                                  int _showExpenseAmountFormat = showExpenseAddList[index]['expenseAmount'];
-
-                                                  return Column(
-                                                    children: [
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(left: 40, top: 5),
-                                                        child: Row(
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: <Widget>[
-                                                            Container(
-                                                              width: size.width*0.5,
-                                                              child: Text(
-                                                                showExpenseAddList[index]['title'].toString(), style: TextStyle(
-                                                                  color: Colors.white),
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                width: size.width*0.2,
-                                                                child: Text(
-                                                                  koFormatMoney.format(_showExpenseAmountFormat) + '  \\', style: TextStyle(
-                                                                    color: Colors.white),),
-                                                              ),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                }, separatorBuilder: (BuildContext context, int index) {
-                                                return Container(height: 15,);
-                                              },
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  },
-                                ),
-                              ],
-                              ),
-                            ],),
+                          // child: ExpansionCard(
+                          //   initiallyExpanded: _isExpanded,
+                          //   borderRadius: 30,
+                          //   // background: DecoratedBox(
+                          //   //   decoration: _decorationContainerPageView([Colors.pink[400], Colors.pink[400], Colors.pink[500]]),
+                          //   //   child: Container(
+                          //   //     // width: size.width,
+                          //   //     height: size.height*0.3,
+                          //   //   ),
+                          //   // ),
+                          //   title: Container(
+                          //     width: size.width,
+                          //     child: Column(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: <Widget>[
+                          //     Padding(
+                          //     padding: EdgeInsets.symmetric(horizontal: 10),
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: [
+                          //         Text('총지출     ' + koFormatMoney.format(totalExpense),
+                          //           style: TextStyle(
+                          //               color: Colors.white,
+                          //               fontSize: 16, height: 1.1),
+                          //         ),
+                          //         Expanded(child: Text('   \\', style: TextStyle(color: Colors.white70 , fontSize: 8),))
+                          //       ],
+                          //     ),
+                          //   ),
+                          //         _searchScreenPageViewShowTextForm(16, 10.0, Colors.white, '식자재', foodProvisionExpanse,),
+                          //       ],
+                          //     ),),
+                          //   children: [
+                          //     Padding(
+                          //       padding: const EdgeInsets.only(bottom: 10),
+                          //       child: Container(width: size.width*0.7, height: 2, color: Colors.white24,),
+                          //     ),
+                          //     Column(
+                          //     children: <Widget>[
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, '음료', beverageExpanse,),
+                          //       _searchScreenPageViewShowTextForm(null, 25.0 ,null, '주류', alcoholExpanse,),
+                          //       Padding(
+                          //         padding: const EdgeInsets.only(top: 15),
+                          //         child: Container(width: size.width*0.7, height: 2, color: Colors.white24,),
+                          //       ),
+                          //       InkWell(
+                          //         child: Column(
+                          //           mainAxisAlignment: MainAxisAlignment.start,
+                          //           crossAxisAlignment: CrossAxisAlignment.start,
+                          //           children: <Widget>[
+                          //             Padding(
+                          //               padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
+                          //               child: Row(
+                          //                 children: <Widget>[
+                          //                   Text('추가지출       ',style: TextStyle(color: Colors.white, fontSize: 13),),
+                          //                   Column(
+                          //                     children: <Widget>[
+                          //                       Text(listShowExpenseAddList.length.toString() + ' 건', style: TextStyle(color: Colors.white, fontSize: 13),),
+                          //                       Padding(
+                          //                         padding: const EdgeInsets.only(top: 5),
+                          //                         child: Text(koFormatMoney.format(totalExpenseAddTotalAmount), style: TextStyle(color: Colors.white, fontSize: 13),),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                   Padding(
+                          //                     padding: const EdgeInsets.only(left: 20),
+                          //                     child: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white,),
+                          //                   ),
+                          //                 ],
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //         onTap: (){
+                          //           showMaterialModalBottomSheet(
+                          //               shape: RoundedRectangleBorder(
+                          //                 borderRadius: BorderRadius.circular(30),
+                          //               ),
+                          //               closeProgressThreshold: 5.0,
+                          //               elevation: 90.0,
+                          //               animationCurve: Curves.fastOutSlowIn,
+                          //               duration: Duration(milliseconds: 1500),
+                          //               barrierColor: Colors.black87,
+                          //               backgroundColor: Colors.deepOrangeAccent,
+                          //               context: context,
+                          //               builder: (BuildContext context){
+                          //                 return Container(
+                          //                   height: size.height*0.3,
+                          //                   child: Padding(
+                          //                     padding: const EdgeInsets.symmetric(vertical: 15),
+                          //                     child: ListView.separated(
+                          //                       itemCount: showExpenseAddList.length,
+                          //                       itemBuilder: (BuildContext context, int index) {
+                          //
+                          //                         int _showExpenseAmountFormat = showExpenseAddList[index]['expenseAmount'];
+                          //
+                          //                         return Column(
+                          //                           children: [
+                          //                             Padding(
+                          //                               padding: const EdgeInsets.only(left: 40, top: 5),
+                          //                               child: Row(
+                          //                                 crossAxisAlignment: CrossAxisAlignment.center,
+                          //                                 children: <Widget>[
+                          //                                   Container(
+                          //                                     width: size.width*0.5,
+                          //                                     child: Text(
+                          //                                       showExpenseAddList[index]['title'].toString(), style: TextStyle(
+                          //                                         color: Colors.white),
+                          //                                     ),
+                          //                                   ),
+                          //                                   Expanded(
+                          //                                     child: Container(
+                          //                                       width: size.width*0.2,
+                          //                                       child: Text(
+                          //                                         koFormatMoney.format(_showExpenseAmountFormat) + '  \\', style: TextStyle(
+                          //                                           color: Colors.white),),
+                          //                                     ),
+                          //                                   ),
+                          //
+                          //                                 ],
+                          //                               ),
+                          //                             ),
+                          //                           ],
+                          //                         );
+                          //                       }, separatorBuilder: (BuildContext context, int index) {
+                          //                       return Container(height: 15,);
+                          //                     },
+                          //                     ),
+                          //                   ),
+                          //                 );
+                          //               });
+                          //         },
+                          //       ),
+                          //     ],
+                          //     ),
+                          //   ],),
                         ),
                       ],
                     );
   }
 
-  Padding _searchScreenPageViewShowTextForm(double fontSize, double paddingDouble, Color color, String hint, data) {
+  Padding _searchScreenPageViewShowTextForm(double? fontSize, double paddingDouble, Color? color, String hint, data) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: paddingDouble ?? 0.0),
+      padding: EdgeInsets.symmetric(horizontal: paddingDouble),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -767,17 +762,17 @@ class _SearchScreenState extends State<SearchScreen> {
             '$hint     ' +
                 koFormatMoney.format(data),
             style: TextStyle(
-                color: color == null? Colors.white : color,
-                fontSize: fontSize == null ? 13 : fontSize, height: 1.1),
+                color: color=Colors.white70,
+                fontSize: fontSize=12, height: 1.1),
           ),
-          Expanded(child: Text('   \\', style: TextStyle(color: color == null ? Colors.white70 : color, fontSize: 8),))
+          Expanded(child: Text('   \\', style: TextStyle(color: color=Colors.white70, fontSize: 8),))
         ],
       ),
     );
   }
 
   dynamic _listDataNullCheckForm(data){
-    int dataIntForm = data.isEmpty || _rangePickerStartDateTime == null ? int.parse('0') : data.reduce((v, e) => v+e);
+    int? dataIntForm = data.isEmpty || _rangePickerStartDateTime == null ? int.parse('0') : data.reduce((v, e) => v+e);
     return(dataIntForm);
   }
 

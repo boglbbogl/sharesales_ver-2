@@ -6,7 +6,7 @@ import 'package:sharesales_ver2/firebase_firestore/firestore_user_repository.dar
 
 class FirebaseAuthState extends ChangeNotifier {
   FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.logout;
-  User _user;
+  User? _user;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   void watchAuthChange() {
@@ -21,7 +21,7 @@ class FirebaseAuthState extends ChangeNotifier {
   }
 
   void registerUser(BuildContext context,
-      {@required String email, @required String password}) async {
+      {required String email, required String password}) async {
     UserCredential userCredential = await _firebaseAuth
         .createUserWithEmailAndPassword(
             email: email.trim(), password: password.trim())
@@ -65,12 +65,12 @@ class FirebaseAuthState extends ChangeNotifier {
       Scaffold.of(context).showSnackBar(snackBar);
     } else {
       await userNetworkRepository.attemptCreateUser(
-          userKey: _user.uid, email: _user.email);
+          userKey: _user!.uid, email: _user!.email);
     }
   }
 
   void login(BuildContext context,
-      {@required String email, @required String password}) async{
+      {required String email, required String password}) async{
     UserCredential userCredential = await _firebaseAuth
         .signInWithEmailAndPassword(
             email: email.trim(), password: password.trim())
@@ -123,7 +123,7 @@ class FirebaseAuthState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeFirebaseAuthStatus([FirebaseAuthStatus firebaseAuthStatus]) {
+  void changeFirebaseAuthStatus([FirebaseAuthStatus? firebaseAuthStatus]) {
     if (firebaseAuthStatus != null) {
       _firebaseAuthStatus = firebaseAuthStatus;
     } else {
@@ -136,7 +136,7 @@ class FirebaseAuthState extends ChangeNotifier {
   }
 
   FirebaseAuthStatus get firebaseAuthStatus => _firebaseAuthStatus;
-  User get user => _user;
+  User? get user => _user;
 }
 
 enum FirebaseAuthStatus { logout, progress, login }

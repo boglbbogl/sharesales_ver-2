@@ -54,7 +54,7 @@ class _SignInFormState extends State<SignInForm> {
                   controller: _emailController,
                   decoration: blackInputDecor('Email'),
                   validator: (text){
-                    if(text.isNotEmpty && text.contains('@')){
+                    if(text!.isNotEmpty && text.contains('@')){
                       return null;
                     } else {
                       return '정확한 이메일 입력해라';
@@ -67,7 +67,7 @@ class _SignInFormState extends State<SignInForm> {
                   controller: _pwController,
                   decoration: blackInputDecor('Password'),
                   validator: (text){
-                    if(text.isNotEmpty && text.length > 6){
+                    if(text!.isNotEmpty && text.length > 6){
                       return null;
                     } else {
                       return '6자리 이상으로 해';
@@ -79,7 +79,7 @@ class _SignInFormState extends State<SignInForm> {
                   child: FlatButton(
                     color: Colors.amberAccent,
                     onPressed: (){
-                      if(_formKey.currentState.validate());
+                      if(_formKey.currentState!.validate());
                       {
                         print('잘 작동해');
                         Provider.of<FirebaseAuthState>(context, listen: false)

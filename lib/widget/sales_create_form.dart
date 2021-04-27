@@ -4,17 +4,17 @@ import 'package:sharesales_ver2/constant/size.dart';
 
 class SalesCreateForm extends StatelessWidget {
   const SalesCreateForm({
-    Key key,
-    @required TextEditingController totalSalesController,
-    @required TextEditingController actualSalesController,
-    @required TextEditingController vosController,
-    @required TextEditingController vatController,
-    @required TextEditingController discountController,
-    @required TextEditingController creditCardController,
-    @required TextEditingController cashController,
-    @required TextEditingController cashReceiptController,
-    @required TextEditingController deliveryController,
-    @required TextEditingController giftCardController,
+    Key? key,
+    required TextEditingController totalSalesController,
+    required TextEditingController actualSalesController,
+    required TextEditingController vosController,
+    required TextEditingController vatController,
+    required TextEditingController discountController,
+    required TextEditingController creditCardController,
+    required TextEditingController cashController,
+    required TextEditingController cashReceiptController,
+    required TextEditingController deliveryController,
+    required TextEditingController giftCardController,
 
 
   })  : _totalSalesController = totalSalesController,
@@ -98,7 +98,7 @@ class SalesCreateForm extends StatelessWidget {
     );
   }
 
-  String _salesInputValidator(text) {
+  String? _salesInputValidator(text) {
     if (text.isEmpty) {
       return '필수 입력사항  ex)  0';
     } else

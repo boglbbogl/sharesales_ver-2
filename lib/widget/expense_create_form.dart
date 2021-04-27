@@ -6,22 +6,22 @@ import 'package:sharesales_ver2/constant/size.dart';
 import 'expense_text_add_create_form.dart';
 
 class ExpenseCreateForm extends StatelessWidget {
-  final int index;
+  final int? index;
 
   const ExpenseCreateForm(
-      {Key key,
+      {Key? key,
       this.index,
-      TextEditingController foodProvisionsController,
-      TextEditingController beverageController,
-      TextEditingController alcoholController})
+      TextEditingController? foodProvisionsController,
+      TextEditingController? beverageController,
+      TextEditingController? alcoholController})
       : _foodProvisionsController = foodProvisionsController,
         _beverageController = beverageController,
         _alcoholController = alcoholController,
         super(key: key);
 
-  final TextEditingController _foodProvisionsController;
-  final TextEditingController _beverageController;
-  final TextEditingController _alcoholController;
+  final TextEditingController? _foodProvisionsController;
+  final TextEditingController? _beverageController;
+  final TextEditingController? _alcoholController;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,9 @@ class ExpenseCreateForm extends StatelessWidget {
       String startText,
       String centerText,
       String endText,
-      TextEditingController startController,
-      TextEditingController centerController,
-      TextEditingController endController) {
+      TextEditingController? startController,
+      TextEditingController? centerController,
+      TextEditingController? endController) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -4,7 +4,7 @@ import 'package:sharesales_ver2/firebase_firestore/transformers.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 
 class UserNetworkRepository with Transformers {
-  Future<void> attemptCreateUser({String userKey, String email}) async {
+  Future<void> attemptCreateUser({String? userKey, String? email}) async {
     final DocumentReference userReference =
         FirebaseFirestore.instance.collection(COLLECTION_USERS).doc(userKey);
 

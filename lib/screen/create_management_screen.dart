@@ -16,9 +16,9 @@ import 'package:sharesales_ver2/widget/sales_create_form.dart';
 
 class CreateManagementScreen extends StatefulWidget {
 
-  final String userKey;
+  final String? userKey;
 
-  const CreateManagementScreen( {Key key, this.userKey,}) : super(key: key);
+  const CreateManagementScreen( {Key? key, this.userKey,}) : super(key: key);
 
 
   @override
@@ -284,22 +284,22 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                   icon: Icon(Icons.save_alt_rounded, size: 35,),
                   onPressed: () async{
 
-                    UserModel userModel =
+                    UserModel? userModel =
                         Provider.of<UserModelState>(context, listen: false)
                             .userModel;
 
                       FocusScope.of(context).unfocus();
 
-                      if (!_formKey.currentState.validate()) {
+                      if (!_formKey.currentState!.validate()) {
                         setState(() {
                           _showTabBarBadge = true;
                         });
                       } else {
                         _showTabBarBadge = false;
-                        _formKey.currentState.save();
+                        _formKey.currentState!.save();
 
                         await managementRepository.createManagement(context,
-                            userModel,
+                            userModel!,
                             ManagementModel.createMapForManagementList(
                               userKey: userModel.userKey,
                               actualSales: _actualSalesController.text.isEmpty ? int.parse('0') : int.parse(_actualSalesController.text.replaceAll(",", "")),
@@ -319,7 +319,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                               foodProvisionExpense: _foodProvisionController.text.isEmpty ? int.parse('0') : int.parse(_foodProvisionController.text.replaceAll(",", "")),
                               beverageExpense: _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
                               alcoholExpense: _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_alcoholController.text.replaceAll(",", "")),
-                            ),);
+                            ) as Map<String, dynamic>,);
                       }
                   },
                 ),

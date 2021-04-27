@@ -34,7 +34,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
        this._totalSalesController, this._actualSalesController, this._vosController, this._vatController,
        this._discountController, this._creditCardController, this._cashController, this._cashReceiptController,
        this._deliveryController, this._giftCardController, this._foodProvisionController, this._beverageController,
-       this._alcoholController, this._editAddExpenseTitleController, this._editAddExpenseAmountController,{Key key,}) : super(key: key);
+       this._alcoholController, this._editAddExpenseTitleController, this._editAddExpenseAmountController,{Key? key,}) : super(key: key);
 
 
   @override
@@ -196,7 +196,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                       gradient: LinearGradient(
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
-                                        colors: [Colors.green[500], Colors.green[500], Colors.green[400], Colors.green[300]],
+                                        colors: [Colors.green[500]!, Colors.green[500]!, Colors.green[400]!, Colors.green[300]!],
                                       ),
                                     ),
                                     height: size.height * 0.09,
@@ -622,7 +622,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                                                             itemCount: upDateExpenseAddList.length,
                                                                                                             itemBuilder: (BuildContext context, int index) {
 
-                                                                                                              int _showExpenseAmountFormat = upDateExpenseAddList[index]['expenseAmount'];
+                                                                                                              int? _showExpenseAmountFormat = upDateExpenseAddList[index]['expenseAmount'];
                                                                                                               return Column(
                                                                                                                 children: [
                                                                                                                   Row(
@@ -649,7 +649,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
 
                                                                                                                           await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
                                                                                                                               .collection(userModel.userName).doc(snapshotData.id).update({
-                                                                                                                            'expenseAddTotalAmount': FieldValue.increment(-_showExpenseAmountFormat),
+                                                                                                                            'expenseAddTotalAmount': FieldValue.increment(-_showExpenseAmountFormat!),
                                                                                                                             'expenseAddList': FieldValue.arrayRemove([
                                                                                                                               upDateExpenseAddList[index]]),
                                                                                                                           });
@@ -692,7 +692,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                               itemCount: addListToExpense.length,
                                                                               itemBuilder: (BuildContext context, int index) {
 
-                                                                                int _showAddListToExpenseFormat = addListToExpense[index]['expenseAmount'];
+                                                                                int? _showAddListToExpenseFormat = addListToExpense[index]['expenseAmount'];
 
                                                                                 return Column(
                                                                                   children: [
@@ -730,7 +730,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Colors.pink[100],Colors.redAccent[100]],
+              colors: [Colors.pink[100]!,Colors.redAccent[100]!],
             ),
           ),
           // color: Color(0xFFecf2f9),
@@ -799,7 +799,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
             gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.purple[100],Colors.purple[200],Colors.purple[200],Colors.purple[200],Colors.purple[100]]),
+                colors: [Colors.purple[100]!,Colors.purple[200]!,Colors.purple[200]!,Colors.purple[200]!,Colors.purple[100]!]),
           ),
           // color: Colors.deepOrange,
           padding: EdgeInsets.only(top: 10),
@@ -1063,7 +1063,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                         itemCount: showBottomSheetExpenseAddShow.length,
                                         itemBuilder: (BuildContext context, int index) {
 
-                                          int _showBottomExpenseAmountFormat = showBottomSheetExpenseAddShow[index]['expenseAmount'];
+                                          int? _showBottomExpenseAmountFormat = showBottomSheetExpenseAddShow[index]['expenseAmount'];
 
                                           return Column(
                                             children: [
