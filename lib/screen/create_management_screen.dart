@@ -13,6 +13,8 @@ import 'package:sharesales_ver2/widget/date_picker_create_form.dart';
 import 'package:sharesales_ver2/widget/expense_create_form.dart';
 import 'package:sharesales_ver2/widget/expense_text_add_create_form.dart';
 import 'package:sharesales_ver2/widget/sales_create_form.dart';
+import 'package:sizer/sizer.dart';
+
 
 class CreateManagementScreen extends StatefulWidget {
 
@@ -31,8 +33,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
 
   SelectedIndicator _selectedIndicator = SelectedIndicator.left;
 
-  double _salesPos = 0;
-  double _expensePos = size.width;
+  double _salesPos = 0.w;
+  double _expensePos = size.width.w;
 
   bool _showTabBarBadge = false;
 
@@ -179,7 +181,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                         setState(() {
                           _selectedIndicator = SelectedIndicator.left;
                           _salesPos = 0;
-                          _expensePos = size.width;
+                          _expensePos = size.width.w;
                         });
                       },
                       child: ImageIcon(
@@ -194,7 +196,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                           print('매출클릭');
                           _selectedIndicator = SelectedIndicator.left;
                           _salesPos = 0;
-                          _expensePos = size.width;
+                          _expensePos = size.width.w;
                         });
                       },
                       child: Center(
@@ -222,7 +224,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                     FocusScope.of(context).unfocus();
                     print('지출클릭');
                     _selectedIndicator = SelectedIndicator.right;
-                    _salesPos = -size.width;
+                    _salesPos = -size.width.w;
                     _expensePos = 0;
                   });
                 },

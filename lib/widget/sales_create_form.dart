@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sizer/sizer.dart';
 
 class SalesCreateForm extends StatelessWidget {
   const SalesCreateForm({
@@ -67,28 +68,28 @@ class SalesCreateForm extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Container(
-          height: salTtfHeightSize,
-          width: salTtfWidthSize,
+          height: 8.h,
+          width: 30.w,
           child: TextFormField(
             controller: startController,
             inputFormatters: [wonMaskFormatter],
             // validator: _salesInputValidator,
             style: salesInputStyle(),
-            cursorColor: Colors.white,
+            cursorColor: Colors.deepPurple,
             decoration: blackInputDecor(leftText),
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
           ),
         ),
         Container(
-          height: salTtfHeightSize,
-          width: salTtfWidthSize,
+          height: 8.h,
+          width: 30.w,
           child: TextFormField(
             controller: endController,
             inputFormatters: [wonMaskFormatter],
             // validator: _salesInputValidator,
             style: salesInputStyle(),
-            cursorColor: Colors.white,
+            cursorColor: Colors.deepPurple,
             decoration: blackInputDecor(rightText),
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,

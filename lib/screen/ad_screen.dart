@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 import 'package:sharesales_ver2/screen/auth_screen.dart';
 import 'package:sharesales_ver2/screen/create_management_screen.dart';
 
@@ -31,9 +33,15 @@ class AdScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-              icon: Icon(Icons.create, color: Colors.deepPurple,), onPressed: ()=>CreateManagementScreen()),
+              icon: Icon(Icons.create, color: Colors.deepPurple,), onPressed: ()=>Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateManagementScreen()))),
           IconButton(
-              icon: Icon(Icons.account_circle, color: Colors.deepPurple,), onPressed: (){}),
+              icon: Icon(Icons.account_circle, color: Colors.deepPurple,), onPressed: (){
+            Provider.of<FirebaseAuthState>(context, listen: false)
+                .signOut();
+          }),
         ],
       ),
       body: SingleChildScrollView(

@@ -30,20 +30,20 @@ class _MainHomePageState extends State<MainHomePage> {
 
   List<Widget> _screenList = [
     AdScreen(),
-    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget? child){
+    Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
       else
         return SearchScreen();
     }),
-    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget? child){
+    Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
       else
         return ManagementScreen();
     }),
     Example(),
-    Consumer<UserModelState>(builder: (BuildContext context, UserModelState userModelState, Widget? child){
+    Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
       else

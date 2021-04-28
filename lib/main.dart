@@ -6,10 +6,14 @@ import 'package:sharesales_ver2/screen/auth_screen.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 import 'constant/color.dart';
+import 'dart:ui';
+
 import 'firebase_auth/firebase_auth_state.dart';
 import 'firebase_auth/user_model_state.dart';
 import 'firebase_firestore/firestore_user_repository.dart';
 import 'main_home_page.dart';
+import 'package:sizer/sizer.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,46 +38,50 @@ class MyApp extends StatelessWidget {
           create: (_) => UserModelState(),
         ),
       ],
-      child: MaterialApp(
-        // debugShowCheckedModeBanner: ,
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          SfGlobalLocalizations.delegate
-        ],
-        supportedLocales: [
-          const Locale('en', 'US'),
-          const Locale('ko', 'KO'),
-        ],
-        locale: const Locale('ko', 'KO'),
-        title: 'share sales',
-        theme: ThemeData(
-          fontFamily: 'Yanolja',
-          // canvasColor: blackColor,
-          primarySwatch: Colors.red,
-        ),
-        home: Consumer(
-          builder: (BuildContext context, FirebaseAuthState firebaseAuthState,
-              Widget? child) {
-            switch (firebaseAuthState.firebaseAuthStatus) {
-              case FirebaseAuthStatus.logout:
-                _clearUserModel(context);
-                _currentWidget = AuthScreen();
-                break;
-              case FirebaseAuthStatus.login:
-                _initUserModel(firebaseAuthState, context);
-                _currentWidget = MainHomePage();
-                break;
-              default:
-                _currentWidget = MyProgressIndicator();
-            }
-            return AnimatedSwitcher(
-              duration: Duration(milliseconds: 300),
-              child: _currentWidget,
-            );
-          },
-        ),
-        // home: MyProgressIndicator(),
+      child: Sizer(
+        builder: (BuildContext context, Orientation orientation, DeviceType deviceType) {
+        return MaterialApp(
+          // debugShowCheckedModeBanner: ,
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            SfGlobalLocalizations.delegate
+          ],
+          supportedLocales: [
+            const Locale('en', 'US'),
+            const Locale('ko', 'KO'),
+          ],
+          locale: const Locale('ko', 'KO'),
+          title: 'share sales',
+          theme: ThemeData(
+            fontFamily: 'Yanolja',
+            // canvasColor: blackColor,
+            primarySwatch: Colors.red,
+          ),
+          home: Consumer(
+            builder: (BuildContext context, FirebaseAuthState firebaseAuthState,
+                Widget? child) {
+              switch (firebaseAuthState.firebaseAuthStatus) {
+                case FirebaseAuthStatus.logout:
+                  _clearUserModel(context);
+                  _currentWidget = AuthScreen();
+                  break;
+                case FirebaseAuthStatus.login:
+                  _initUserModel(firebaseAuthState, context);
+                  _currentWidget = MainHomePage();
+                  break;
+                default:
+                  _currentWidget = MyProgressIndicator();
+              }
+              return AnimatedSwitcher(
+                duration: Duration(milliseconds: 300),
+                child: _currentWidget,
+              );
+            },
+          ),
+          // home: MyProgressIndicator(),
+        );
+        },
       ),
     );
   }

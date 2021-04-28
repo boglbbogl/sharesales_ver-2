@@ -15,6 +15,7 @@ import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'package:sharesales_ver2/widget/search_screen_chart_form.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'management_screen.dart';
+import 'package:sizer/sizer.dart';
 
 class SearchScreen extends StatefulWidget {
 
@@ -31,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
   PageController _pageBarChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageLinearChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
   PageController _pageRadialChartViewController = PageController(viewportFraction: 0.7, initialPage: 0);
-  PageController _pageTextViewController = PageController(viewportFraction: 0.8);
+  PageController _pageTextViewController = PageController(viewportFraction: 0.7);
 
   String? _rangePickerStartDate;
   String? _rangePickerEndDate;
@@ -115,16 +116,16 @@ class _SearchScreenState extends State<SearchScreen> {
           listShowExpenseAddList.addAll(docQuery['expenseAddList']);
         });
 
-        int? totalSales = _listDataNullCheckForm(listTotalSales);
+        int totalSales = _listDataNullCheckForm(listTotalSales);
         int actualSales = _listDataNullCheckForm(listActualSales);
-        int? vos = _listDataNullCheckForm(listVos);
-        int? vat = _listDataNullCheckForm(listVat);
-        int? discount = _listDataNullCheckForm(listDiscount);
-        int? creditCard = _listDataNullCheckForm(listCreditCard);
-        int? cash = _listDataNullCheckForm(listCash);
-        int? cashReceipt = _listDataNullCheckForm(listCashReceipt);
-        int? delivery = _listDataNullCheckForm(listDelivery);
-        int? giftCard = _listDataNullCheckForm(listGiftCard);
+        int vos = _listDataNullCheckForm(listVos);
+        int vat = _listDataNullCheckForm(listVat);
+        int discount = _listDataNullCheckForm(listDiscount);
+        int creditCard = _listDataNullCheckForm(listCreditCard);
+        int cash = _listDataNullCheckForm(listCash);
+        int cashReceipt = _listDataNullCheckForm(listCashReceipt);
+        int delivery = _listDataNullCheckForm(listDelivery);
+        int giftCard = _listDataNullCheckForm(listGiftCard);
         int expenseAddTotalAmount = _listDataNullCheckForm(listExpenseAddTotalAmount);
         int foodProvisionExpense = _listDataNullCheckForm(listFoodProvisionExpanse);
         int beverageExpense = _listDataNullCheckForm(listBeverageExpanse);
@@ -171,7 +172,7 @@ class _SearchScreenState extends State<SearchScreen> {
             },
             child: Scaffold(
               backgroundColor: Colors.white,
-              appBar: mainAppBar(context, IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
+              appBar: mainAppBar(context, 'share sales', null,IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
                   onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
                 leadingIcon: IconButton(icon: Icon(Icons.autorenew_rounded),
                   color: circularChartSwitcher ? Colors.pinkAccent : Colors.green,
@@ -208,6 +209,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           actualSales, totalSales, discount, delivery, creditCard, vos, vat, cash, cashReceipt, giftCard,
                           expenseAddTotalAmount, foodProvisionExpense, beverageExpense, alcoholExpense, listShowExpenseAddList,
                           context, listShowExpenseAddList, totalExpense),
+                      ExpandablePageView(
+                        controller: _pageTextViewController,
+                        children: [
+                          _searchScreenPageViewContainerListTextFormBySales(actualSales, totalSales, context, vos, vat, discount, delivery, creditCard, cash, cashReceipt, giftCard),
+                          _searchScreenPageViewContainerListTextFormByExpense(totalExpense, foodProvisionExpense, context, beverageExpense, alcoholExpense, listShowExpenseAddList, expenseAddTotalAmount),
+
+                        ],
+                      ),
                       _rangePickerStartDate == null ? Container() : SearchScreenChartForm(duration, barChartData, circularChartData, totalSales, totalExpense, doughnutMainTotalExpense,
                           _pageBarChartViewController, _pageRadialChartViewController,_pageDoughnutChartViewController, _pageLinearChartViewController,
                           circularChartSwitcher, timeSeriesChartSwitcher),
@@ -220,6 +229,192 @@ class _SearchScreenState extends State<SearchScreen> {
         );
       }
     );
+  }
+
+  InkWell _searchScreenPageViewContainerListTextFormByExpense(int totalExpense, int foodProvisionExpense, BuildContext context, int beverageExpense, int alcoholExpense, List listShowExpenseAddList, int expenseAddTotalAmount) {
+    return InkWell(child: _searchScreenSalesAndExpensePageViewContainerForm(Colors.pink.shade400,'총 지출','식자재',totalExpense, foodProvisionExpense),
+                        onTap: ()=>showMaterialModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            closeProgressThreshold: 5.0,
+                            elevation: 90.0,
+                            animationCurve: Curves.fastOutSlowIn,
+                            duration: Duration(milliseconds: 1500),
+                            barrierColor: Colors.black54,
+                            backgroundColor: Colors.pink.shade500,
+                            context: context,
+                            builder: (BuildContext context){
+                              return Container(
+                                height: 30.h,
+                                child: Container(
+                                  height: 30.h,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        SizedBox(height: 25,),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('식자재', foodProvisionExpense),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('음료', beverageExpense),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('주류', alcoholExpense),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 5),
+                                          child: Container(height: 3, width: size.width*0.5,color: Colors.pinkAccent,),
+                                        ),
+                                        InkWell(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 8),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text('추가지출  ', style: TextStyle(color: Colors.white),),
+                                                Icon(Icons.search_rounded, color: Colors.white,),
+                                              ],
+                                            ),
+                                          ),
+                                          onTap: ()=>__searchScreenSalesAndExpensePageViewContainerFormInTextFormDetailAddExpenseView(context, listShowExpenseAddList),
+                                        ),
+                                        Text(listShowExpenseAddList.length.toString() + ' 건' +'    '+
+                                        koFormatMoney.format(expenseAddTotalAmount) + ' 원', style: TextStyle(color: Colors.white),),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),);
+  }
+
+  InkWell _searchScreenPageViewContainerListTextFormBySales(int actualSales, int totalSales, BuildContext context, int vos, int vat, int discount, int delivery, int creditCard, int cash, int cashReceipt, int giftCard) {
+    return InkWell(child: _searchScreenSalesAndExpensePageViewContainerForm(Colors.deepPurple.shade400,'실제매출','총 매출',actualSales, totalSales,),
+                        onTap: ()=>showMaterialModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            closeProgressThreshold: 5.0,
+                            elevation: 90.0,
+                            animationCurve: Curves.fastOutSlowIn,
+                            duration: Duration(milliseconds: 1500),
+                            barrierColor: Colors.black54,
+                            backgroundColor: Colors.deepPurple.shade500,
+                            context: context,
+                            builder: (BuildContext context){
+                              return Container(
+                                height: 30.h,
+                                child: Container(
+                                  height: 30.h,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        SizedBox(height: 25,),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('공급가액', vos),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('세액', vat),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('할인', discount),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('Delivery', delivery),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('신용카드', creditCard),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('현금', cash),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('현금영수증', cashReceipt),
+                                        __searchScreenSalesAndExpensePageViewContainerFormInTextForm('Gift Card', giftCard),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),);
+  }
+
+  Future __searchScreenSalesAndExpensePageViewContainerFormInTextFormDetailAddExpenseView(BuildContext context, List listShowExpenseAddList) {
+    return showMaterialModalBottomSheet(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(30),
+                                              ),
+                                              closeProgressThreshold: 5.0,
+                                              elevation: 90.0,
+                                              animationCurve: Curves.fastOutSlowIn,
+                                              duration: Duration(milliseconds: 1500),
+                                              barrierColor: Colors.black87,
+                                              backgroundColor: Colors.deepOrangeAccent,
+                                              context: context,
+                                              builder: (BuildContext context){
+                                                return Container(
+                                                  height: size.height*0.3,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 15),
+                                                    child: ListView.separated(
+                                                      itemCount: listShowExpenseAddList.length,
+                                                      itemBuilder: (BuildContext context, int index) {
+
+                                                        int _showExpenseAmountFormat = listShowExpenseAddList[index]['expenseAmount'];
+
+                                                        return Column(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(left: 40, top: 5),
+                                                              child: Row(
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: <Widget>[
+                                                                  Container(
+                                                                    width: size.width*0.5,
+                                                                    child: Text(
+                                                                      listShowExpenseAddList[index]['title'].toString(), style: TextStyle(
+                                                                        color: Colors.white),
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Container(
+                                                                      width: size.width*0.2,
+                                                                      child: Text(
+                                                                        koFormatMoney.format(_showExpenseAmountFormat) + '  \\', style: TextStyle(
+                                                                          color: Colors.white),),
+                                                                    ),
+                                                                  ),
+
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }, separatorBuilder: (BuildContext context, int index) {
+                                                      return Container(height: 15,);
+                                                    },
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+  }
+
+  Padding __searchScreenSalesAndExpensePageViewContainerFormInTextForm(String title,int value) {
+    return Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 5),
+                                          child: Text('$title : ' + koFormatMoney.format(value) + ' 원', style: TextStyle(
+                                            color: Colors.white,
+                                          ),),
+                                        );
+  }
+
+  Padding _searchScreenSalesAndExpensePageViewContainerForm(Color color, String topTitle, String bottomTitle, int topValue, int bottomValue) {
+    return Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Container(
+                            width: 80.w,
+                            height: 10.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: color,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text('$topTitle : ' + koFormatMoney.format(topValue) + ' 원',
+                                style: TextStyle(color: Colors.white, fontSize: 19),),
+                                SizedBox(height: 4,),
+                                Text('$bottomTitle : ' + koFormatMoney.format(bottomValue) + ' 원',
+                                style: TextStyle(color: Colors.white, fontSize: 19),),
+                              ],
+                            ),
+                          ),
+                        );
   }
 
   Future _searchScreenShowBottomSheetRangeDatePickerList(BuildContext context) {
@@ -563,7 +758,7 @@ class _SearchScreenState extends State<SearchScreen> {
       int? creditCard, int? vos, int? vat, int? cash, int? cashReceipt, int? giftCard, int totalExpenseAddTotalAmount, int foodProvisionExpanse,
       int beverageExpanse, int alcoholExpanse, List listShowExpenseAddList, BuildContext context, List showExpenseAddList, int totalExpense ) {
     return ExpandablePageView(
-                      controller: _pageTextViewController,
+                      // controller: _pageTextViewController,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right:12),

@@ -106,7 +106,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
         return SafeArea(
           child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: mainAppBar(context, IconButton(
+            appBar: mainAppBar(context, 'share sales',null,IconButton(
             icon: Icon(
               Icons.create,
               color: Colors.deepPurpleAccent,

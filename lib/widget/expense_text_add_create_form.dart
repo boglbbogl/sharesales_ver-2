@@ -4,6 +4,8 @@ import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
+import 'package:sizer/sizer.dart';
+
 
 List<Map<dynamic, dynamic>> expenseAddMapList = [];
 List<int> expenseAmountTotal = [];
@@ -39,8 +41,8 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
             alignment: Alignment.center,
             children: <Widget>[
               Container(
-                width: size.width*0.8,
-                height: size.height*0.05,
+                width: 80.w,
+                height: 5.h,
                 child: Text('추가 지출', style: TextStyle(color: Colors.black54, fontSize: 20), textAlign: TextAlign.center,),
               ),
             ],
@@ -48,8 +50,8 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
       _expenseTextAddTff(),
       _expenseTextAddDivider(context),
         Container(
-          height: size.height * 0.4,
-          width: size.width * 0.98,
+          height: 40.h,
+          width: 98.w,
           child: ListView(
             shrinkWrap: true,
             controller: _scrollController,
@@ -78,11 +80,11 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
             Container(
               color: Colors.deepOrange,
               height: 2,
-              width: size.width * 0.9,
+              width: 90.w,
             ),
             Container(
               height: 30,
-              width: size.width * 0.5,
+              width: 50.w,
               child: RaisedButton(
                 onPressed: () {
                   setState(() {
@@ -135,8 +137,8 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Container(
-            height: salTtfHeightSize,
-            width: salTtfWidthSize * 1.5,
+            height: 8.h,
+            width: 50.w,
             child: Stack(
               children: [
                 Badge(
@@ -156,8 +158,8 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
             ),
           ),
           Container(
-            height: expTtfHeightSize,
-            width: expTtfWidthSize,
+            height: 8.h,
+            width: 30.w,
             child: Stack(
               children: [
                 Badge(

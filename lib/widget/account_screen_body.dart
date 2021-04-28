@@ -10,46 +10,28 @@ import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
 
 class AccountScreenBody extends StatefulWidget {
-  final Function? onPageChanged;
-  final int? nowActualSales;
-  final int? nowTotalExpense;
-  final int? lastActualSales;
-  final int? lastTotalExpense;
+  final int nowActualSales;
+  final int nowTotalExpense;
+  final int lastActualSales;
+  final int lastTotalExpense;
 
   const AccountScreenBody(this.nowActualSales, this.nowTotalExpense, this.lastActualSales, this.lastTotalExpense,
-      {Key? key, this.onPageChanged}) : super(key: key);
+      {Key? key}) : super(key: key);
 
   @override
   _AccountScreenBodyState createState() => _AccountScreenBodyState();
 }
 
-class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTickerProviderStateMixin {
-  late AnimationController _iconAniController;
-
-  @override
-  void initState() {
-    _iconAniController = AnimationController(
-      vsync: this,
-      duration: mainDuration,
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _iconAniController.dispose();
-    super.dispose();
-  }
+class _AccountScreenBodyState extends State<AccountScreenBody> {
 
   @override
   Widget build(BuildContext context) {
 
-
     DateTime now = DateTime.now();
-    int nowActualSales = widget.nowActualSales==null ? int.parse('0') : widget.nowActualSales!;
-    int nowTotalExpense = widget.nowTotalExpense==null ? int.parse('0') : widget.nowTotalExpense!;
-    int lastActualSales = widget.lastActualSales==null ? int.parse('0') : widget.lastActualSales!;
-    int lastTotalExpense = widget.lastTotalExpense==null ? int.parse('0') : widget.lastTotalExpense!;
+    int nowActualSales = widget.nowActualSales;
+    int nowTotalExpense =  widget.nowTotalExpense;
+    int lastActualSales =  widget.lastActualSales;
+    int lastTotalExpense =  widget.lastTotalExpense;
 
     UserModel userModel =
         Provider.of<UserModelState>(context, listen: false).userModel!;
@@ -166,18 +148,7 @@ class _AccountScreenBodyState extends State<AccountScreenBody> with SingleTicker
           icon: Icon(Icons.add, color: Colors.deepPurple[50],),
         ),
         actions: [
-                IconButton(
-                  color: Colors.deepPurple,
-                    icon: AnimatedIcon(
-                      icon: AnimatedIcons.menu_close,
-                      progress: _iconAniController,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        widget.onPageChanged!();
-                        _iconAniController.status == AnimationStatus.completed ? _iconAniController.reverse() : _iconAniController.forward();
-                      });
-                    }),
+
         ],
       );
   }

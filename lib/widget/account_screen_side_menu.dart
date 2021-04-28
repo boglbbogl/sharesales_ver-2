@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
+import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
+import 'package:sizer/sizer.dart';
 
 class AccountScreenSideMenu extends StatelessWidget {
 
 
   @override
   Widget build(BuildContext context) {
+
+    UserModelState userModelState = Provider.of<UserModelState>(context);
+
+
     return SafeArea(
       child: SizedBox(
         child: Column(
@@ -19,6 +25,7 @@ class AccountScreenSideMenu extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){
+                print(userModelState.userModel!.userName);
                 Provider.of<FirebaseAuthState>(context, listen: false)
                     .signOut();
               },

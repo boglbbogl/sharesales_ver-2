@@ -241,11 +241,14 @@ class SearchScreenChartForm extends StatelessWidget {
     return ExpandablePageView(
         controller: _pageBarChartViewController,
         children: [
-          _searchScreenBarChartToSalesAndExpense('실제매출', '총 지출',
+          _searchScreenBarChartToSalesAndExpense('실제매출', '총 지출',[Colors.deepPurple.shade600, Colors.deepPurple.shade400, Colors.deepPurple.shade300] ,
+              [Colors.pink.shade500, Colors.pink.shade400, Colors.pink.shade200],
                   (BarChartData data, _)=>data.actualSalesYValue, (BarChartData data, _)=>data.expenseTotalYValue, Colors.deepPurple, Colors.pink),
-          _searchScreenBarChartToSalesAndExpense('총 매출', '실제매출',
+          _searchScreenBarChartToSalesAndExpense('총 매출', '실제매출', [Colors.amber.shade700, Colors.amber.shade500, Colors.amber.shade400],
+              [Colors.deepPurple.shade500,Colors.deepPurple.shade400, Colors.deepPurple.shade200],
                   (BarChartData data, _)=>data.totalSalesYValue, (BarChartData data, _)=>data.actualSalesYValue, Colors.amber, Colors.deepPurple),
-          _searchScreenBarChartToSalesAndExpense('총 지출', '식자재',
+          _searchScreenBarChartToSalesAndExpense('총 지출', '식자재',[Colors.pink.shade600,Colors.pink.shade400, Colors.pink.shade300],
+              [Colors.lightBlue.shade600, Colors.lightBlue.shade400, Colors.lightBlue.shade300],
                   (BarChartData data, _)=>data.expenseTotalYValue, (BarChartData data, _)=>data.foodProvisionExpenseYValue, Colors.pink, Colors.lightBlue),
         ],
       );
@@ -301,7 +304,7 @@ class SearchScreenChartForm extends StatelessWidget {
     );
   }
 
-  Column _searchScreenBarChartToSalesAndExpense(String firstTitle, String secondTitle,
+  Column _searchScreenBarChartToSalesAndExpense(String firstTitle, String secondTitle, List<Color> firstColor, List<Color> secondColor,
        firstData, secondData, Color firstBadgeColor, Color secondBadgeColor) {
     return Column(
       children: [
@@ -335,6 +338,11 @@ class SearchScreenChartForm extends StatelessWidget {
                 trackColor: Colors.black12,
                 borderRadius: BorderRadius.only(topRight: Radius.circular(5), topLeft: Radius.circular(5)),
                 name: firstTitle,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: firstColor,
+                ),
               ),
               ColumnSeries<BarChartData, dynamic>(
                 dataSource: barChartData,
@@ -345,6 +353,11 @@ class SearchScreenChartForm extends StatelessWidget {
                 trackColor: Colors.black12,
                 borderRadius: BorderRadius.only(topRight: Radius.circular(5), topLeft: Radius.circular(5)),
                 name: secondTitle,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: secondColor,
+                ),
               ),
             ],
             legend: Legend(isVisible: false,),

@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'expense_text_add_create_form.dart';
+import 'package:sizer/sizer.dart';
+
 
 class ExpenseCreateForm extends StatelessWidget {
   final int? index;
@@ -47,39 +49,39 @@ class ExpenseCreateForm extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
-          height: expTtfHeightSize,
-          width: expTtfWidthSize,
+          height: 8.h,
+          width: 25.w,
           child: TextFormField(
             controller: startController,
             inputFormatters: [wonMaskFormatter],
             style: salesInputStyle(),
-            cursorColor: Colors.white,
+            cursorColor: Colors.pink,
             decoration: expenseInputDecor(startText),
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
           ),
         ),
         Container(
-          height: expTtfHeightSize,
-          width: expTtfWidthSize,
+          height: 8.h,
+          width: 25.w,
           child: TextFormField(
             controller: centerController,
             inputFormatters: [wonMaskFormatter],
             style: salesInputStyle(),
-            cursorColor: Colors.white,
+            cursorColor: Colors.pink,
             decoration: expenseInputDecor(centerText),
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
           ),
         ),
         Container(
-          height: expTtfHeightSize,
-          width: expTtfWidthSize,
+          height: 8.h,
+          width: 25.w,
           child: TextFormField(
             controller: endController,
             inputFormatters: [wonMaskFormatter],
             style: salesInputStyle(),
-            cursorColor: Colors.white,
+            cursorColor: Colors.pink,
             decoration: expenseInputDecor(endText),
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
