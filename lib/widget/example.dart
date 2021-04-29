@@ -1,25 +1,34 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sizer/sizer.dart';
 
-
-class Example extends StatefulWidget {
+class Exapmple2 extends StatefulWidget {
   @override
-  _ExampleState createState() => _ExampleState();
+  _Exapmple2State createState() => _Exapmple2State();
 }
 
-class _ExampleState extends State<Example> {
+class _Exapmple2State extends State<Exapmple2> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 90.w,
-        height: 20.h,
-        color: Colors.redAccent,
-        child: Text('sdklfjsdlkjf',style: TextStyle(fontSize: 20.sp),),
-      ),
+    return Scaffold(
+      body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                width: 90.w,
+                height: 10.h,
+                color: Colors.pinkAccent,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      width: 30.w,
+                      height: 10.h,
+                      color: Colors.amberAccent,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )),
     );
   }
 }

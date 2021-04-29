@@ -42,7 +42,7 @@ class _MainHomePageState extends State<MainHomePage> {
       else
         return ManagementScreen();
     }),
-    Example(),
+    Exapmple2(),
     Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
