@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/app_bar.dart';
 import 'package:sharesales_ver2/constant/color.dart';
-import 'package:sharesales_ver2/constant/duration.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
@@ -21,6 +23,13 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  AdvancedDrawerController _advancedDrawerController = AdvancedDrawerController();
+
+  @override
+  void dispose() {
+    _advancedDrawerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,77 +74,160 @@ class _AccountScreenState extends State<AccountScreen> {
         return SafeArea(
           child: GestureDetector(
             onTap: (){},
-            child: Scaffold(
-              appBar: mainAppBar(context, 'share sales', Colors.deepPurple[50],IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color: Colors.deepPurpleAccent,
-                ),
-                onPressed: () {
-
-                },
-              ),
-              appBarBottom: PreferredSize(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Text('돈까스상회',style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 28,
-                      foreground: Paint()..shader = secondMainColor,
-                    ),),
-                  ),
-                  preferredSize: Size(size.width*0.8, 50))
-              ),
-              backgroundColor: Colors.deepPurple[50],
-              body: SingleChildScrollView(
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 26.h,
-                        width: 80.w,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Container(
-                              height: 8.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.deepPurple.shade100,
-                              ),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: <Widget>[
-                                    _accountScreenNowLastMonthTextForm(now, Colors.lightBlueAccent, now.month),
-                                    _accountScreenMonthBodyTextForm(nowActualSales, nowTotalExpense),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 8.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.deepPurple.shade100,
-                              ),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: <Widget>[
-                                    _accountScreenMonthBodyTextForm(lastActualSales, lastTotalExpense),
-                                    _accountScreenNowLastMonthTextForm(now, Colors.orangeAccent, now.month-1),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            _accountScreenPostItFormByCompare(
-                                now, nowActualSales, lastActualSales, actualSalesPercentage, nowTotalExpense, lastTotalExpense, totalExpensePercentage),
-                          ],
+            child: AdvancedDrawer(
+              openRatio: 0.4,
+              backdropColor: Colors.pink.shade200,
+              controller: _advancedDrawerController,
+              drawer: SafeArea(
+                child: Container(
+                  child: ListTileTheme(
+                    textColor: Colors.white,
+                    iconColor: Colors.white,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        SizedBox(height: 15.h,),
+                        ListTile(
+                          onTap: () {},
+                          leading: Icon(Icons.delete_forever),
+                          title: Text('탈퇴하기'),
                         ),
-                      ),
-                    ],
+                        ListTile(
+                          onTap: () {
+                            Provider.of<FirebaseAuthState>(context, listen: false)
+                                .signOut();
+                          },
+                          leading: Icon(Icons.logout),
+                          title: Text('로그아웃'),
+                        ),
+                        SizedBox(height: 10.h,),
+                        ListTile(
+                          onTap: () {
+                            _advancedDrawerController.hideDrawer();
+                          },
+                          leading: Icon(Icons.home),
+                          title: Text('Home'),
+                        ),
+                        ListTile(
+                          onTap: () {},
+                          leading: Icon(Icons.account_circle_rounded),
+                          title: Text('프로필'),
+                        ),
+                        ListTile(
+                          onTap: (){},
+                          leading: Icon(Icons.create),
+                          title: Text('추가'),
+                        ),
+                        ListTile(
+                          onTap: (){},
+                          leading: Icon(Icons.search_rounded),
+                          title: Text('검색'),
+                        ),
+                        ListTile(
+                          onTap: () {},
+                          leading: Icon(Icons.settings),
+                          title: Text('설정'),
+                        ),
+                        ListTile(
+                          onTap: () {},
+                          leading: Icon(Icons.favorite),
+                          title: Text('고객센터'),
+                        ),
+                        Spacer(),
+                        DefaultTextStyle(
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white54,
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 16.0,
+                            ),
+                            child: Text('boglbbogl@gmail.com'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              child: Scaffold(
+                appBar: mainAppBar(context, 'share sales', Colors.pink[50],
+                    IconButton(color: Colors.deepPurple, icon: Icon(Icons.create), onPressed: (){},),
+                leadingIcon: IconButton(color: Colors.pink, icon: ValueListenableBuilder<AdvancedDrawerValue>(
+                  valueListenable: _advancedDrawerController,
+                  builder: (context, value, child) {
+                    return Icon(
+                      value.visible! ? Icons.clear : Icons.menu,
+                    );
+                  },
+                ),
+                  onPressed: () {
+                    _advancedDrawerController.showDrawer();
+                  },
+                ),
+                appBarBottom: PreferredSize(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: Text('돈까스상회',style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 28,
+                        foreground: Paint()..shader = secondMainColor,
+                      ),),
+                    ),
+                    preferredSize: Size(size.width*0.8, 50))
+                ),
+                backgroundColor: Colors.pink[50],
+                body: SingleChildScrollView(
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 26.h,
+                          width: 80.w,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Container(
+                                height: 8.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.lightBlue.shade300,
+                                ),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: <Widget>[
+                                      _accountScreenNowLastMonthTextForm(now, Colors.lightBlue.shade500, now.month),
+                                      _accountScreenMonthBodyTextForm(nowActualSales, nowTotalExpense),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 8.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.orange.shade300,
+                                ),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: <Widget>[
+                                      _accountScreenMonthBodyTextForm(lastActualSales, lastTotalExpense),
+                                      _accountScreenNowLastMonthTextForm(now, Colors.orange.shade500, now.month-1),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              _accountScreenPostItFormByCompare(
+                                  now, nowActualSales, lastActualSales, actualSalesPercentage, nowTotalExpense, lastTotalExpense, totalExpensePercentage),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -152,7 +244,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             height: 8.h,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Colors.deepPurple.shade100,
+                              color: Colors.red.shade100,
                             ),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
@@ -209,7 +301,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                           child: Center(
                                             child: Text(koFormatMoney.format(nowData-lastData)+'  \\   /   ' + percentage.toStringAsFixed(1)+'  %',
                                             style: TextStyle(
-                                              color: (nowData>lastData)? Colors.green.shade600:Colors.red, fontWeight: FontWeight.bold,
+                                              color: (nowData>lastData)? Colors.lightBlue:Colors.redAccent, fontWeight: FontWeight.bold,
                                               fontSize: 17,
                                             ),),
                                           ),
@@ -228,11 +320,11 @@ class _AccountScreenState extends State<AccountScreen> {
         children: <Widget>[
           Text('매출   ' + koFormatMoney.format(nowActualSales)+ '  \\',
             style: TextStyle(
-                color: Colors.black54, fontSize: 18),),
+                color: Colors.white, fontSize: 18),),
           SizedBox(height: 3,),
           Text('지출   ' + koFormatMoney.format(nowTotalExpense)+ '  \\',
             style: TextStyle(
-                color: Colors.black54, fontSize: 18),),
+                color: Colors.white, fontSize: 18),),
         ],
       ),
     );

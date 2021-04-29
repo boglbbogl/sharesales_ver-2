@@ -21,7 +21,7 @@ class _MainHomePageState extends State<MainHomePage> {
   int _selectedIndex = 0;
 
   List<BottomNavigationBarItem> _btmNavItems = [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: '',),
     BottomNavigationBarItem(icon: Icon(Icons.calendar_today_rounded), label: ''),
     BottomNavigationBarItem(icon: Icon(Icons.view_list), label: ''),
     BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: ''),
@@ -29,7 +29,12 @@ class _MainHomePageState extends State<MainHomePage> {
   ];
 
   List<Widget> _screenList = [
-    AdScreen(),
+    Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
+      if(userModelState == null || userModelState.userModel == null)
+        return MyProgressIndicator();
+      else
+        return AccountScreen();
+    }),
     Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
@@ -42,13 +47,8 @@ class _MainHomePageState extends State<MainHomePage> {
       else
         return ManagementScreen();
     }),
-    Exapmple2(),
-    Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
-      if(userModelState == null || userModelState.userModel == null)
-        return MyProgressIndicator();
-      else
-        return AccountScreen();
-    }),
+    HomeScreen(),
+    AdScreen(),
   ];
 
 
@@ -62,20 +62,21 @@ class _MainHomePageState extends State<MainHomePage> {
         index: _selectedIndex,
         children: _screenList,
       ),
-      bottomNavigationBar: _btmNav(),
+      bottomNavigationBar: _btmNav(
+      ),
     );
   }
 
   BottomNavigationBar _btmNav() {
     return BottomNavigationBar(
-      backgroundColor: Colors.white,
+      backgroundColor: _selectedIndex==0 ? Colors.pink.shade50 : _selectedIndex==1? Colors.deepPurple.shade50 : Colors.white,
       elevation: 1,
       type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndex,
       items: _btmNavItems,
       showSelectedLabels: false,
       showUnselectedLabels: false,
-      selectedItemColor: Colors.deepPurpleAccent,
+      selectedItemColor: _selectedIndex==0 ? Colors.pinkAccent : _selectedIndex==1? Colors.deepPurpleAccent : Colors.deepOrangeAccent,
       unselectedItemColor: Colors.black26,
       onTap: (index){
         setState(() {

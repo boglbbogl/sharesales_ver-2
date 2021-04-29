@@ -1,34 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
-class Exapmple2 extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _Exapmple2State createState() => _Exapmple2State();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _Exapmple2State extends State<Exapmple2> {
+class _HomeScreenState extends State<HomeScreen> {
+  final _advancedDrawerController = AdvancedDrawerController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                width: 90.w,
-                height: 10.h,
-                color: Colors.pinkAccent,
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: 30.w,
-                      height: 10.h,
-                      color: Colors.amberAccent,
-                    )
-                  ],
+    return AdvancedDrawer(
+      backdropColor: Colors.blueGrey,
+      controller: _advancedDrawerController,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Advanced Drawer Example'),
+          leading: IconButton(
+            onPressed: _handleMenuButtonPressed,
+            icon: ValueListenableBuilder<AdvancedDrawerValue>(
+              valueListenable: _advancedDrawerController,
+              builder: (context, value, child) {
+                return Icon(
+                  value.visible! ? Icons.clear : Icons.menu,
+                );
+              },
+            ),
+          ),
+        ),
+        body: Container(color: Colors.deepPurple,),
+      ),
+      drawer: SafeArea(
+        child: Container(
+          child: ListTileTheme(
+            textColor: Colors.white,
+            iconColor: Colors.white,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  width: 128.0,
+                  height: 128.0,
+                  margin: const EdgeInsets.only(
+                    top: 24.0,
+                    bottom: 64.0,
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Container(),
                 ),
-              ),
-            ],
-          )),
+                ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.home),
+                  title: Text('Home'),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.account_circle_rounded),
+                  title: Text('Profile'),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.favorite),
+                  title: Text('Favourites'),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
+                ),
+                Spacer(),
+                DefaultTextStyle(
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white54,
+                  ),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                    ),
+                    child: Text('Terms of Service | Privacy Policy'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
+  }
+
+  void _handleMenuButtonPressed() {
+    // NOTICE: Manage Advanced Drawer state through the Controller.
+    // _advancedDrawerController.value = AdvancedDrawerValue.visible();
+    _advancedDrawerController.showDrawer();
   }
 }

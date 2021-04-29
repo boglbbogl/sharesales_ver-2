@@ -3,6 +3,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sharesales_ver2/constant/app_bar.dart';
 import 'package:sharesales_ver2/constant/duration.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
@@ -85,6 +86,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: _selectedIndicator == SelectedIndicator.left ? Colors.deepPurple.shade50: Colors.pink.shade50,
         appBar: _createScreenAppbar(context),
         body: SingleChildScrollView(
           child: Builder(
@@ -93,8 +95,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                  Container(),
-                  DatePickerCreateForm(),
+                  SizedBox(height: 10,),
+                  //DatePickerCreateForm(),
                   _tapButton(),
                   _tapIndicator(),
                   SizedBox(
@@ -249,10 +251,18 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
     );
   }
 
+
   AppBar _createScreenAppbar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 10,
+      backgroundColor: _selectedIndicator==SelectedIndicator.left ? Colors.deepPurple.shade50 : Colors.pink.shade50,
+      elevation: 2,
+      bottom: PreferredSize(
+        preferredSize: Size(size.width*0.8, 50),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 0),
+          child: DatePickerCreateForm(),
+        ),
+      ),
       title: Text(
         'CREATE',
         style: TextStyle(

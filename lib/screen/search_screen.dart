@@ -170,8 +170,8 @@ class _SearchScreenState extends State<SearchScreen> {
               FocusScope.of(context).unfocus();
             },
             child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: mainAppBar(context, 'share sales', null,IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
+              backgroundColor: Colors.deepPurple.shade50,
+              appBar: mainAppBar(context, 'share sales', Colors.deepPurple.shade50,IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
                   onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
                 leadingIcon: IconButton(icon: Icon(Icons.autorenew_rounded),
                   color: circularChartSwitcher ? Colors.pinkAccent : Colors.green,

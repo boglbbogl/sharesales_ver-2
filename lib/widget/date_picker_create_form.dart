@@ -43,7 +43,7 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
                   color: Colors.deepOrangeAccent,
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
-                  fontSize: 22,
+                  fontSize: 26,
                 ),
               ),
             ),
