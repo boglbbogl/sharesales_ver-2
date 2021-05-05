@@ -6,7 +6,7 @@ import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 class UserNetworkRepository with Transformers {
   Future<void> attemptCreateUser({String? userKey, String? email}) async {
     final DocumentReference userReference =
-        FirebaseFirestore.instance.collection(COLLECTION_USERS).doc(userKey);
+    FirebaseFirestore.instance.collection(COLLECTION_USERS).doc(userKey);
 
     DocumentSnapshot snapshot = await userReference.get();
     if (!snapshot.exists) {

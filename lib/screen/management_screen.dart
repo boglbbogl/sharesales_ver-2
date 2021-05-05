@@ -72,7 +72,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
       stream: FirebaseFirestore.instance
           .collection(COLLECTION_SALES_MANAGEMENT)
           .doc(userModel.userKey)
-          .collection(userModel.userName!).orderBy("stdDate", descending: true)
+          .collection(userModel.email!).orderBy("stdDate", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
@@ -112,10 +112,10 @@ class _ManagementScreenState extends State<ManagementScreen> {
               color: Colors.deepPurpleAccent,
             ),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CreateManagementScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateManagementScreen()));
             },
           )),
             body: Column(

@@ -4,6 +4,7 @@ import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 
+
 class SignUpForm extends StatefulWidget {
   @override
   _SignUpFormState createState() => _SignUpFormState();
@@ -27,6 +28,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -86,14 +88,15 @@ class _SignUpFormState extends State<SignUpForm> {
                       }
                     },
                   ),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
                     child: FlatButton(
                       color: Colors.black,
-                        onPressed: (){
+                        onPressed: () {
                           if(_formKey.currentState!.validate()){
-                            print('기능잘 작동합니다');
-                            Provider.of<FirebaseAuthState>(context, listen: false).registerUser(context, email: _emailController.text, password: _pwController.text);
+                           Provider.of<FirebaseAuthState>(context, listen: false).registerUser(
+                                context, email: _emailController.text, password: _pwController.text,);
                           }
                         },
                         child: Text(

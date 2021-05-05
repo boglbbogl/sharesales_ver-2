@@ -12,7 +12,7 @@ class ManagementRepository {
       Map<String, dynamic> managementData) async {
 
     final DocumentReference managementReference = FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
-    .collection(userModel.userName!).doc(pickerDate.toUtc().toString().substring(0,10));
+    .collection(userModel.email!).doc(pickerDate.toUtc().toString().substring(0,10));
     final DocumentSnapshot managementSnapshot = await managementReference.get();
 
     String outputDate = pickerDate.toUtc().toString().substring(0,10);

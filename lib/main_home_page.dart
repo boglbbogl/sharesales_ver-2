@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
 import 'package:sharesales_ver2/screen/search_screen.dart';
+import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/example.dart';
 import 'constant/color.dart';
 import 'constant/size.dart';
 import 'firebase_auth/user_model_state.dart';
-import 'screen/account_screen.dart';
+import 'screen/main_screen.dart';
 import 'screen/ad_screen.dart';
 import 'widget/my_progress_indicator.dart';
 
@@ -33,7 +34,7 @@ class _MainHomePageState extends State<MainHomePage> {
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
       else
-        return AccountScreen();
+        return MainScreen();
     }),
     Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
@@ -48,9 +49,8 @@ class _MainHomePageState extends State<MainHomePage> {
         return ManagementScreen();
     }),
     HomeScreen(),
-    AdScreen(),
+    StoreDetailScreen(),
   ];
-
 
   @override
   Widget build(BuildContext context) {

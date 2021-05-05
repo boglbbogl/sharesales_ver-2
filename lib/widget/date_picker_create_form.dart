@@ -69,7 +69,7 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
                     pickerDate = selectedDate;
 
                 });
-                FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel!.userKey).collection(userModel.userName!)
+                FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel!.userKey).collection(userModel.email!)
                     .get().then((snap) {
                   snap.docs.forEach((element) {
                     if(!element.exists) {

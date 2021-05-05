@@ -117,7 +117,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                 ),
                                               ),
                                               onTap: () {
-                                                FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName)
+                                                FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.email)
                                                     .doc(snapshotData.id).delete();
                                                 Navigator.pop(context);
                                                 Navigator.pop(context);
@@ -193,18 +193,14 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                   return Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [Colors.green[500]!, Colors.green[500]!, Colors.green[400]!, Colors.green[300]!],
-                                      ),
+                                      color: Colors.white,
                                     ),
                                     height: size.height * 0.09,
                                     child: Padding(
-                                      padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                                      padding: const EdgeInsets.only(top: 3, left: 3, right: 3),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: Colors.black,
                                           borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
                                         ),
                                         child: Row(
@@ -216,14 +212,14 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(12),
                                                     bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
-                                                color: Colors.white,
+                                                color: Colors.black,
                                               ),
                                               width: size.width * 0.45,
                                               child: ListTile(horizontalTitleGap: 0.01,
-                                                leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
+                                                leading: Icon(Icons.add_outlined, color: Colors.black, size: 25,
                                                 ),
                                                 title: Text('   매출',
-                                                  style: TextStyle(color: Colors.green[800],fontWeight: FontWeight.bold, fontSize: 21),
+                                                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 21),
                                                 ),
                                                 onTap: () {
                                                   Navigator.pop(context);
@@ -297,7 +293,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                             onTap: () async{
 
                                                                               await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
-                                                                                  .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                  .collection(userModel.email).doc(snapshotData.id).update({
                                                                                 'totalSales': _totalSalesController.text.isEmpty ? int.parse('0') : int.parse(_totalSalesController.text.replaceAll(",", "")),
                                                                                 'actualSales': _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_actualSalesController.text.replaceAll(",", "")),
                                                                                 'vos' : _vosController.text.isEmpty ? int.parse('0') : int.parse(_vosController.text.replaceAll(",", "")),
@@ -336,7 +332,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                 },
                                               ),
                                             ),
-                                            Container(color: Colors.green,
+                                            Container(color: Colors.white,
                                               height: size.height * 0.06,
                                               width: size.width * 0.005,
                                             ),
@@ -344,14 +340,14 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(topRight: Radius.circular(30),topLeft: Radius.circular(12),
                                                     bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                                                color: Colors.white,
+                                                color: Colors.black,
                                               ),
                                               width: size.width * 0.45,
                                               child: ListTile(horizontalTitleGap: 0.01,
-                                                leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
+                                                leading: Icon(Icons.add_outlined, color: Colors.black, size: 25,
                                                 ),
                                                 title: Text('   지출',
-                                                  style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.bold, fontSize: 21),
+                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 21),
                                                 ),
                                                 onTap: () {
 
@@ -418,7 +414,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                               onTap: () async{
 
                                                                                 await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
-                                                                                    .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                    .collection(userModel.email).doc(snapshotData.id).update({
                                                                                   'foodProvisionExpense': _foodProvisionController.text.isEmpty ? int.parse('0') : int.parse(_foodProvisionController.text.replaceAll(",", "")),
                                                                                   'beverageExpense': _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
                                                                                   'alcoholExpense': _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_alcoholController.text.replaceAll(",", "")),
@@ -469,7 +465,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                             onPressed: () async{
 
                                                                               await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
-                                                                                  .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                  .collection(userModel.email).doc(snapshotData.id).update({
                                                                                 'foodProvisionExpense': _foodProvisionController.text.isEmpty ? int.parse('0') : int.parse(_foodProvisionController.text.replaceAll(",", "")),
                                                                                 'beverageExpense': _beverageController.text.isEmpty ? int.parse('0') : int.parse(_beverageController.text.replaceAll(",", "")),
                                                                                 'alcoholExpense': _alcoholController.text.isEmpty ? int.parse('0') : int.parse(_alcoholController.text.replaceAll(",", "")),
@@ -587,7 +583,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                                                             }]);
                                                                                                           });
                                                                                                           await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
-                                                                                                              .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                              .collection(userModel.email).doc(snapshotData.id).update({
                                                                                                             'expenseAddTotalAmount': FieldValue.increment(int.parse(_editAddExpenseAmountController.text.replaceAll(',', ""))),
                                                                                                             'expenseAddList': FieldValue.arrayUnion([{
                                                                                                               'title': _editAddExpenseTitleController.text.trim(),
@@ -648,7 +644,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                                                                         onTap: () async{
 
                                                                                                                           await FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey)
-                                                                                                                              .collection(userModel.userName).doc(snapshotData.id).update({
+                                                                                                                              .collection(userModel.email).doc(snapshotData.id).update({
                                                                                                                             'expenseAddTotalAmount': FieldValue.increment(-_showExpenseAmountFormat!),
                                                                                                                             'expenseAddList': FieldValue.arrayRemove([
                                                                                                                               upDateExpenseAddList[index]]),

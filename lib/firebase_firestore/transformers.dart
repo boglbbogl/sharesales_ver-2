@@ -7,8 +7,8 @@ import 'management_model.dart';
 class Transformers {
   final toUser = StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, sink) async {
-     sink.add(UserModel.fromSnapshot(snapshot));
-  });
+       sink.add(UserModel.fromSnapshot(snapshot));
+      });
 
   final toSales =
       StreamTransformer<DocumentSnapshot, ManagementModel>.fromHandlers(

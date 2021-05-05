@@ -41,3 +41,14 @@ class CircularChartData{
   CircularChartData({this.title, this.color,this.radialExpense, this.radialSales, this.radialMainShow, this.pieSales,
     this.doughnutMain, this.doughnutExpense, this.labelTitle});
 }
+
+class LineChartData{
+  final String? month;
+  final String? title;
+  final int? nowActualSales;
+  final int? nowTotalExpense;
+  final int? lastActualSales;
+  final int? lastTotalExpense;
+
+  LineChartData({this.month, this.nowActualSales, this.nowTotalExpense, this.lastActualSales, this.lastTotalExpense, this.title});
+}

@@ -69,7 +69,7 @@ class _SearchScreenState extends State<SearchScreen> {
     UserModel userModel = Provider.of<UserModelState>(context, listen: false).userModel!;
 
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.userName!)
+      stream: FirebaseFirestore.instance.collection(COLLECTION_SALES_MANAGEMENT).doc(userModel.userKey).collection(userModel.email!)
       .where('stdDate', isGreaterThanOrEqualTo: _rangePickerStartDateTime,
           isLessThanOrEqualTo: _rangePickerEndDateTime==null?_rangePickerStartDateTime!.add(Duration(days: 1)):_rangePickerEndDateTime!.add(Duration(days: 1)))
           .snapshots(),
@@ -164,6 +164,7 @@ class _SearchScreenState extends State<SearchScreen> {
             CircularChartData(title: "추가지출", color: Colors.green, labelTitle: doughnutExpenseAddAmount.toStringAsFixed(1)+' %', doughnutExpense: doughnutExpenseAddAmount.isNaN ? 0.0 : doughnutExpenseAddAmount),
           ];
 
+
         return SafeArea(
           child: GestureDetector(
             onTap: (){
@@ -171,7 +172,8 @@ class _SearchScreenState extends State<SearchScreen> {
             },
             child: Scaffold(
               backgroundColor: Colors.deepPurple.shade50,
-              appBar: mainAppBar(context, 'share sales', Colors.deepPurple.shade50,IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
+              appBar: mainAppBar(context, 'share sales', Colors.deepPurple.shade50,
+                IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
                   onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
                 leadingIcon: IconButton(icon: Icon(Icons.autorenew_rounded),
                   color: circularChartSwitcher ? Colors.pinkAccent : Colors.green,
