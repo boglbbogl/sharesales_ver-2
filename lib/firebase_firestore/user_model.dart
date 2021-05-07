@@ -37,7 +37,7 @@ class UserModel {
     Map<String, dynamic>? map = Map();
     // map[KEY_USERNAME] = email!.isEmpty ? '' : email.split('@')[0];
     map[KEY_USERNAME] = '';
-    map[KEY_EMAIL] = email;
+    map[KEY_EMAIL] = email!.isEmpty ? 'error':email;
     map[KEY_REPRESENTATIVE] = '';
     map[KEY_STORENAME] = '';
     map[KEY_STORECODE] = '';

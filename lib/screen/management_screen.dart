@@ -10,9 +10,11 @@ import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
+import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/management_screen_folding_cell_list.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'create_management_screen.dart';
+import 'package:sizer/sizer.dart';
 
 final koFormatMoney = NumberFormat.simpleCurrency(locale: "ko_KR", name: '', decimalDigits: 0);
 
@@ -112,11 +114,40 @@ class _ManagementScreenState extends State<ManagementScreen> {
               color: Colors.deepPurpleAccent,
             ),
             onPressed: () {
+              if(userModel.storeCode!.isEmpty && userModel.storeCode!.length==0){
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context){
+                      return AlertDialog(
+                        title: Text('사업자등록증 미인증'),
+                        content: Text('사업자등록증 인증 후 이용해 주세요'),
+                        actions: [
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StoreDetailScreen()));
+
+                          },
+                          child: Text('등록하기'),
+                        ),
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('닫기'),
+                          )
+                        ],
+                      );
+                    });
+              }else {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => CreateManagementScreen()));
-            },
+              }},
           )),
             body: Column(
               mainAxisSize: MainAxisSize.min,

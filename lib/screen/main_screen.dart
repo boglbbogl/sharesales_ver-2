@@ -13,6 +13,7 @@ import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
+import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/main_screen_chart_form.dart';
 import 'package:sharesales_ver2/widget/main_screen_tab_indicator_form.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
@@ -302,7 +303,12 @@ class _MainScreenState extends State<MainScreen> {
                           title: Text('Home'),
                         ),
                         ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StoreDetailScreen()));
+                          },
                           leading: Icon(Icons.account_circle_rounded),
                           title: Text('프로필'),
                         ),

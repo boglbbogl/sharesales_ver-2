@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +51,6 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     Provider.of<UserModelState>(context, listen: false).userModel;
 
     // var _specialChar = ';^\\\$()[](){}*|/';
-
 
     return GestureDetector(
       onTap: ()=> FocusScope.of(context).unfocus(),
@@ -121,9 +119,11 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                           _typeOfServiceController.clear();
                           _typeOfBusinessController.clear();
                           _storeLocationController.clear();
-                        } else {
+                          Navigator.of(context).pop();
+                            } else {
 
                             }
+
                           }),
                       _storeDetailScreenTextButton('나중에 ',Colors.cyan,
                           onPressed: (){

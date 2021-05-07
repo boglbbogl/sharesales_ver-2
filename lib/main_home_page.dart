@@ -5,11 +5,9 @@ import 'package:sharesales_ver2/screen/management_screen.dart';
 import 'package:sharesales_ver2/screen/search_screen.dart';
 import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/example.dart';
-import 'constant/color.dart';
 import 'constant/size.dart';
 import 'firebase_auth/user_model_state.dart';
 import 'screen/main_screen.dart';
-import 'screen/ad_screen.dart';
 import 'widget/my_progress_indicator.dart';
 
 class MainHomePage extends StatefulWidget {
