@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
-import 'package:sharesales_ver2/constant/size.dart';
 import 'expense_text_add_create_form.dart';
 import 'package:sizer/sizer.dart';
 

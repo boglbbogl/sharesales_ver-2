@@ -49,7 +49,7 @@ class SalesCreateForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        _createTextForm('총매출', '실제매출', _totalSalesController, _actualSalesController),
+        _createTextForm('총매출', '실제매출', _totalSalesController, _actualSalesController, validator: _salesInputValidator),
         _createTextForm('공급가액','세액', _vosController, _vatController),
         _createTextForm('할인','신용카드', _discountController, _creditCardController),
         _createTextForm('현금','현금영수증', _cashController, _cashReceiptController),
@@ -62,7 +62,7 @@ class SalesCreateForm extends StatelessWidget {
       String leftText,
       String rightText,
       TextEditingController startController,
-      TextEditingController endController) {
+      TextEditingController endController,{validator}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -87,7 +87,7 @@ class SalesCreateForm extends StatelessWidget {
           child: TextFormField(
             controller: endController,
             inputFormatters: [wonMaskFormatter],
-            // validator: _salesInputValidator,
+            validator: validator,
             style: salesInputStyle(),
             cursorColor: Colors.deepPurple,
             decoration: blackInputDecor(rightText),

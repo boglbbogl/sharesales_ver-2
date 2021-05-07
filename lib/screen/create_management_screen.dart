@@ -174,10 +174,10 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                 children: [
                   Badge(
                     showBadge: _showTabBarBadge,
-                    position: BadgePosition.bottomEnd(bottom: 9, end: 10),
+                    position: BadgePosition.bottomEnd(bottom: 12, end: 10),
                     badgeColor: _selectedIndicator == SelectedIndicator.right
-                        ? Colors.deepPurple
-                        : Colors.pink,
+                        ? Colors.lightBlue
+                        : Colors.pinkAccent,
                     badgeContent: InkWell(
                       onTap: () {
                         setState(() {
@@ -188,7 +188,7 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                       },
                       child: ImageIcon(
                         AssetImage('assets/images/exclamation_mark.png'),
-                        size: 17,
+                        size: 10,
                       ),
                     ),
                     child: InkWell(
@@ -290,8 +290,8 @@ class _CreateManagementScreenState extends State<CreateManagementScreen> {
                 showBadge: _showTabBarBadge,
                 position: BadgePosition.topEnd(end: 5, top: 5),
                 badgeColor: _selectedIndicator == SelectedIndicator.right
-                    ? Colors.deepPurple
-                    : Colors.pink,
+                    ? Colors.lightBlue
+                    : Colors.pinkAccent,
                 child: IconButton(
                   icon: Icon(Icons.save_alt_rounded, size: 35,),
                   onPressed: () async{

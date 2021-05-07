@@ -83,7 +83,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
               width: 90.w,
             ),
             Container(
-              height: 30,
+              height: 3.h,
               width: 50.w,
               child: RaisedButton(
                 onPressed: () {
@@ -143,12 +143,12 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
               children: [
                 Badge(
                   showBadge: _titleBadge,
-                  position: BadgePosition.topEnd(end: 10, top: 30),
+                  position: BadgePosition.topEnd(end: 10, top: 20),
                   badgeColor: Colors.green,
                   child: TextFormField(
                     controller: expenseTitleController,
                     style: salesInputStyle(),
-                    cursorColor: Colors.white,
+                    cursorColor: Colors.pink,
                     decoration: expenseTextAddInputDecor('내용'),
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
@@ -164,13 +164,13 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
               children: [
                 Badge(
                   showBadge: _amountBadge,
-                  position: BadgePosition.topEnd(end: 10, top: 30),
+                  position: BadgePosition.topEnd(end: 10, top: 20),
                   badgeColor: Colors.green,
                   child: TextFormField(
                     inputFormatters: [wonMaskFormatter],
                     controller: expenseAmountController,
                     style: salesInputStyle(),
-                    cursorColor: Colors.white,
+                    cursorColor: Colors.pink,
                     decoration: expenseTextAddInputDecor('지출금액'),
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
@@ -202,7 +202,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
               // _toggleExpense(addText);123123
             },
           title: Text(
-              expense.values.first, style: TextStyle(color: Colors.black),
+              expense.values.first, style: TextStyle(color: Colors.black54),
               ),
             ),
         ),
@@ -210,7 +210,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
           padding: const EdgeInsets.only(bottom: 19, left: 10),
           child: Text(
             '/ ',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black54),
           ),
         ),
         Flexible(
@@ -220,7 +220,7 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
             },
             title: Text(
               koFormatMoney.format(expense.values.last),
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: Colors.black54),
             ),
             trailing: SizedBox(
               width: 35,

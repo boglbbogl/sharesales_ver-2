@@ -81,15 +81,18 @@ InputDecoration salesChangeInputDecor(String hint) {
 
   );
 }
-InputDecoration storeDetailScreenInputDecor(String label, String hint){
+InputDecoration storeDetailScreenInputDecor(String label, String hint,){
   return InputDecoration(
     enabledBorder: _storeDetailScreenActiveInputDecor(Colors.cyan.shade500),
     focusedBorder: _storeDetailScreenActiveInputDecor(Colors.cyan.shade500),
     errorBorder: _storeDetailScreenErrorInputDecor(),
+    focusedErrorBorder: _storeDetailScreenErrorInputDecor(),
     labelText: label,
+    errorStyle: TextStyle(fontSize: 12, color: Colors.pink),
+    isDense: true,
     hintText: hint,
     alignLabelWithHint: true,
-    labelStyle: TextStyle(color: Colors.cyan,),
+    labelStyle: TextStyle(color: Colors.cyan),
   );
 }
 
@@ -115,6 +118,8 @@ InputDecoration blackInputDecor(String hint) {
     focusedBorder: _blackActiveInputBorder(),
     errorBorder: _blackErrorInputBorder(),
     focusedErrorBorder: _blackErrorInputBorder(),
+    errorStyle: TextStyle(color: Colors.pink),
+
     labelText: hint,
     labelStyle: TextStyle(color: Colors.deepPurple),
   );

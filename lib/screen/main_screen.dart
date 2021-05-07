@@ -276,75 +276,57 @@ class _MainScreenState extends State<MainScreen> {
                   child: ListTileTheme(
                     textColor: Colors.white,
                     iconColor: Colors.white,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
+                    child: ListView(
+                      shrinkWrap: true,
                       children: [
-                        SizedBox(height: 8.h,),
-                        Container(
-                          // height: 70.h,
-                          child: Column(
-                            children: [
-                              ListTile(
-                                onTap: () {},
-                                leading: Icon(Icons.delete_forever),
-                                title: Text('탈퇴하기'),
-                              ),
-                              ListTile(
-                                onTap: () {
-                                  Provider.of<FirebaseAuthState>(context, listen: false)
-                                      .signOut();
-                                },
-                                leading: Icon(Icons.logout),
-                                title: Text('로그아웃'),
-                              ),
-                              SizedBox(height: 5.h,),
-                              ListTile(
-                                onTap: () {
-                                  _advancedDrawerController.hideDrawer();
-                                },
-                                leading: Icon(Icons.home),
-                                title: Text('Home'),
-                              ),
-                              ListTile(
-                                onTap: () {},
-                                leading: Icon(Icons.account_circle_rounded),
-                                title: Text('프로필'),
-                              ),
-                              ListTile(
-                                onTap: (){},
-                                leading: Icon(Icons.create),
-                                title: Text('추가'),
-                              ),
-                              ListTile(
-                                onTap: (){},
-                                leading: Icon(Icons.search_rounded),
-                                title: Text('검색'),
-                              ),
-                              ListTile(
-                                onTap: () {},
-                                leading: Icon(Icons.settings),
-                                title: Text('설정'),
-                              ),
-                              ListTile(
-                                onTap: () {},
-                                leading: Icon(Icons.favorite),
-                                title: Text('고객센터'),
-                              ),
-                            ],
-                          ),
+                        // SizedBox(height: 8.h,),
+                        ListTile(
+                          onTap: () {},
+                          leading: Icon(Icons.delete_forever),
+                          title: Text('탈퇴하기'),
                         ),
-                        // SizedBox(height: 7.h,),
-                        Spacer(),
-                        DefaultTextStyle(
-                          style: TextStyle(
-                            fontSize: 8,
-                            color: Colors.white54,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 1.h),
-                            child: Text('해당 어플은 판매를 목적으로 개발되었습니다.'),
-                          ),
+                        ListTile(
+                          onTap: () {
+                            Provider.of<FirebaseAuthState>(context, listen: false)
+                                .signOut();
+                          },
+                          leading: Icon(Icons.logout),
+                          title: Text('로그아웃'),
                         ),
+                        SizedBox(height: 5.h,),
+                        ListTile(
+                          onTap: () {
+                            _advancedDrawerController.hideDrawer();
+                          },
+                          leading: Icon(Icons.home),
+                          title: Text('Home'),
+                        ),
+                        ListTile(
+                          onTap: () {},
+                          leading: Icon(Icons.account_circle_rounded),
+                          title: Text('프로필'),
+                        ),
+                        ListTile(
+                          onTap: (){},
+                          leading: Icon(Icons.create),
+                          title: Text('추가'),
+                        ),
+                        ListTile(
+                          onTap: (){},
+                          leading: Icon(Icons.search_rounded),
+                          title: Text('검색'),
+                        ),
+                        ListTile(
+                          onTap: () {},
+                          leading: Icon(Icons.settings),
+                          title: Text('설정'),
+                        ),
+                        ListTile(
+                          onTap: () {},
+                          leading: Icon(Icons.favorite),
+                          title: Text('고객센터'),
+                        ),
+
                       ],
                     ),
                   ),

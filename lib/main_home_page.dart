@@ -49,7 +49,12 @@ class _MainHomePageState extends State<MainHomePage> {
         return ManagementScreen();
     }),
     HomeScreen(),
-    StoreDetailScreen(),
+    Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
+      if(userModelState == null || userModelState.userModel == null)
+        return MyProgressIndicator();
+      else
+        return StoreDetailScreen();
+    }),
   ];
 
   @override

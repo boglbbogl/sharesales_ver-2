@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/size.dart';
+import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
+import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sizer/sizer.dart';
 
@@ -110,9 +113,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _toggleValue = 0;
   @override
   Widget build(BuildContext context) {
+
+    // UserModel userModel =
+    // Provider.of<UserModelState>(context, listen: false).userModel!;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Toggle Button'),
@@ -130,18 +136,35 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedToggle(
-              values: ['English', 'Arabic'],
-              onToggleCallback: (value) {
+            InkWell(
+              child: Container(
+                width: 50.w,
+                height: 10.h,
+                color: Colors.black,
+              ),
+              onTap: (){
                 setState(() {
-                  _toggleValue = value;
+
                 });
               },
-              buttonColor: const Color(0xFF0A3157),
-              backgroundColor: const Color(0xFFB5C1CC),
-              textColor: const Color(0xFFFFFFFF),
             ),
-            Text('Toggle Value : $_toggleValue'),
+            TextFormField(
+              decoration: InputDecoration(
+              ),
+                         ),
+            // Text(userModel.userKey),
+            // Text(userModel.email!),
+            // Text(userModel.userName!),
+            // Text(userModel.storeName!),
+            // Text(userModel.representative!),
+            // Text(userModel.storeLocation!),
+            // Text(userModel.typeOfService!),
+            // Text(userModel.typeOfBusiness!),
+            // Text(userModel.openDate!),
+            // Text(userModel.pocCode!),
+            // Text(userModel.storeCode!),
+            // Text(userModel.personalOrCorporate!),
+
           ],
         ),
       ),
