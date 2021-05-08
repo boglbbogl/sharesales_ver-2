@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
+import 'package:sharesales_ver2/constant/app_bar.dart';
+import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
@@ -50,14 +52,13 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     UserModel? userModel =
     Provider.of<UserModelState>(context, listen: false).userModel;
 
-    // var _specialChar = ';^\\\$()[](){}*|/';
+    var _specialChar = ';^\\\$()[](){}*|/';
 
     return GestureDetector(
       onTap: ()=> FocusScope.of(context).unfocus(),
           child: Scaffold(
             resizeToAvoidBottomInset: true,
-            appBar: AppBar(backgroundColor: Colors.cyan.shade100,elevation: 0,
-            title: Text('세부 사항 등록'),),
+            appBar: mainAppBar(context, detailScreenAppBarColor,'사업자 인증', Colors.cyan.shade100, Icon(Icons.warning, color: Colors.cyan.shade100,), backBtn: false),
             backgroundColor: Colors.cyan.shade100,
             body: Form(
               key: _formKey,
@@ -66,24 +67,25 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                 child: ListView(
                     shrinkWrap: true,
                     children: <Widget>[
+                      SizedBox(height: 1.h,),
                       _storeDetailScreenGroupButtonForm(),
                       _storeDetailScreenHalfTextForm('사업자 등록 번호','',  _storeCodeController, TextInputType.number,
                           inputFormatter: [MaskedInputFormatter('###-##-#####')],
-                          validator: (text)=>text!.toString().length==12?null:'정확하게 입력해 주세요'),
+                          validator: (text)=>text!.toString().trim().length==12?null:'정확하게 입력해 주세요'),
                       _storeDetailScreenHalfTextForm('대표자','',  _representativeController, TextInputType.text,
-                          inputFormatter:  [], validator: (text)=>text!.isNotEmpty?null:'', ),
+                          inputFormatter:  [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣]'))], validator: (text)=>text!.isNotEmpty?null:'', ),
                       _storeDetailScreenHalfTextForm(_pocSelected==0?'상호명':'법인명','',  _storeNameController, TextInputType.text,
                           inputFormatter:  [], validator: (text)=>text!.isNotEmpty?null:''),
                       _pocSelected==0 ? _storeDetailScreenHalfTextForm('생년월일', 'ex) 2000-11-11', _pocCodeController, TextInputType.number,
-                      inputFormatter: [MaskedInputFormatter('####-##-##')], validator: (text)=>text!.toString().length==10?null:'정확하게 입력해 주세요') :
+                      inputFormatter: [MaskedInputFormatter('####-##-##')], validator: (text)=>text!.toString().trim().length==10?null:'정확하게 입력해 주세요') :
                           _storeDetailScreenHalfTextForm('법인등록번호', '123456-7891011', _pocCodeController, TextInputType.number,
-                          inputFormatter: [MaskedInputFormatter('######-#######')], validator: (text)=>text!.toString().length==14?null:'정확하게 입력해 주세요'),
+                          inputFormatter: [MaskedInputFormatter('######-#######')], validator: (text)=>text!.toString().trim().length==14?null:'정확하게 입력해 주세요'),
                       _storeDetailScreenHalfTextForm('개업일','ex) 2020-01-01',  _openDateController, TextInputType.number,
-                          inputFormatter:  [MaskedInputFormatter('####-##-##')], validator: (text)=>text!.toString().length==10?null:'정확하게 입력해 주세요'),
+                          inputFormatter:  [MaskedInputFormatter('####-##-##')], validator: (text)=>text!.toString().trim().length==10?null:'정확하게 입력해 주세요'),
                       _storeDetailScreenHalfTextForm('업태','대표 업태 하나만 작성하세요',  _typeOfServiceController, TextInputType.text,
-                          inputFormatter:  [], validator: (text)=>text.isNotEmpty?null:''),
+                          inputFormatter:  [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣]'))], validator: (text)=>text.isNotEmpty?null:''),
                       _storeDetailScreenHalfTextForm('종목','대표 종목 하나만 작성하세요',  _typeOfBusinessController, TextInputType.text,
-                          inputFormatter:  [], validator: (text)=>text.isNotEmpty?null:''),
+                          inputFormatter:  [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣]'))], validator: (text)=>text.isNotEmpty?null:''),
                       _storeDetailScreenHalfTextForm('사업장 소재지','',  _storeLocationController, TextInputType.text,
                           inputFormatter:  []),
                       Padding(
@@ -127,7 +129,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                           }),
                       _storeDetailScreenTextButton('나중에 ',Colors.cyan,
                           onPressed: (){
-                        print(_pocSelected);
+                        Navigator.of(context).pop();
                           }),
 
                     ],
@@ -144,8 +146,8 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     return Center(
                       child: GroupButton(
                         spacing: 10,
-                        buttonHeight: 3.h,
-                        buttonWidth: 25.w,
+                        buttonHeight: 4.h,
+                        buttonWidth: 27.w,
                         selectedColor: Colors.lightBlue,
                         unselectedColor: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(12),

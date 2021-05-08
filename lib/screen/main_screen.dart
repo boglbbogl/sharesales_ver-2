@@ -1,10 +1,13 @@
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:sharesales_ver2/constant/alert_dialog_form.dart';
 import 'package:sharesales_ver2/constant/app_bar.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
@@ -13,6 +16,7 @@ import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
+import 'package:sharesales_ver2/screen/create_management_screen.dart';
 import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/main_screen_chart_form.dart';
 import 'package:sharesales_ver2/widget/main_screen_tab_indicator_form.dart';
@@ -22,6 +26,8 @@ import 'management_screen.dart';
 
 
 class MainScreen extends StatefulWidget {
+
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -259,14 +265,10 @@ class _MainScreenState extends State<MainScreen> {
           nowTotalExpense: chartNowDecExpense.isEmpty ? int.parse('0'):chartNowDecExpense.reduce((v, e) => v+e),
           lastTotalExpense: chartLastDecExpense.isEmpty ? int.parse('0'):chartLastDecExpense.reduce((v, e) => v+e)),
         ];
-
-
+        
         return SafeArea(
           child: GestureDetector(
             onTap: (){
-              print(nowActualSalesList);
-              print(DateTime(now.year).toString().substring(0,4) + '-01');
-              print(chartNowMarSales);
             },
             child: AdvancedDrawer(
               openRatio: 0.4,
@@ -282,14 +284,23 @@ class _MainScreenState extends State<MainScreen> {
                       children: [
                         // SizedBox(height: 8.h,),
                         ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            alertDialogForm(context, type: CoolAlertType.warning, title: '탈퇴 하시겠습니까 ?', text: '모든 정보는 복구 불가합니다',
+                                confirmBtnText: '탈퇴하기', backColors: Colors.redAccent, confirmBtnColors: Colors.redAccent, onConfirmBtnTap: (){
+                                  print('탈퇴폼');
+                                });
+                          },
                           leading: Icon(Icons.delete_forever),
                           title: Text('탈퇴하기'),
                         ),
                         ListTile(
-                          onTap: () {
-                            Provider.of<FirebaseAuthState>(context, listen: false)
-                                .signOut();
+                          onTap: () async{
+                            alertDialogForm(context, type: CoolAlertType.warning, title: '로그아웃 하시겠습니까 ?', text: '', confirmBtnText: '로그아웃',
+                                backColors: Colors.pinkAccent, confirmBtnColors: Colors.pinkAccent, onConfirmBtnTap: (){
+                              Navigator.of(context).pop();
+                              Provider.of<FirebaseAuthState>(context, listen: false)
+                                  .signOut();
+                                });
                           },
                           leading: Icon(Icons.logout),
                           title: Text('로그아웃'),
@@ -297,23 +308,49 @@ class _MainScreenState extends State<MainScreen> {
                         SizedBox(height: 5.h,),
                         ListTile(
                           onTap: () {
-                            _advancedDrawerController.hideDrawer();
+                            if(userModel.storeCode!.isEmpty || userModel.storeCode!.length==0 || userModel.storeName!.isEmpty || userModel.storeName!.length==0 ||
+                                userModel.personalOrCorporate!.isEmpty || userModel.pocCode!.isEmpty || userModel.openDate!.isEmpty || userModel.representative!.isEmpty ||
+                                userModel.typeOfBusiness!.isEmpty || userModel.typeOfService!.isEmpty){
+                              _advancedDrawerController.hideDrawer();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => StoreDetailScreen()));
+                            } else{
+                              alertDialogForm(context, type: CoolAlertType.success, title: '인증완료', text: '수정을 하시겠습니까 ?', confirmBtnText: '수정하기',
+                                  backColors: Colors.amber, confirmBtnColors: Colors.amber, onConfirmBtnTap: (){
+                                    Navigator.of(context).pop();
+                                  });
+                            }
                           },
-                          leading: Icon(Icons.home),
-                          title: Text('Home'),
+                          leading: Icon(Icons.warning),
+                          title: Text('사업자 인증'),
                         ),
                         ListTile(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => StoreDetailScreen()));
+                            _advancedDrawerController.hideDrawer();
+                            _mainScreenProfileSimpleBottomSheetForm(context, userModel);
                           },
-                          leading: Icon(Icons.account_circle_rounded),
+                          leading: Icon(Icons.account_circle),
                           title: Text('프로필'),
                         ),
                         ListTile(
-                          onTap: (){},
+                          onTap: (){
+                            if(userModel.storeCode!.isEmpty || userModel.storeCode!.length==0 || userModel.storeName!.isEmpty || userModel.storeName!.length==0 ||
+                                userModel.personalOrCorporate!.isEmpty || userModel.pocCode!.isEmpty || userModel.openDate!.isEmpty || userModel.representative!.isEmpty ||
+                                userModel.typeOfBusiness!.isEmpty || userModel.typeOfService!.isEmpty){
+                              alertDialogForm(context, type: CoolAlertType.error, title: '사업자 인증 후 이용해 주세요', text: '', confirmBtnText: '등록하기',
+                                  backColors: Colors.cyan, confirmBtnColors: Colors.cyan, onConfirmBtnTap: (){
+                                    Navigator.of(context).pop();
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreDetailScreen()));
+                                  });
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CreateManagementScreen()));
+                            }
+                          },
                           leading: Icon(Icons.create),
                           title: Text('추가'),
                         ),
@@ -339,8 +376,22 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               child: Scaffold(
-                appBar: mainAppBar(context, 'share sales', Colors.pink[50],
+                appBar: mainAppBar(context, secondMainColor,'share sales', Colors.pink[50],
                     IconButton(color: Colors.deepPurple, icon: Icon(Icons.create), onPressed: (){
+                   if(userModel.storeCode!.isEmpty || userModel.storeCode!.length==0 || userModel.storeName!.isEmpty || userModel.storeName!.length==0 ||
+                       userModel.personalOrCorporate!.isEmpty || userModel.pocCode!.isEmpty || userModel.openDate!.isEmpty || userModel.representative!.isEmpty ||
+                       userModel.typeOfBusiness!.isEmpty || userModel.typeOfService!.isEmpty){
+                     alertDialogForm(context, type: CoolAlertType.error, title: '사업자 인증 후 이용해 주세요', text: '', confirmBtnText: '등록하기',
+                         backColors: Colors.cyan, confirmBtnColors: Colors.cyan, onConfirmBtnTap: (){
+                           Navigator.of(context).pop();
+                           Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreDetailScreen()));
+                         });
+                   } else {
+                     Navigator.push(
+                         context,
+                         MaterialPageRoute(
+                             builder: (context) => CreateManagementScreen()));
+                   }
                     }),
                 leadingIcon: IconButton(color: Colors.pink, icon: ValueListenableBuilder<AdvancedDrawerValue>(
                   valueListenable: _advancedDrawerController,
@@ -357,7 +408,7 @@ class _MainScreenState extends State<MainScreen> {
                 appBarBottom: PreferredSize(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text('돈까스상회',style: TextStyle(
+                      child: Text(userModel.storeName!, style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
                         fontSize: 28,
@@ -455,6 +506,88 @@ class _MainScreenState extends State<MainScreen> {
         );
       },
     );
+  }
+
+  Future _mainScreenProfileSimpleBottomSheetForm(BuildContext context, UserModel userModel) {
+    return showMaterialModalBottomSheet(
+                duration: Duration(milliseconds: 2000),
+                closeProgressThreshold: 5.0,
+                elevation: 0,
+                enableDrag: true,
+                animationCurve: Curves.fastOutSlowIn,
+                barrierColor: Colors.white12,
+                backgroundColor: Colors.white12,
+                context: context, builder: (BuildContext context){
+              return Container(
+                height: 45.h,
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: DefaultTextStyle(
+                  style: TextStyle(color: Colors.white, fontFamily: 'Yanolja', fontSize: 19),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: ListView(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 1.h),
+                          child: Center(child: Text(userModel.storeCode!, style: TextStyle(fontSize: 22),)),
+                        ),
+                        Container(
+                          child: Center(child: Text(userModel.personalOrCorporate=='개인' ? '개인사업자' : '법인사업자')),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 2.h),
+                          width: 90.w,height: 0.1.h, color: Colors.deepOrangeAccent,),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 1.h),
+                          child: Text(userModel.personalOrCorporate=='개인' ? '상         호   :   ' + userModel.storeName! :'법   인   명   :   ' + userModel.storeName! ),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.symmetric(vertical: 1.h),
+                                child: Text('성         명   :   ' + userModel.representative!),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 1.h),
+                              child: Text(userModel.personalOrCorporate=='개인' ? '생년월일   :   ' +userModel.pocCode! : '법인등록번호   :   ' + userModel.pocCode!.substring(0,8)),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 1.h),
+                          child: Text('개업연월일   :   ' + userModel.openDate!),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 1.h),
+                          child: Text('사업장소재지'),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 3.h, bottom: 1.h),
+                          child: Text(userModel.storeLocation!),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 1.h),
+                          child: Text('사업의종류'),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 3.h),
+                          child: Text('업태 : ' + userModel.typeOfService!),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 3.h),
+                          child: Text('업종 : ' + userModel.typeOfBusiness!),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            });
   }
 
   Container _mainScreenPostItFormByCompare(DateTime now, int nowActualSales, int lastActualSales, double? actualSalesPercentage,

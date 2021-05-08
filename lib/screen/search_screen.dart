@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/app_bar.dart';
+import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
@@ -172,7 +173,7 @@ class _SearchScreenState extends State<SearchScreen> {
             },
             child: Scaffold(
               backgroundColor: Colors.deepPurple.shade50,
-              appBar: mainAppBar(context, 'share sales', Colors.deepPurple.shade50,
+              appBar: mainAppBar(context, secondMainColor,'share sales', Colors.deepPurple.shade50,
                 IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
                   onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
                 leadingIcon: IconButton(icon: Icon(Icons.autorenew_rounded),
@@ -427,79 +428,56 @@ class _SearchScreenState extends State<SearchScreen> {
                                 builder: (BuildContext context){
                                   return Container(
                                     height: size.height*0.2,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Opacity(
-                                          opacity: 0,
-                                          child: Container(
-                                            width: size.width*0.1,
-                                            height: size.height*0.25,
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [Colors.green[500]!, Colors.green[500]!, Colors.green[400]!, Colors.green[300]!],
-                                            ),
-                                            borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-                                          ),
-                                          width: size.width*0.8,
-                                          height: size.height*0.25,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-                                              ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  ListTile(
-                                                      leading: Text('Day'),
-                                                      title: Text('일자별',),
-                                                      dense: true,
-                                                      onTap: (){
-                                                        Navigator.pop(context);
-                                                        _searchScreenDayRangeDatePicker(context);
-                                                      }
-                                                  ),
-                                                  Divider(height: 1,),
-                                                  ListTile(
-                                                      leading: Text('Month'),
-                                                      title: Text('월별'),
-                                                      dense: true,
-                                                      onTap: (){
-                                                        Navigator.pop(context);
-                                                        _searchScreenMonthRangeDatePicker(context);
-                                                      }
-                                                  ),
-                                                  Divider(height: 1,),
-                                                  ListTile(
-                                                      leading: Text('Year'),
-                                                      title: Text('연도별'),
-                                                      dense: true,
-                                                      onTap: (){
-                                                        Navigator.pop(context);
-                                                        _searchScreenYearRangeDatePicker(context);
-                                                        print('아직 못만듬');
-                                                      }
-                                                  ),
-                                                ],
-                                              ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+                                      ),
+                                      child: ListView(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 20),
+                                            child: ListTile(
+                                              horizontalTitleGap: 30,
+                                                leading: Text('Day', style: TextStyle(color: Colors.white),),
+                                                title: Text('일자별', style: TextStyle(color: Colors.white),),
+                                                dense: true,
+                                                onTap: (){
+                                                  Navigator.pop(context);
+                                                  _searchScreenDayRangeDatePicker(context);
+                                                }
                                             ),
                                           ),
-                                        ),
-                                        Opacity(
-                                          opacity: 0,
-                                          child: Container(
-                                            width: size.width*0.1,
-                                            height: size.height*0.15,
+                                          Divider(height: 1,color: Colors.white12,),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 20),
+                                            child: ListTile(
+                                              horizontalTitleGap: 30,
+                                                leading: Text('Month',style: TextStyle(color: Colors.white)),
+                                                title: Text('월별',style: TextStyle(color: Colors.white)),
+                                                dense: true,
+                                                onTap: (){
+                                                  Navigator.pop(context);
+                                                  _searchScreenMonthRangeDatePicker(context);
+                                                }
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          Divider(height: 1,color: Colors.white12,),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 20),
+                                            child: ListTile(
+                                              horizontalTitleGap: 30,
+                                                leading: Text('Year',style: TextStyle(color: Colors.white)),
+                                                title: Text('연도별',style: TextStyle(color: Colors.white)),
+                                                dense: true,
+                                                onTap: (){
+                                                  Navigator.pop(context);
+                                                  _searchScreenYearRangeDatePicker(context);
+                                                }
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 });

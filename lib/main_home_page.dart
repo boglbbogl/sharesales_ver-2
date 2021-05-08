@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
+import 'package:sharesales_ver2/screen/profile_screen.dart';
 import 'package:sharesales_ver2/screen/search_screen.dart';
 import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/example.dart';
@@ -17,7 +18,7 @@ class MainHomePage extends StatefulWidget {
 
 class _MainHomePageState extends State<MainHomePage> {
 
-  int _selectedIndex = 0;
+  int _selectedIndex=0;
 
   List<BottomNavigationBarItem> _btmNavItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: '',),
@@ -46,13 +47,14 @@ class _MainHomePageState extends State<MainHomePage> {
       else
         return ManagementScreen();
     }),
-    HomeScreen(),
     Consumer<UserModelState>(builder: (BuildContext context, UserModelState? userModelState, Widget? child){
       if(userModelState == null || userModelState.userModel == null)
         return MyProgressIndicator();
       else
-        return StoreDetailScreen();
+        return ProfileScreen();
     }),
+    HomeScreen(),
+
   ];
 
   @override
@@ -72,14 +74,14 @@ class _MainHomePageState extends State<MainHomePage> {
 
   BottomNavigationBar _btmNav() {
     return BottomNavigationBar(
-      backgroundColor: _selectedIndex==0 ? Colors.pink.shade50 : _selectedIndex==1? Colors.deepPurple.shade50 : Colors.white,
+      backgroundColor: _selectedIndex==0 ? Colors.pink.shade50 : _selectedIndex==1? Colors.deepPurple.shade50 : _selectedIndex==2 ? Colors.white : _selectedIndex==3 ? Colors.orange.shade50 : Colors.red.shade50,
       elevation: 1,
       type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndex,
       items: _btmNavItems,
       showSelectedLabels: false,
       showUnselectedLabels: false,
-      selectedItemColor: _selectedIndex==0 ? Colors.pinkAccent : _selectedIndex==1? Colors.deepPurpleAccent : Colors.deepOrangeAccent,
+      selectedItemColor: _selectedIndex==0 ? Colors.pinkAccent : _selectedIndex==1? Colors.deepPurpleAccent : _selectedIndex==2 ? Colors.redAccent : _selectedIndex==3 ? Colors.orange : Colors.redAccent,
       unselectedItemColor: Colors.black26,
       onTap: (index){
         setState(() {

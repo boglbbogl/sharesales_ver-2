@@ -1,11 +1,14 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sharesales_ver2/constant/alert_dialog_form.dart';
 import 'package:sharesales_ver2/constant/app_bar.dart';
 import 'package:sharesales_ver2/constant/change_library/change_month_strip_pub_dev.dart';
+import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
@@ -14,7 +17,6 @@ import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/management_screen_folding_cell_list.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'create_management_screen.dart';
-import 'package:sizer/sizer.dart';
 
 final koFormatMoney = NumberFormat.simpleCurrency(locale: "ko_KR", name: '', decimalDigits: 0);
 
@@ -108,39 +110,19 @@ class _ManagementScreenState extends State<ManagementScreen> {
         return SafeArea(
           child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: mainAppBar(context, 'share sales',null,IconButton(
+            appBar: mainAppBar(context, secondMainColor,'share sales',null,IconButton(
             icon: Icon(
               Icons.create,
               color: Colors.deepPurpleAccent,
             ),
             onPressed: () {
-              if(userModel.storeCode!.isEmpty && userModel.storeCode!.length==0){
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: Text('사업자등록증 미인증'),
-                        content: Text('사업자등록증 인증 후 이용해 주세요'),
-                        actions: [
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => StoreDetailScreen()));
-
-                          },
-                          child: Text('등록하기'),
-                        ),
-                          FlatButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('닫기'),
-                          )
-                        ],
-                      );
+              if(userModel.storeCode!.isEmpty || userModel.storeCode!.length==0 || userModel.storeName!.isEmpty || userModel.storeName!.length==0 ||
+              userModel.personalOrCorporate!.isEmpty || userModel.pocCode!.isEmpty || userModel.openDate!.isEmpty || userModel.representative!.isEmpty ||
+              userModel.typeOfBusiness!.isEmpty || userModel.typeOfService!.isEmpty){
+                alertDialogForm(context, type: CoolAlertType.error, title: '사업자 인증 후 이용해 주세요', text: '', confirmBtnText: '등록하기',
+                    backColors: Colors.cyan, confirmBtnColors: Colors.cyan, onConfirmBtnTap: (){
+                      Navigator.of(context).pop();
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreDetailScreen()));
                     });
               }else {
                 Navigator.push(

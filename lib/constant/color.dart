@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+final Shader detailScreenAppBarColor = LinearGradient(
+  colors: <Color>[Colors.cyanAccent, Colors.cyan,Colors.lightBlue,Colors.green ,Colors.lightGreen],
+).createShader(new Rect.fromLTWH(0.0, 300.0, 300.0, 0.0));
+
 final Shader secondMainColor = LinearGradient(
   colors: <Color>[Colors.red, Colors.purple, Colors.blue],
 ).createShader(new Rect.fromLTWH(100.0, 300.0, 300.0, 0.0));

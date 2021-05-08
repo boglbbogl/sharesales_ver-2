@@ -200,7 +200,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                       padding: const EdgeInsets.only(top: 3, left: 3, right: 3),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
                                         ),
                                         child: Row(
@@ -212,14 +212,14 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(12),
                                                     bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
-                                                color: Colors.black,
+                                                color: Colors.white,
                                               ),
                                               width: size.width * 0.45,
                                               child: ListTile(horizontalTitleGap: 0.01,
-                                                leading: Icon(Icons.add_outlined, color: Colors.black, size: 25,
+                                                leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
                                                 ),
                                                 title: Text('   매출',
-                                                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 21),
+                                                  style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold, fontSize: 21),
                                                 ),
                                                 onTap: () {
                                                   Navigator.pop(context);
@@ -332,22 +332,22 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                 },
                                               ),
                                             ),
-                                            Container(color: Colors.white,
+                                            Container(color: Colors.black,
                                               height: size.height * 0.06,
-                                              width: size.width * 0.005,
+                                              width: size.width * 0.009,
                                             ),
                                             Container(
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(topRight: Radius.circular(30),topLeft: Radius.circular(12),
                                                     bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                                                color: Colors.black,
+                                                color: Colors.white,
                                               ),
                                               width: size.width * 0.45,
                                               child: ListTile(horizontalTitleGap: 0.01,
-                                                leading: Icon(Icons.add_outlined, color: Colors.black, size: 25,
+                                                leading: Icon(Icons.add_outlined, color: Colors.white, size: 25,
                                                 ),
                                                 title: Text('   지출',
-                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 21),
+                                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 21),
                                                 ),
                                                 onTap: () {
 
