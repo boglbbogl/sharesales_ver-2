@@ -176,7 +176,7 @@ class _SearchScreenState extends State<SearchScreen> {
               appBar: mainAppBar(context, secondMainColor,'share sales', Colors.deepPurple.shade50,
                 IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
                   onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
-                leadingIcon: IconButton(icon: Icon(Icons.autorenew_rounded),
+                leadingIcon: _rangePickerStartDate==null ? Icon(Icons.autorenew_rounded, color: Colors.black54,) : IconButton(icon: Icon(Icons.autorenew_rounded),
                   color: circularChartSwitcher ? Colors.pinkAccent : Colors.green,
                 onPressed: (){
                   setState(() {

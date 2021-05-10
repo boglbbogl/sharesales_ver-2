@@ -2,10 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/screen/auth_screen.dart';
+import 'package:sharesales_ver2/screen/auth__main_screen.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
-import 'constant/color.dart';
 import 'dart:ui';
 
 import 'firebase_auth/firebase_auth_state.dart';
@@ -64,7 +63,7 @@ class MyApp extends StatelessWidget {
               switch (firebaseAuthState.firebaseAuthStatus) {
                 case FirebaseAuthStatus.logout:
                   _clearUserModel(context);
-                  _currentWidget = AuthScreen();
+                  _currentWidget = SignMainScreen();
                   break;
                 case FirebaseAuthStatus.login:
                   _initUserModel(firebaseAuthState, context);
@@ -74,7 +73,7 @@ class MyApp extends StatelessWidget {
                   _currentWidget = MyProgressIndicator();
               }
               return AnimatedSwitcher(
-                duration: Duration(milliseconds: 300),
+                duration: Duration(milliseconds: 2000),
                 child: _currentWidget,
               );
             },

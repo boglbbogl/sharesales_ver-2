@@ -329,6 +329,24 @@ class _MainScreenState extends State<MainScreen> {
                         ListTile(
                           onTap: () {
                             _advancedDrawerController.hideDrawer();
+                            (userModel.storeCode!.isEmpty || userModel.storeName!.isEmpty) ?
+                                showMaterialModalBottomSheet(
+                                    duration: Duration(milliseconds: 2000),
+                                    closeProgressThreshold: 5.0,
+                                    elevation: 0,
+                                    enableDrag: true,
+                                    animationCurve: Curves.fastOutSlowIn,
+                                    barrierColor: Colors.white12,
+                                    context: context, builder: (BuildContext context){
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.deepOrange,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    child: Center(child: Text('사업자 인증이 필요합니다', style: TextStyle(color: Colors.white, fontSize: 30),)),
+                                    height: 20.h,
+                                  );
+                                }) :
                             _mainScreenProfileSimpleBottomSheetForm(context, userModel);
                           },
                           leading: Icon(Icons.account_circle),
@@ -408,7 +426,7 @@ class _MainScreenState extends State<MainScreen> {
                 appBarBottom: PreferredSize(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(userModel.storeName!, style: TextStyle(
+                      child: Text(userModel.storeName!.isEmpty ? userModel.email!.split('@')[0] : userModel.storeName!, style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
                         fontSize: 28,
@@ -532,7 +550,7 @@ class _MainScreenState extends State<MainScreen> {
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.symmetric(vertical: 1.h),
-                          child: Center(child: Text(userModel.storeCode!, style: TextStyle(fontSize: 22),)),
+                          child: Center(child: Text(userModel.storeCode!.isEmpty ? '' : userModel.storeCode!, style: TextStyle(fontSize: 22),)),
                         ),
                         Container(
                           child: Center(child: Text(userModel.personalOrCorporate=='개인' ? '개인사업자' : '법인사업자')),
@@ -549,38 +567,38 @@ class _MainScreenState extends State<MainScreen> {
                             Expanded(
                               child: Container(
                                 margin: EdgeInsets.symmetric(vertical: 1.h),
-                                child: Text('성         명   :   ' + userModel.representative!),
+                                child: Text(userModel.representative!.isEmpty ?'성         명   :   ' : '성         명   :   ' + userModel.representative!),
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.symmetric(vertical: 1.h),
-                              child: Text(userModel.personalOrCorporate=='개인' ? '생년월일   :   ' +userModel.pocCode! : '법인등록번호   :   ' + userModel.pocCode!.substring(0,8)),
+                              child: Text(userModel.personalOrCorporate=='개인' ? '생년월일   :   ' +userModel.pocCode! : '법인등록번호   :   ' + userModel.pocCode!),
                             ),
                           ],
                         ),
                         Container(
                           margin: EdgeInsets.symmetric(vertical: 1.h),
-                          child: Text('개업연월일   :   ' + userModel.openDate!),
+                          child: Text(userModel.openDate!.isEmpty ? '개업연월일   :   ' : '개업연월일   :   ' + userModel.openDate!),
                         ),
                         Container(
                           margin: EdgeInsets.only(top: 1.h),
                           child: Text('사업장소재지'),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 3.h, bottom: 1.h),
-                          child: Text(userModel.storeLocation!),
+                          margin: EdgeInsets.only(left: 5.h, bottom: 1.h),
+                          child: Text(userModel.storeLocation!.isEmpty ? '': userModel.storeLocation!),
                         ),
                         Container(
                           margin: EdgeInsets.only(top: 1.h),
                           child: Text('사업의종류'),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 3.h),
-                          child: Text('업태 : ' + userModel.typeOfService!),
+                          margin: EdgeInsets.only(left: 5.h),
+                          child: Text(userModel.typeOfService!.isEmpty ? '업태 : ' : '업태 : ' + userModel.typeOfService!),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 3.h),
-                          child: Text('업종 : ' + userModel.typeOfBusiness!),
+                          margin: EdgeInsets.only(left: 5.h),
+                          child: Text(userModel.typeOfBusiness!.isEmpty ? '업종 : ' : '업종 : ' + userModel.typeOfBusiness!),
                         ),
                       ],
                     ),

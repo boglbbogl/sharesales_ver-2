@@ -52,8 +52,6 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     UserModel? userModel =
     Provider.of<UserModelState>(context, listen: false).userModel;
 
-    var _specialChar = ';^\\\$()[](){}*|/';
-
     return GestureDetector(
       onTap: ()=> FocusScope.of(context).unfocus(),
           child: Scaffold(
@@ -123,7 +121,6 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                           _storeLocationController.clear();
                           Navigator.of(context).pop();
                             } else {
-
                             }
 
                           }),

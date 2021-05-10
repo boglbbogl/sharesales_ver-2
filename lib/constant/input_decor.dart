@@ -81,6 +81,40 @@ InputDecoration salesChangeInputDecor(String hint) {
 
   );
 }
+
+InputDecoration signMainUpScreenInputDecor(String label, String hint, {required Color colors, required Color errorColor}){
+  return InputDecoration(
+    enabledBorder: _signMainUpScreenActiveInputDecor(colors),
+    focusedBorder: _signMainUpScreenActiveInputDecor(colors),
+    errorBorder: _signMainUpScreenErrorInputDecor(errorColor),
+    focusedErrorBorder: _signMainUpScreenErrorInputDecor(errorColor),
+    contentPadding: EdgeInsets.symmetric(vertical: 10),
+    labelText: label,
+    hintStyle: TextStyle(color: Colors.white54, fontSize: 30),
+    errorStyle: TextStyle(fontSize: 12, color: colors),
+    isDense: true,
+    hintText: hint,
+    alignLabelWithHint: true,
+    labelStyle: TextStyle(color: colors, fontSize: 20),
+  );
+}
+
+UnderlineInputBorder _signMainUpScreenErrorInputDecor(Color colors) {
+  return UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: colors,
+    ),
+  );
+}
+
+UnderlineInputBorder _signMainUpScreenActiveInputDecor(Color colors) {
+  return UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: colors,
+    ),
+  );
+}
+
 InputDecoration storeDetailScreenInputDecor(String label, String hint,){
   return InputDecoration(
     enabledBorder: _storeDetailScreenActiveInputDecor(Colors.cyan.shade500),

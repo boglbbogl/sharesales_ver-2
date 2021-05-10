@@ -115,10 +115,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-
-    // UserModel userModel =
-    // Provider.of<UserModelState>(context, listen: false).userModel!;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Toggle Button'),
@@ -132,42 +128,11 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              child: Container(
-                width: 50.w,
-                height: 10.h,
-                color: Colors.black,
-              ),
-              onTap: (){
-                setState(() {
-
-                });
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-              ),
-                         ),
-            // Text(userModel.userKey),
-            // Text(userModel.email!),
-            // Text(userModel.userName!),
-            // Text(userModel.storeName!),
-            // Text(userModel.representative!),
-            // Text(userModel.storeLocation!),
-            // Text(userModel.typeOfService!),
-            // Text(userModel.typeOfBusiness!),
-            // Text(userModel.openDate!),
-            // Text(userModel.pocCode!),
-            // Text(userModel.storeCode!),
-            // Text(userModel.personalOrCorporate!),
-
-          ],
-        ),
+      body: RaisedButton(
+        onPressed: (){
+        },
       ),
     );
   }
 }
+

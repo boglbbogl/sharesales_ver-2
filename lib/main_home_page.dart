@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
 import 'package:sharesales_ver2/screen/profile_screen.dart';
 import 'package:sharesales_ver2/screen/search_screen.dart';
-import 'package:sharesales_ver2/screen/store_detail_screen.dart';
-import 'package:sharesales_ver2/widget/example.dart';
 import 'constant/size.dart';
 import 'firebase_auth/user_model_state.dart';
 import 'screen/main_screen.dart';
@@ -24,7 +22,6 @@ class _MainHomePageState extends State<MainHomePage> {
     BottomNavigationBarItem(icon: Icon(Icons.home), label: '',),
     BottomNavigationBarItem(icon: Icon(Icons.calendar_today_rounded), label: ''),
     BottomNavigationBarItem(icon: Icon(Icons.view_list), label: ''),
-    BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: ''),
     BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: ''),
   ];
 
@@ -53,7 +50,6 @@ class _MainHomePageState extends State<MainHomePage> {
       else
         return ProfileScreen();
     }),
-    HomeScreen(),
 
   ];
 

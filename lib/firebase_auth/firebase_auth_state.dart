@@ -1,6 +1,8 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sharesales_ver2/constant/alert_dialog_form.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/firebase_firestore/firestore_user_repository.dart';
 
@@ -65,7 +67,7 @@ class FirebaseAuthState extends ChangeNotifier {
       Scaffold.of(context).showSnackBar(snackBar);
     } else {
       await userNetworkRepository.attemptCreateUser(
-          userKey: _user!.uid, email: _user!.email);
+          userKey: _user!.uid, email: _user!.email!);
     }
   }
 
@@ -91,12 +93,13 @@ class FirebaseAuthState extends ChangeNotifier {
           _massage = '패스워드가 정확하지 않습니다';
           break;
       }
+
       SnackBar snackBar = SnackBar(
         content: Text(
           _massage,
           style: snackBarStyle(),
         ),
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Colors.cyanAccent,
       );
       Scaffold.of(context).showSnackBar(snackBar);
     });

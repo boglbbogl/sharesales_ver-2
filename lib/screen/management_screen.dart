@@ -155,12 +155,17 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
                       if(formatPickerMonth!=fireStoreMonthFormat){
                         return Container();
-                      } else {
-                        return ManagementScreenFoldingCellList(userModel, snapshotData, expenseAmountOnlyResult, _totalSalesController, _actualSalesController,
+                      }else if(snapshot.connectionState == ConnectionState.waiting){
+                        return MyProgressIndicator();
+                      } else
+
+                      // if(formatPickerMonth!=fireStoreMonthFormat){
+                      //   return Container();
+                      // } else
+                       return ManagementScreenFoldingCellList(userModel, snapshotData, expenseAmountOnlyResult, _totalSalesController, _actualSalesController,
                             _vosController, _vatController, _discountController, _creditCardController, _cashController, _cashReceiptController,
                             _deliveryController, _giftCardController, _foodProvisionController, _beverageController, _alcoholController,
                             _editAddExpenseTitleController, _editAddExpenseAmountController);
-                      }
                     }).toList(),
                   ),
                 ),
