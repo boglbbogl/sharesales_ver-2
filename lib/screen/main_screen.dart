@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:sharesales_ver2/constant/alert_dialog_form.dart';
+import 'package:sharesales_ver2/constant/alert_dialog_and_bottom_sheet_form.dart';
 import 'package:sharesales_ver2/constant/app_bar.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
@@ -330,23 +330,7 @@ class _MainScreenState extends State<MainScreen> {
                           onTap: () {
                             _advancedDrawerController.hideDrawer();
                             (userModel.storeCode!.isEmpty || userModel.storeName!.isEmpty) ?
-                                showMaterialModalBottomSheet(
-                                    duration: Duration(milliseconds: 2000),
-                                    closeProgressThreshold: 5.0,
-                                    elevation: 0,
-                                    enableDrag: true,
-                                    animationCurve: Curves.fastOutSlowIn,
-                                    barrierColor: Colors.white12,
-                                    context: context, builder: (BuildContext context){
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.deepOrange,
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    child: Center(child: Text('사업자 인증이 필요합니다', style: TextStyle(color: Colors.white, fontSize: 30),)),
-                                    height: 20.h,
-                                  );
-                                }) :
+                            storeDetailWarningShowModalBottomSheetForm(context, backColors: Colors.amber.shade50, textColor: Colors.black54) :
                             _mainScreenProfileSimpleBottomSheetForm(context, userModel);
                           },
                           leading: Icon(Icons.account_circle),
@@ -553,7 +537,7 @@ class _MainScreenState extends State<MainScreen> {
                           child: Center(child: Text(userModel.storeCode!.isEmpty ? '' : userModel.storeCode!, style: TextStyle(fontSize: 22),)),
                         ),
                         Container(
-                          child: Center(child: Text(userModel.personalOrCorporate=='개인' ? '개인사업자' : '법인사업자')),
+                          child: Center(child: Text(userModel.personalOrCorporate=='개인' || userModel.personalOrCorporate!.isEmpty ? '개인사업자' : '법인사업자')),
                         ),
                         Container(
                           margin: EdgeInsets.symmetric(vertical: 2.h),

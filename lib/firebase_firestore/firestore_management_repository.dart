@@ -1,4 +1,4 @@
-
+import 'package:sizer/sizer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
@@ -20,10 +20,19 @@ class ManagementRepository {
     if (!managementSnapshot.exists) {
      await managementReference.set(managementData);
      Navigator.of(context).pop();
-     snackBarCreateManagementScreenTopFlushBarGreenForm(context, '$outputDate' + ' 저장 완료',);
+     snackBarFlashBarCreateManagementSuccessForm(context,
+     massage: outputDate + ' 저장 완료',
+   );
        print('Save success !!');
     } else if(managementSnapshot.exists){
-      snackBarCreateManagementScreenTopFlushBarAmberForm(context, '$outputDate' + '  저장 할 수 없습니다', '이미 존재하는 날짜입니다');
+      return snackBarFlashBarCreateManagementDatePickerWarning(context,
+          massage: '날짜를 변경해 주세요',
+          title: '이미 저장된 날짜 입니다',
+          textColor:Colors.white,
+          marginV : 5.h,
+          marginH: 5.w,
+          duration: 3000,
+          backColors:Colors.deepOrange);
       print('Not Working !!');
     } else
       print('몰라');

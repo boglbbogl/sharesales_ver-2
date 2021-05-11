@@ -1,8 +1,10 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sharesales_ver2/constant/alert_dialog_form.dart';
+import 'package:sizer/sizer.dart';
+import 'package:sharesales_ver2/constant/alert_dialog_and_bottom_sheet_form.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/firebase_firestore/firestore_user_repository.dart';
 
@@ -32,42 +34,33 @@ class FirebaseAuthState extends ChangeNotifier {
       String _massage = '';
       switch (error.code) {
         case 'email-already-in-use':
-          _massage = '이미 사용중';
+          _massage = '이미 사용중인 계정입니다';
           break;
         case 'invalid-email':
-          _massage = '폼이 안맞어';
+          _massage = '정확한 이메일 주소를 입력해 주세요';
           break;
         case 'operation-not-allowed':
           _massage = '잠시후 다시 시도해주세요';
           break;
         case 'weak-password':
-          _massage = '6자리 이상사용해라';
+          _massage = '8자리 이상의 비밀번호를 사용해 주세요';
           break;
       }
-
-      SnackBar snackBar = SnackBar(
-        content: Text(
-          _massage,
-          style: snackBarStyle(),
-        ),
-        backgroundColor: Colors.lightBlueAccent,
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
+      snackBarFlashBarCreateAuthStateForm(context,
+          massage: _massage, textColor: Colors.deepPurple,marginV: 10.h, marginH: 3.w, backColors: Colors.amber,duration: 2000);
     });
-
     _user = userCredential.user;
     if (_user == null) {
-      SnackBar snackBar = SnackBar(
-        content: Text(
-          '잠시후 다시 이용해 주세요',
-          style: snackBarStyle(),
-        ),
-        backgroundColor: Colors.lightBlueAccent,
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
+      snackBarFlashBarCreateAuthStateForm(context,
+          massage: '잠시후 다시 이용해 주세요', textColor: Colors.deepPurple,marginV: 10.h, marginH: 3.w, backColors: Colors.amber,duration: 2000);
     } else {
+
       await userNetworkRepository.attemptCreateUser(
           userKey: _user!.uid, email: _user!.email!);
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      snackBarFlashBarCreateAuthStateForm(context,
+          massage: '${_user!.email}님 반갑습니다 ', textColor: Colors.white,marginV: 10.h, marginH: 3.w, backColors: Colors.black45, duration: 3000);
     }
   }
 
@@ -81,39 +74,31 @@ class FirebaseAuthState extends ChangeNotifier {
       String _massage = '';
       switch (error.code) {
         case 'invalid-email':
-          _massage = 'Email 주소가 아닙니다';
+          _massage = '정확한 이메일 주소를 입력해 주세요';
           break;
         case 'user-disabled':
-          _massage = '해당 Email 계정은 사용할 수 없습니다';
+          _massage = '해당 계정은 관리자에 의해 사용이 중단 되었습니다.';
           break;
         case 'user-not-found':
-          _massage = '회원이 아닙니다';
+          _massage = '해당 계정은 등록된 사용자가 아닙니다';
           break;
         case 'wrong-password':
-          _massage = '패스워드가 정확하지 않습니다';
+          _massage = '비밀번호를 확인해 주세요';
           break;
       }
-
-      SnackBar snackBar = SnackBar(
-        content: Text(
-          _massage,
-          style: snackBarStyle(),
-        ),
-        backgroundColor: Colors.cyanAccent,
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
+      snackBarFlashBarCreateAuthStateForm(context,
+          massage: _massage, textColor: Colors.amber,marginV: 10.h, marginH: 3.w, backColors: Colors.deepPurple, duration: 2000);
     });
 
     _user = userCredential.user;
     if (_user == null) {
-      SnackBar snackBar = SnackBar(
-        content: Text(
-          '잠시후 다시 이용해 주세요',
-          style: snackBarStyle(),
-        ),
-        backgroundColor: Colors.lightBlueAccent,
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
+      snackBarFlashBarCreateAuthStateForm(context,
+          massage: '잠시후 다시 이용해 주세요', textColor: Colors.deepPurple,marginV: 10.h, marginH: 3.w, backColors: Colors.amber,duration: 2000);
+    } else{
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      snackBarFlashBarCreateAuthStateForm(context,
+          massage: '${_user!.email}', textColor: Colors.white,marginV: 10.h, marginH: 3.w, backColors: Colors.black45, duration: 3000);
     }
   }
 

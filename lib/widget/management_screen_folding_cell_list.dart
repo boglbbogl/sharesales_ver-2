@@ -6,6 +6,7 @@ import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
 
@@ -121,6 +122,8 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                     .doc(snapshotData.id).delete();
                                                 Navigator.pop(context);
                                                 Navigator.pop(context);
+                                                snackBarFlashBarCreateManagementSuccessForm(context,
+                                                    massage: snapshotData['selectedDate'] + ' 삭제 완료',);
                                               },
                                             ),
                                           ),
@@ -306,6 +309,8 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                                 'giftCard' : _giftCardController.text.isEmpty ? int.parse('0') : int.parse(_giftCardController.text.replaceAll(",", "")),
                                                                               });
                                                                               Navigator.of(context).pop();
+                                                                              snackBarFlashBarCreateManagementSuccessForm(context,
+                                                                                massage: snapshotData['selectedDate'] + ' 수정 완료',);
                                                                               _totalSalesController.clear();
                                                                               _actualSalesController.clear();
                                                                               _vosController.clear();
@@ -422,6 +427,8 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                                   });
 
                                                                                   Navigator.of(context).pop();
+                                                                                  snackBarFlashBarCreateManagementSuccessForm(context,
+                                                                                    massage: snapshotData['selectedDate'] + ' 수정 완료',);
                                                                                   _foodProvisionController.clear();
                                                                                   _beverageController.clear();
                                                                                   _alcoholController.clear();

@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:sharesales_ver2/constant/alert_dialog_and_bottom_sheet_form.dart';
 import 'package:sharesales_ver2/constant/app_bar.dart';
 import 'package:sharesales_ver2/constant/color.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
@@ -12,6 +13,7 @@ import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
+import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'package:sharesales_ver2/widget/search_screen_chart_form.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -197,7 +199,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         Text(_rangePickerEndDate == null || _rangePickerEndDate==_rangePickerStartDate ? '' : _rangePickerEndDate!.replaceAll(".", ""), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
                       ],
                     ),
-                    onTap: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),
+                    onTap: (){
+                          if(userModel.storeCode!.isEmpty || userModel.storeCode!.length==0 || userModel.storeName!.isEmpty || userModel.storeName!.length==0 ||
+                              userModel.personalOrCorporate!.isEmpty || userModel.pocCode!.isEmpty || userModel.openDate!.isEmpty || userModel.representative!.isEmpty ||
+                              userModel.typeOfBusiness!.isEmpty || userModel.typeOfService!.isEmpty){
+                            storeDetailWarningShowModalBottomSheetForm(context, backColors: Colors.black, textColor: Colors.white);
+                          } else
+                          _searchScreenShowBottomSheetRangeDatePickerList(context);
+                    },
                   ),
                 ), preferredSize: Size(size.width*0.8, 50)),),
               body: SingleChildScrollView(

@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:sizer/sizer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +81,14 @@ class _DatePickerCreateFormState extends State<DatePickerCreateForm> {
                           .substring(0, 10);
                     setState(() {
                       if (selectedDateInDb == changePickerDate) {
-                        return snackBarDatePickerMiddleFlushBarRedForm(context,  '$changePickerDate' + ' 날짜를 변경하세요', '이미 저장된 날짜입니다');
+                        return snackBarFlashBarCreateManagementDatePickerWarning(context,
+                            massage: '날짜를 변경해 주세요',
+                            title: changePickerDate,
+                            textColor:Colors.black54,
+                            marginV : 1.h,
+                            marginH: 5.w,
+                            duration: 1000,
+                            backColors:Colors.greenAccent);
                       }
                     });
                   });
