@@ -285,29 +285,6 @@ class _MainScreenState extends State<MainScreen> {
                         // SizedBox(height: 8.h,),
                         ListTile(
                           onTap: () {
-                            alertDialogForm(context, type: CoolAlertType.warning, title: '탈퇴 하시겠습니까 ?', text: '모든 정보는 복구 불가합니다',
-                                confirmBtnText: '탈퇴하기', backColors: Colors.redAccent, confirmBtnColors: Colors.redAccent, onConfirmBtnTap: (){
-                                  print('탈퇴폼');
-                                });
-                          },
-                          leading: Icon(Icons.delete_forever),
-                          title: Text('탈퇴하기'),
-                        ),
-                        ListTile(
-                          onTap: () async{
-                            alertDialogForm(context, type: CoolAlertType.warning, title: '로그아웃 하시겠습니까 ?', text: '', confirmBtnText: '로그아웃',
-                                backColors: Colors.pinkAccent, confirmBtnColors: Colors.pinkAccent, onConfirmBtnTap: (){
-                              Navigator.of(context).pop();
-                              Provider.of<FirebaseAuthState>(context, listen: false)
-                                  .signOut();
-                                });
-                          },
-                          leading: Icon(Icons.logout),
-                          title: Text('로그아웃'),
-                        ),
-                        SizedBox(height: 5.h,),
-                        ListTile(
-                          onTap: () {
                             if(userModel.storeCode!.isEmpty || userModel.storeCode!.length==0 || userModel.storeName!.isEmpty || userModel.storeName!.length==0 ||
                                 userModel.personalOrCorporate!.isEmpty || userModel.pocCode!.isEmpty || userModel.openDate!.isEmpty || userModel.representative!.isEmpty ||
                                 userModel.typeOfBusiness!.isEmpty || userModel.typeOfService!.isEmpty){
@@ -326,6 +303,20 @@ class _MainScreenState extends State<MainScreen> {
                           leading: Icon(Icons.warning),
                           title: Text('사업자 인증'),
                         ),
+                        ListTile(
+                          onTap: () async{
+                            alertDialogForm(context, type: CoolAlertType.warning, title: '로그아웃 하시겠습니까 ?', text: '', confirmBtnText: '로그아웃',
+                                backColors: Colors.pinkAccent, confirmBtnColors: Colors.pinkAccent, onConfirmBtnTap: (){
+                                  Navigator.of(context).pop();
+                                  Provider.of<FirebaseAuthState>(context, listen: false)
+                                      .signOut();
+                                });
+                          },
+                          leading: Icon(Icons.logout),
+                          title: Text('로그아웃'),
+                        ),
+                        SizedBox(height: 5.h,),
+
                         ListTile(
                           onTap: () {
                             _advancedDrawerController.hideDrawer();
@@ -369,7 +360,7 @@ class _MainScreenState extends State<MainScreen> {
                         ListTile(
                           onTap: () {},
                           leading: Icon(Icons.favorite),
-                          title: Text('고객센터'),
+                          title: Text('문의하기'),
                         ),
 
                       ],
@@ -523,8 +514,8 @@ class _MainScreenState extends State<MainScreen> {
               return Container(
                 height: 45.h,
                 decoration: BoxDecoration(
-                  color: Colors.deepOrange,
-                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.black,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                 ),
                 child: DefaultTextStyle(
                   style: TextStyle(color: Colors.white, fontFamily: 'Yanolja', fontSize: 19),
