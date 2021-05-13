@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ class _SignMainScreenState extends State<SignMainScreen> {
 
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.cyanAccent,
       appBar: AppBar(backgroundColor: Colors.cyanAccent,elevation: 0,),
     body: Column(
@@ -65,7 +67,7 @@ class _SignMainScreenState extends State<SignMainScreen> {
                         SizedBox(height: 20.h,),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Text('첫 방문 인가요 ?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 70),),
+                          child: Text('첫 방문 인가요 ?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),),
                         ),
                         InkWell(
                           onTap: (){
@@ -88,7 +90,7 @@ class _SignMainScreenState extends State<SignMainScreen> {
                         SizedBox(height: 8.h,),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Text('회원 인가요 ?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 70),),
+                          child: Text('회원 인가요 ?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),),
                         ),
                         InkWell(
                           onTap: (){
@@ -141,79 +143,82 @@ class _SignMainScreenState extends State<SignMainScreen> {
                               builder: (BuildContext context){
                                 return GestureDetector(
                                   onTap: ()=>FocusScope.of(context).unfocus(),
-                                  child: Form(
-                                    key: _formKey,
-                                    child: Container(
-                                      height: 90.h,
-                                      margin: EdgeInsets.only(right: 10.h, left: 3.h),
-                                      child: ListView(
-                                        children: <Widget>[
-                                          SizedBox(height: 15.h,),
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 12),
-                                            child: Text('이메일', style: TextStyle(color: Colors.deepPurple, fontSize: 70, fontWeight: FontWeight.bold),),
-                                          ),
-                                          TextFormField(
-                                            controller: _emailController,
-                                            style: TextStyle(color: Colors.white, fontSize: 30),
-                                            // autofocus: true,
-                                            decoration: signMainUpScreenInputDecor('email', 'ex) abcd@efg.com', colors: Colors.deepPurple, errorColor: Colors.cyanAccent),
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                                            validator: (text){
-                                              if(text!.isNotEmpty && text.contains('@') && text.contains('.')){
-                                                return null;
-                                              } else {
-                                                return '이메일 주소를 입력해 주세요';
-                                              }
-                                            },
-                                          ),
-                                          SizedBox(height: 5.h,),
-                                          _emailController.text.contains('.') ?
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 12),
-                                            child: Text('비밀번호', style: TextStyle(color: Colors.deepPurple, fontSize: 70, fontWeight: FontWeight.bold),),
-                                          ) : Container(),
-                                          _emailController.text.contains('.') ?
-                                          TextFormField(
-                                            controller: _pwController,
-                                            style: TextStyle(color: Colors.white, fontSize: 30),
-                                            // autofocus: true,
-                                            decoration: signMainUpScreenInputDecor('', '', colors: Colors.deepPurple, errorColor: Colors.cyanAccent),
-                                            validator: (text){
-                                              if(text!.isNotEmpty && text.length > 7){
-                                                return null;
-                                              } else {
-                                                return '8자리 이상으로 만들어 주세요';
-                                              }
-                                            },
-                                          ) : Container(),
-                                          SizedBox(height: 5.h,),
-                                          _pwController.text.isNotEmpty ?
-                                          InkWell(
-                                            onTap: () {
-                                              if(_formKey.currentState!.validate()){
-                                                Provider.of<FirebaseAuthState>(context, listen: false)
-                                                    .login(context, email: _emailController.text, password: _pwController.text);
-                                                print('작동완료');
-                                              }
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  '로그인하기   ',
-                                                  style: TextStyle(
-                                                      color: Colors.deepOrange,
-                                                      fontSize: 40,
-                                                      fontWeight: FontWeight.bold),
-                                                ),
-                                                Icon(
-                                                  Icons.double_arrow,
-                                                  color: Colors.deepOrange,
-                                                ),
-                                              ],
+                                  child: Padding(
+                                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                    child: Form(
+                                      key: _formKey,
+                                      child: Container(
+                                        height: 90.h,
+                                        margin: EdgeInsets.only(right: 10.h, left: 3.h),
+                                        child: ListView(
+                                          children: <Widget>[
+                                            SizedBox(height: 15.h,),
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 12),
+                                              child: Text('이메일', style: TextStyle(color: Colors.deepPurple, fontSize: 70, fontWeight: FontWeight.bold),),
                                             ),
-                                          ) : Container(),
-                                        ],
+                                            TextFormField(
+                                              controller: _emailController,
+                                              style: TextStyle(color: Colors.white, fontSize: 30),
+                                              // autofocus: true,
+                                              decoration: signMainUpScreenInputDecor('email', 'ex) abcd@efg.com', colors: Colors.deepPurple, errorColor: Colors.cyanAccent),
+                                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                                              validator: (text){
+                                                if(text!.isNotEmpty && text.contains('@') && text.contains('.')){
+                                                  return null;
+                                                } else {
+                                                  return '이메일 주소를 입력해 주세요';
+                                                }
+                                              },
+                                            ),
+                                            SizedBox(height: 5.h,),
+                                            _emailController.text.contains('.') ?
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 12),
+                                              child: Text('비밀번호', style: TextStyle(color: Colors.deepPurple, fontSize: 70, fontWeight: FontWeight.bold),),
+                                            ) : Container(),
+                                            _emailController.text.contains('.') ?
+                                            TextFormField(
+                                              controller: _pwController,
+                                              style: TextStyle(color: Colors.white, fontSize: 30),
+                                              // autofocus: true,
+                                              decoration: signMainUpScreenInputDecor('', '', colors: Colors.deepPurple, errorColor: Colors.cyanAccent),
+                                              validator: (text){
+                                                if(text!.isNotEmpty && text.length > 7){
+                                                  return null;
+                                                } else {
+                                                  return '8자리 이상으로 만들어 주세요';
+                                                }
+                                              },
+                                            ) : Container(),
+                                            SizedBox(height: 5.h,),
+                                            _pwController.text.isNotEmpty ?
+                                            InkWell(
+                                              onTap: () {
+                                                if(_formKey.currentState!.validate()){
+                                                  Provider.of<FirebaseAuthState>(context, listen: false)
+                                                      .login(context, email: _emailController.text, password: _pwController.text);
+                                                  print('작동완료');
+                                                }
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    '로그인하기   ',
+                                                    style: TextStyle(
+                                                        color: Colors.deepOrange,
+                                                        fontSize: 40,
+                                                        fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Icon(
+                                                    Icons.double_arrow,
+                                                    color: Colors.deepOrange,
+                                                  ),
+                                                ],
+                                              ),
+                                            ) : Container(),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -237,90 +242,93 @@ class _SignMainScreenState extends State<SignMainScreen> {
                           builder: (BuildContext context) {
                                 return GestureDetector(
                                   onTap: ()=>FocusScope.of(context).unfocus(),
-                                  child :Form(
-                                    key: _formKey,
-                                    child: Container(
-                                      height: 90.h,
-                                      margin: EdgeInsets.only(right: 10.h, left: 3.h),
-                                      child: ListView(
-                                        children: <Widget>[
-                                          SizedBox(height: 15.h,),
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 12),
-                                            child: Text('이메일', style: TextStyle(color: Colors.amberAccent, fontSize: 70, fontWeight: FontWeight.bold),),
-                                          ),
-                                          TextFormField(
-                                            controller: _emailController,
-                                            style: TextStyle(color: Colors.white, fontSize: 30),
-                                            // autofocus: true,
-                                            decoration: signMainUpScreenInputDecor('email', 'ex) abcd@efg.com', colors: Colors.amberAccent, errorColor: Colors.pink),
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                                            validator: (text){
-                                              if(text!.isNotEmpty && text.contains('@') && text.contains('.')){
-                                                return null;
-                                              } else {
-                                                return '이메일 주소를 입력해 주세요';
-                                              }
-                                            },
-                                          ),
-                                          SizedBox(height: 5.h,),
-                                          _emailController.text.contains('.') ?
-                                          TextFormField(
-                                            controller: _pwController,
-                                            style: TextStyle(color: Colors.white, fontSize: 30),
-                                            // autofocus: true,
-                                            decoration: signMainUpScreenInputDecor('비밀번호','', colors: Colors.amberAccent, errorColor: Colors.pink),
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                                            validator: (text){
-                                              if(text!.isNotEmpty && text.length > 7){
-                                                return null;
-                                              } else {
-                                                return '10자리 이상으로 만들어 주세요';
-                                              }
-                                            },
-                                          ) : Container(),
-                                          _emailController.text.contains('.') ?
-                                          TextFormField(
-                                            controller: _cpwController,
-                                            style: TextStyle(color: Colors.white, fontSize: 30),
-                                            // autofocus: true,
-                                            decoration: signMainUpScreenInputDecor('비밀번호확인','', colors: Colors.amberAccent, errorColor: Colors.pink),
-                                            validator: (text){
-                                              if(text!.isNotEmpty && _pwController.text == text){
-                                                return null;
-                                              } else {
-                                                return '비밀번호가 일치하지 않습니다.';
-                                              }
-                                            },
-                                          ) : Container(),
-                                          SizedBox(height: 5.h,),
-                                          _pwController.text.isNotEmpty && _cpwController.text.isNotEmpty && _pwController.text.length == _cpwController.text.length ?
-                                          InkWell(
-                                            onTap: () {
-                                              if(_formKey.currentState!.validate()) {
-                                                Provider.of<FirebaseAuthState>(context, listen: false)
-                                                    .registerUser(
-                                                  context, email: _emailController.text,
-                                                  password: _pwController.text,);
-                                              }
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  '계정 생성하기   ',
-                                                  style: TextStyle(
-                                                      color: Colors.cyanAccent,
-                                                      fontSize: 40,
-                                                      fontWeight: FontWeight.bold),
-                                                ),
-                                                Icon(
-                                                  Icons.double_arrow,
-                                                  color: Colors.cyanAccent,
-                                                ),
-                                              ],
+                                  child : Padding(
+                                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                    child: Form(
+                                      key: _formKey,
+                                      child: Container(
+                                        height: 90.h,
+                                        margin: EdgeInsets.only(right: 10.h, left: 3.h),
+                                        child: ListView(
+                                          children: <Widget>[
+                                            SizedBox(height: 15.h,),
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 12),
+                                              child: Text('이메일', style: TextStyle(color: Colors.amberAccent, fontSize: 70, fontWeight: FontWeight.bold),),
                                             ),
-                                          ) : Container(),
-                                        ],
+                                            TextFormField(
+                                              controller: _emailController,
+                                              style: TextStyle(color: Colors.white, fontSize: 30),
+                                              // autofocus: true,
+                                              decoration: signMainUpScreenInputDecor('email', 'ex) abcd@efg.com', colors: Colors.amberAccent, errorColor: Colors.pink),
+                                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                                              validator: (text){
+                                                if(text!.isNotEmpty && text.contains('@') && text.contains('.')){
+                                                  return null;
+                                                } else {
+                                                  return '이메일 주소를 입력해 주세요';
+                                                }
+                                              },
+                                            ),
+                                            SizedBox(height: 5.h,),
+                                            _emailController.text.contains('.') ?
+                                            TextFormField(
+                                              controller: _pwController,
+                                              style: TextStyle(color: Colors.white, fontSize: 30),
+                                              // autofocus: true,
+                                              decoration: signMainUpScreenInputDecor('비밀번호','', colors: Colors.amberAccent, errorColor: Colors.pink),
+                                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                                              validator: (text){
+                                                if(text!.isNotEmpty && text.length > 7){
+                                                  return null;
+                                                } else {
+                                                  return '10자리 이상으로 만들어 주세요';
+                                                }
+                                              },
+                                            ) : Container(),
+                                            _emailController.text.contains('.') ?
+                                            TextFormField(
+                                              controller: _cpwController,
+                                              style: TextStyle(color: Colors.white, fontSize: 30),
+                                              // autofocus: true,
+                                              decoration: signMainUpScreenInputDecor('비밀번호확인','', colors: Colors.amberAccent, errorColor: Colors.pink),
+                                              validator: (text){
+                                                if(text!.isNotEmpty && _pwController.text == text){
+                                                  return null;
+                                                } else {
+                                                  return '비밀번호가 일치하지 않습니다.';
+                                                }
+                                              },
+                                            ) : Container(),
+                                            SizedBox(height: 5.h,),
+                                            _pwController.text.isNotEmpty && _cpwController.text.isNotEmpty && _pwController.text.length == _cpwController.text.length ?
+                                            InkWell(
+                                              onTap: () {
+                                                if(_formKey.currentState!.validate()) {
+                                                  Provider.of<FirebaseAuthState>(context, listen: false)
+                                                      .registerUser(
+                                                    context, email: _emailController.text,
+                                                    password: _pwController.text,);
+                                                }
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    '계정 생성하기   ',
+                                                    style: TextStyle(
+                                                        color: Colors.cyanAccent,
+                                                        fontSize: 40,
+                                                        fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Icon(
+                                                    Icons.double_arrow,
+                                                    color: Colors.cyanAccent,
+                                                  ),
+                                                ],
+                                              ),
+                                            ) : Container(),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),

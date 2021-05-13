@@ -29,7 +29,10 @@ void storeDetailWarningShowModalBottomSheetForm(context, {Color? backColors, Col
                   child: Text('사업자 인증이 필요합니다', style: TextStyle(fontSize: 30,color: textColor),textAlign: TextAlign.center,),
                 ),
                 InkWell(
-                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreDetailScreen())),
+                  onTap: (){
+                    Navigator.of(context).pop();
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreDetailScreen()));
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Row(
@@ -55,15 +58,12 @@ void alertDialogForm(BuildContext context ,{String? confirmBtnText, String? titl
     type: type,
     title: title!,
     text: text!,
-    showCancelBtn: true,
-    cancelBtnText: '닫기',
     borderRadius: 20.0,
     loopAnimation: true,
     backgroundColor: backColors,
     confirmBtnColor: confirmBtnColors,
     confirmBtnText: confirmBtnText!,
     onConfirmBtnTap: onConfirmBtnTap,
-    onCancelBtnTap: ()=>Navigator.of(context).pop(),
   );
 
 }

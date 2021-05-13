@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
-import 'package:sizer/sizer.dart';
 
 
 final wonMaskFormatter = MoneyInputFormatter(
@@ -14,7 +13,7 @@ final wonMaskFormatter = MoneyInputFormatter(
 
 TextStyle salesInputStyle(){
   return TextStyle(
-    fontSize: 15,
+    fontSize: 10,
     color: Colors.black54,
   );
 }
@@ -122,7 +121,7 @@ InputDecoration storeDetailScreenInputDecor(String label, String hint,){
     errorBorder: _storeDetailScreenErrorInputDecor(),
     focusedErrorBorder: _storeDetailScreenErrorInputDecor(),
     labelText: label,
-    errorStyle: TextStyle(fontSize: 12, color: Colors.pink),
+    errorStyle: TextStyle(fontSize: 8, color: Colors.pink),
     isDense: true,
     hintText: hint,
     alignLabelWithHint: true,

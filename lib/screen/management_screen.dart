@@ -135,7 +135,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _managementScreenMonthPicker(),
-                Divider(color: Colors.black26,),
+                 Divider(color: Colors.black26,),
                 _managementScreenMonthTotalSalesAndTotalExpense(monthActualSalesTotalShow, monthTotalExpenseShowTextIntType),
                 Flexible(
                   child: ListView(

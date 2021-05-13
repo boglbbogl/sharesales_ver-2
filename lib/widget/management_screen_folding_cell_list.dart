@@ -6,7 +6,6 @@ import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/constant/size.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sharesales_ver2/constant/firestore_keys.dart';
-import 'package:sizer/sizer.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
 
@@ -248,7 +247,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                               return Padding(
                                                                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                                                 child: Container(
-                                                                  height: size.height * 0.5,
+                                                                  height: size.height * 0.6,
                                                                   child: SingleChildScrollView(
                                                                     child: Stack(
                                                                       children: [
@@ -390,7 +389,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                               return Padding(
                                                                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                                                 child: Container(
-                                                                  height: size.height * 0.5,
+                                                                  height: size.height * 0.6,
                                                                   child: SingleChildScrollView(
                                                                     child: Column(
                                                                       mainAxisSize: MainAxisSize.min,
@@ -507,7 +506,7 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                                               return Padding(
                                                                                                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                                                                                 child: Container(
-                                                                                                  height: size.height * 0.5,
+                                                                                                  height: size.height * 0.6,
                                                                                                   child: SingleChildScrollView(
                                                                                                     child: Column(
                                                                                                       mainAxisSize: MainAxisSize.min,
@@ -580,11 +579,11 @@ class ManagementScreenFoldingCellList extends StatelessWidget {
                                                                                                               setState(() {
                                                                                                                 if (_editAddExpenseTitleController.text.isEmpty) {
                                                                                                                   _titleBadge = true;
-                                                                                                                  return snackBarManagementScreenTopFlushBar(context, '내용을 입력해 주세요', '필수 입력사항 입니다');
+                                                                                                                  return snackBarFlashBarExpenseAddForm(context, massage: '내용을 입력해 주세요');
                                                                                                                 } else if (_editAddExpenseAmountController.text.isEmpty) {
                                                                                                                   _titleBadge = false;
                                                                                                                   _amountBadge = true;
-                                                                                                                  return snackBarManagementScreenTopFlushBar(context, '지출금액을 입력해 주세요', '필수 입력사항 입니다');
+                                                                                                                  return snackBarFlashBarExpenseAddForm(context, massage: '금액을 입력해 주세요');
                                                                                                                 }
                                                                                                                 _amountBadge = false;
                                                                                                                 _titleBadge = false;

@@ -13,7 +13,6 @@ import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
 import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
-import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
 import 'package:sharesales_ver2/widget/search_screen_chart_form.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -45,7 +44,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool circularChartSwitcher = true;
   bool timeSeriesChartSwitcher = true;
 
-  Duration duration = Duration(milliseconds: 10000);
+  Duration duration = Duration(milliseconds: 2000);
 
   @override
   void dispose() {
@@ -176,10 +175,10 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Scaffold(
               backgroundColor: Colors.deepPurple.shade50,
               appBar: mainAppBar(context, secondMainColor,'share sales', Colors.deepPurple.shade50,
-                IconButton(icon: Icon(Icons.search_rounded, size: 26, color: Colors.deepPurpleAccent,),
+                IconButton(icon: Icon(Icons.search_rounded, color: Colors.deepPurpleAccent,),
                   onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
-                leadingIcon: _rangePickerStartDate==null ? Icon(Icons.autorenew_rounded, color: Colors.black54,) : IconButton(icon: Icon(Icons.autorenew_rounded),
-                  color: circularChartSwitcher ? Colors.pinkAccent : Colors.green,
+                leadingIcon: _rangePickerStartDate==null ? Icon(Icons.autorenew_rounded, color: Colors.deepPurple.shade50,) : IconButton(icon: Icon(Icons.autorenew_rounded),
+                  color: circularChartSwitcher ? Colors.pinkAccent : Colors.deepPurpleAccent,
                 onPressed: (){
                   setState(() {
                    circularChartSwitcher = !circularChartSwitcher;
@@ -194,9 +193,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                        Text(_rangePickerStartDate == null ? '기간을 선택해주세요' : _rangePickerStartDate!.replaceAll(".", ''), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
-                        Text(_rangePickerStartDate == _rangePickerEndDate ? '' : '   -   ', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic, color: Colors.black54),),
-                        Text(_rangePickerEndDate == null || _rangePickerEndDate==_rangePickerStartDate ? '' : _rangePickerEndDate!.replaceAll(".", ""), style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic, color: Colors.black54),),
+                        Text(_rangePickerStartDate == null ? '기간을 선택해주세요' : _rangePickerStartDate!.replaceAll(".", ''), style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic, color: Colors.black54),),
+                        Text(_rangePickerStartDate == _rangePickerEndDate ? '' : '   -   ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic, color: Colors.black54),),
+                        Text(_rangePickerEndDate == null || _rangePickerEndDate==_rangePickerStartDate ? '' : _rangePickerEndDate!.replaceAll(".", ""), style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic, color: Colors.black54),),
                       ],
                     ),
                     onTap: (){
@@ -209,7 +208,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                   ),
                 ), preferredSize: Size(size.width*0.8, 50)),),
-              body: SingleChildScrollView(
+              body: snapshot.requireData.docs.isNotEmpty ?
+              SingleChildScrollView(
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -224,12 +224,22 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         ],
                       ),
-                      _rangePickerStartDate == null ? Container() : SearchScreenChartForm(duration, barChartData, circularChartData, totalSales, totalExpense, doughnutMainTotalExpense,
+                      SearchScreenChartForm(duration, barChartData, circularChartData, totalSales, actualSales, totalExpense, doughnutMainTotalExpense,
                           _pageBarChartViewController, _pageRadialChartViewController,_pageDoughnutChartViewController, _pageLinearChartViewController,
                           circularChartSwitcher, timeSeriesChartSwitcher),
                     ],
                   ),
                 ),
+              ) : Container(
+                width: 100.w,
+                height: 100.h,
+                child: Center(child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('내역이 없습니다', style: TextStyle(fontSize: 22, color: Colors.black45),),
+                    SizedBox(height: 10.h,),
+                  ],
+                )),
               ),
             ),
           ),
@@ -414,10 +424,10 @@ class _SearchScreenState extends State<SearchScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text('$topTitle : ' + koFormatMoney.format(topValue) + ' 원',
-                                style: TextStyle(color: Colors.white, fontSize: 19),),
+                                style: TextStyle(color: Colors.white, fontSize: 15),),
                                 SizedBox(height: 4,),
                                 Text('$bottomTitle : ' + koFormatMoney.format(bottomValue) + ' 원',
-                                style: TextStyle(color: Colors.white, fontSize: 19),),
+                                style: TextStyle(color: Colors.white, fontSize: 15),),
                               ],
                             ),
                           ),
@@ -436,7 +446,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 context: context,
                                 builder: (BuildContext context){
                                   return Container(
-                                    height: size.height*0.2,
+                                    height: size.height*0.23,
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: Colors.black,

@@ -185,9 +185,9 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
   Container _storeDetailScreenHalfTextForm(String label, String hint,TextEditingController controller,TextInputType keyboardType,
       {List<TextInputFormatter>? inputFormatter, validator}) {
     return Container(
-                          // margin: EdgeInsets.symmetric(vertical: 1.h),
+                          // margin: EdgeInsets.symmetric(vertical: 0.1.h),
                           // width: 60.w,
-                          height: 6.h,
+                          height: 7.h,
                           child: TextFormField(
                             validator: validator,
                             autovalidateMode: AutovalidateMode.onUserInteraction,

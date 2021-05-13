@@ -35,8 +35,8 @@ class UserModel {
 
   static Map<String, dynamic> getMapForCreateUser(String? email) {
     Map<String, dynamic> map = Map();
-    map[KEY_USERNAME] = '';
-    map[KEY_EMAIL] = email==null || email.isEmpty ? 'error':email;
+    map[KEY_USERNAME] = email!.isEmpty ? 'e' : email.split('@')[0];
+    map[KEY_EMAIL] = email;
     map[KEY_REPRESENTATIVE] = '';
     map[KEY_STORENAME] = '';
     map[KEY_STORECODE] = '';

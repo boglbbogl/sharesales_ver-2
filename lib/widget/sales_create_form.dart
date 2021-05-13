@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
-import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sizer/sizer.dart';
 
 class SalesCreateForm extends StatelessWidget {
@@ -68,7 +67,7 @@ class SalesCreateForm extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Container(
-          height: 8.h,
+          height: 9.h,
           width: 30.w,
           child: TextFormField(
             controller: startController,
@@ -82,7 +81,7 @@ class SalesCreateForm extends StatelessWidget {
           ),
         ),
         Container(
-          height: 8.h,
+          height: 9.h,
           width: 30.w,
           child: TextFormField(
             controller: endController,

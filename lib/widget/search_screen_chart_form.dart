@@ -12,6 +12,7 @@ class SearchScreenChartForm extends StatelessWidget {
   final List<BarChartData> barChartData;
   final List<CircularChartData> circularChartData;
   final int? totalSales;
+  final int? actualSales;
   final int totalExpense;
   final double doughnutMainTotalExpense;
   final _pageBarChartViewController;
@@ -21,7 +22,7 @@ class SearchScreenChartForm extends StatelessWidget {
   final bool circularChartSwitcher;
   final bool timeSeriesChartSwitcher;
 
-  const SearchScreenChartForm(this.duration, this.barChartData,this.circularChartData, this.totalSales, this.totalExpense, this.doughnutMainTotalExpense,
+  const SearchScreenChartForm(this.duration, this.barChartData,this.circularChartData, this.totalSales, this.actualSales, this.totalExpense, this.doughnutMainTotalExpense,
       this._pageBarChartViewController, this._pageRadialChartViewController, this._pageDoughnutChartViewController, this._pageLinearChartViewController,
       this.circularChartSwitcher, this.timeSeriesChartSwitcher,{Key? key}) : super(key: key);
 
@@ -259,9 +260,9 @@ class SearchScreenChartForm extends StatelessWidget {
       controller: _pageRadialChartViewController,
       children: [
         _searchScreenRadialChartToSalesAndExpense(circularChartData, (CircularChartData data, _)=>data.radialMainShow,
-        totalSales!.toDouble()*1.1+.0),
+      totalSales! > actualSales! ? totalSales!.toDouble()*1.1+.0 : actualSales!.toDouble()*1.1+.0),
         _searchScreenRadialChartToSalesAndExpense(circularChartData, (CircularChartData data, _)=>data.radialSales,
-        totalSales!.toDouble()*1.1+.0),
+            totalSales! > actualSales! ? totalSales!.toDouble()*1.1+.0 : actualSales!.toDouble()*1.1+.0),
         _searchScreenRadialChartToSalesAndExpense(circularChartData, (CircularChartData data, _)=>data.radialExpense,
             totalExpense.toDouble()*1.1+.0),
       ],

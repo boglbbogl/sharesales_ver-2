@@ -1,7 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
-import 'package:sharesales_ver2/constant/size.dart';
 import 'package:sharesales_ver2/constant/snack_bar_style.dart';
 import 'package:sharesales_ver2/screen/management_screen.dart';
 import 'package:sizer/sizer.dart';
@@ -91,11 +90,12 @@ class _ExpenseTextAddCreateFormState extends State<ExpenseTextAddCreateForm> {
                     FocusScope.of(context).unfocus();
                       if (expenseTitleController.text.isEmpty) {
                         _titleBadge = true;
-                        return snackBarManagementScreenTopFlushBar(context, '내용을 입력해 주세요', '필수 입력사항 입니다');
+                        return snackBarFlashBarExpenseAddForm(context, massage: '내용을 입력해 주세요');
                       } else if (expenseAmountController.text.isEmpty) {
                         _titleBadge = false;
                         _amountBadge = true;
-                        return snackBarManagementScreenTopFlushBar(context, '지출금액을 입력해 주세요', '필수 입력사항 입니다');
+                        return snackBarFlashBarExpenseAddForm(context, massage: '금액을 입력해 주세요');
+                        // return snackBarFlashBarCreateManagementDatePickerWarning(context, );
                       }
                       _amountBadge = false;
                       _titleBadge = false;

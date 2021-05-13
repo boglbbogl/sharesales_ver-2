@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
-import 'package:group_button/group_button.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:sharesales_ver2/constant/alert_dialog_and_bottom_sheet_form.dart';
@@ -14,11 +13,10 @@ import 'package:sharesales_ver2/constant/firestore_keys.dart';
 import 'package:sharesales_ver2/constant/input_decor.dart';
 import 'package:sharesales_ver2/firebase_auth/firebase_auth_state.dart';
 import 'package:sharesales_ver2/firebase_auth/user_model_state.dart';
-import 'package:sharesales_ver2/screen/store_detail_screen.dart';
+import 'package:sharesales_ver2/widget/profile_screen_body_form.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 
-import 'create_management_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -107,7 +105,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _advancedDrawerController.hideDrawer();
                         alertDialogForm(context, type: CoolAlertType.info, title: '수정 하시겠습니까 ?', text: '', confirmBtnText: '수정하기',
                             backColors: Colors.deepPurple, confirmBtnColors: Colors.deepPurple, onConfirmBtnTap: (){
-                          Navigator.of(context).pop();
                               _storeCodeController.text = userModel.storeCode!;
                               _storeNameController.text = userModel.storeName!;
                               _representativeController.text = userModel.representative!;
@@ -117,15 +114,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _typeOfBusinessController.text = userModel.typeOfBusiness!;
                               _typeOfServiceController.text = userModel.typeOfService!;
                               _userNameController.text = userModel.userName!;
-                              _businessInformationCorrectWidgetBottomForm(context, userModel);
-                            });
+                              Navigator.of(context).pop();
+                          if(userModel.storeCode!.isEmpty || userModel.storeCode!.length==0 || userModel.storeName!.isEmpty || userModel.storeName!.length==0 ||
+                              userModel.personalOrCorporate!.isEmpty || userModel.pocCode!.isEmpty || userModel.openDate!.isEmpty || userModel.representative!.isEmpty ||
+                              userModel.typeOfBusiness!.isEmpty || userModel.typeOfService!.isEmpty){
+                            return _userInformationCorrectWidgetBottomForm(context, userModel);
+                          } else{
+                            return _businessInformationCorrectWidgetBottomForm(context, userModel);
+                          }});
                       },
                       leading: Icon(Icons.account_circle_outlined),
                       title: Text('수정하기'),
                     ),
                     ListTile(
                       onTap: () {
-                        _userInformationCorrectWidgetBottomForm(context, userModel);
                       },
                       leading: Icon(Icons.settings),
                       title: Text('설정'),
@@ -158,11 +160,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ),
             ),
+            body: ProfileScreenBodyForm(),
           ),
         ),
       ),
     );
   }
+
   Future _userInformationCorrectWidgetBottomForm(BuildContext context, UserModel userModel){
     return showMaterialModalBottomSheet(
         closeProgressThreshold: 5.0,
@@ -201,8 +205,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     COLLECTION_USERS).doc(userModel.userKey).update({
                                   'userName' : _userNameController.text.isEmpty ? '':_userNameController.text,
                                 });
-                               _userNameController.dispose();
                                 Navigator.of(context).pop();
+                                // _userNameController.dispose();
                               }
                             },
                             child: Row(
@@ -214,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           SizedBox(height: 10.h,),
                           _correctTextFormFieldForm('사용자이름', controller: _userNameController, inputFormatter: [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣|a-z|A-Z]'))],
-                          keyboardType: TextInputType.text, validator: (text)=> text.isNotEmpty?null:''),
+                          keyboardType: TextInputType.text, validator: (text)=> text.isEmpty?'':null),
 
                         ],
                       ),
@@ -239,86 +243,91 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context: context,
                     builder: (BuildContext context){
 
-                      return GestureDetector(
-                        onTap: ()=>FocusScope.of(context).unfocus(),
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: Form(
-                            key: _formKey,
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: Form(
+                          key: _formKey,
+                          child: Container(
+                            height: 90.h,
                             child: Container(
-                              height: 90.h,
+                              decoration: BoxDecoration(
+                                color: Colors.deepPurple,
+                                borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+                              ),
                               child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.deepPurple,
-                                  borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-                                ),
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10.w),
-                                  child: DefaultTextStyle(
-                                    style: TextStyle(color: Colors.amber),
-                                    child: ListView(
-                                      children: <Widget>[
-                                        SizedBox(height: 2.h,),
-                                        InkWell(
-                                          onTap: (){
-                                            if(_formKey.currentState!.validate()) {
-                                              FirebaseFirestore.instance.collection(
-                                                  COLLECTION_USERS).doc(userModel.userKey).update({
-                                                'representative': _representativeController.text.isEmpty ? '' : _representativeController.text,
-                                                'storeName': _storeNameController.text.isEmpty ? '' : _storeNameController.text,
-                                                'pocCode': _pocCodeController.text.isEmpty ? '' : _pocCodeController.text,
-                                                'openDate': _openDateController.text.isEmpty ? '' : _openDateController.text,
-                                                'typeOfService': _typeOfServiceController.text.isEmpty ? '' : _typeOfServiceController.text,
-                                                'typeOfBusiness': _typeOfBusinessController.text.isEmpty ? '' : _typeOfBusinessController.text,
-                                                'storeLocation': _storeLocationController.text.isEmpty ? '' : _storeLocationController.text,
-                                              });
-                                              _representativeController.clear();
-                                              _storeNameController.clear();
-                                              _storeCodeController.clear();
-                                              _pocCodeController.clear();
-                                              _openDateController.clear();
-                                              _typeOfServiceController.clear();
-                                              _typeOfBusinessController.clear();
-                                              _storeLocationController.clear();
-                                              // Navigator.of(context).pop();
-                                            }
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Text('수정하기  ',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,fontFamily: 'Yanolja'),textAlign: TextAlign.center,),
-                                            Icon(Icons.double_arrow, color: Colors.amber,),
-                                            ],
-                                          ),
+                                margin: EdgeInsets.symmetric(horizontal: 10.w),
+                                child: DefaultTextStyle(
+                                  style: TextStyle(color: Colors.amber),
+                                  child: ListView(
+                                    children: <Widget>[
+                                      SizedBox(height: 2.h,),
+                                      InkWell(
+                                        onTap: (){
+                                          if(_formKey.currentState!.validate()) {
+                                            FirebaseFirestore.instance.collection(
+                                                COLLECTION_USERS).doc(userModel.userKey).update({
+                                              'representative': _representativeController.text.isEmpty ? '' : _representativeController.text,
+                                              'storeName': _storeNameController.text.isEmpty ? '' : _storeNameController.text,
+                                              'pocCode': _pocCodeController.text.isEmpty ? '' : _pocCodeController.text,
+                                              'openDate': _openDateController.text.isEmpty ? '' : _openDateController.text,
+                                              'typeOfService': _typeOfServiceController.text.isEmpty ? '' : _typeOfServiceController.text,
+                                              'typeOfBusiness': _typeOfBusinessController.text.isEmpty ? '' : _typeOfBusinessController.text,
+                                              'storeLocation': _storeLocationController.text.isEmpty ? '' : _storeLocationController.text,
+                                            });
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Text('수정하기  ',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,fontFamily: 'Yanolja'),textAlign: TextAlign.center,),
+                                          Icon(Icons.double_arrow, color: Colors.amber,),
+                                          ],
                                         ),
-                                        SizedBox(height: 10.h,),
-                                        Text(userModel.personalOrCorporate=='개인' ? '개인사업자':'법인사업자', style: TextStyle(fontFamily: 'Yanolja', color: Colors.white, fontSize: 15),),
-                                        _correctTextFormFieldForm('사업자번호',controller: _storeCodeController,enabled: false, keyboardType: TextInputType.number, inputFormatter: [], validator: (text){}),
-                                        _correctTextFormFieldForm(userModel.personalOrCorporate=='개인' ? '상호':'법인명',controller: _storeNameController, inputFormatter: [], keyboardType: TextInputType.text,
-                                            validator: (text)=>text!.isNotEmpty?null:''),
-                                        _correctTextFormFieldForm('대표자',controller: _representativeController, inputFormatter: [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣|a-z|A-Z]'))], keyboardType: TextInputType.text,
-                                            validator: (text)=>text!.isNotEmpty?null:''),
-                                        userModel.personalOrCorporate=='개인' ?
-                                        _correctTextFormFieldForm('생년월일', controller: _pocCodeController, inputFormatter: [MaskedInputFormatter('####-##-##')], keyboardType: TextInputType.number,
-                                            validator: (text)=>text!.toString().trim().length==10?null:'정확하게 입력해 주세요')
-                                        :_correctTextFormFieldForm('법인등록번호', controller: _pocCodeController, inputFormatter: [MaskedInputFormatter('######-#######')], keyboardType: TextInputType.number,
-                                            validator: (text)=>text!.toString().trim().length==14?null:'정확하게 입력해 주세요'),
-                                        _correctTextFormFieldForm('개업일',controller: _openDateController, inputFormatter: [MaskedInputFormatter('####-##-##')], keyboardType: TextInputType.number,
-                                            validator: (text)=>text!.toString().trim().length==10?null:'정확하게 입력해 주세요'),
-                                        _correctTextFormFieldForm('종목',controller: _typeOfBusinessController, inputFormatter: [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣|a-z|A-Z]'))], keyboardType: TextInputType.text,
-                                            validator: (text)=>text.isNotEmpty?null:''),
-                                        _correctTextFormFieldForm('업태',controller: _typeOfServiceController, inputFormatter: [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣|a-z|A-Z]'))], keyboardType: TextInputType.text,
-                                            validator: (text)=>text.isNotEmpty?null:''),
-                                        _correctTextFormFieldForm('주소',controller: _storeLocationController, inputFormatter: [], keyboardType: TextInputType.text,
-                                            validator: (text){}),
-                                        SizedBox(height: 5.h,),
-                                        Row(
+                                      ),
+                                      SizedBox(height: 10.h,),
+                                      Text(userModel.personalOrCorporate=='개인' ? '개인사업자':'법인사업자', style: TextStyle(fontFamily: 'Yanolja', color: Colors.white, fontSize: 15),),
+                                      _correctTextFormFieldForm('사업자번호',controller: _storeCodeController,enabled: false, keyboardType: TextInputType.number, inputFormatter: [], validator: (text){}),
+                                      _correctTextFormFieldForm(userModel.personalOrCorporate=='개인' ? '상호':'법인명',controller: _storeNameController, inputFormatter: [], keyboardType: TextInputType.text,
+                                          validator: (text)=>text!.isNotEmpty?null:''),
+                                      _correctTextFormFieldForm('대표자',controller: _representativeController, inputFormatter: [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣|a-z|A-Z]'))], keyboardType: TextInputType.text,
+                                          validator: (text)=>text!.isNotEmpty?null:''),
+                                      userModel.personalOrCorporate=='개인' ?
+                                      _correctTextFormFieldForm('생년월일', controller: _pocCodeController, inputFormatter: [MaskedInputFormatter('####-##-##')], keyboardType: TextInputType.number,
+                                          validator: (text)=>text!.toString().trim().length==10?null:'정확하게 입력해 주세요')
+                                      :_correctTextFormFieldForm('법인등록번호', controller: _pocCodeController, inputFormatter: [MaskedInputFormatter('######-#######')], keyboardType: TextInputType.number,
+                                          validator: (text)=>text!.toString().trim().length==14?null:'정확하게 입력해 주세요'),
+                                      _correctTextFormFieldForm('개업일',controller: _openDateController, inputFormatter: [MaskedInputFormatter('####-##-##')], keyboardType: TextInputType.number,
+                                          validator: (text)=>text!.toString().trim().length==10?null:'정확하게 입력해 주세요'),
+                                      _correctTextFormFieldForm('종목',controller: _typeOfBusinessController, inputFormatter: [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣|a-z|A-Z]'))], keyboardType: TextInputType.text,
+                                          validator: (text)=>text.isNotEmpty?null:''),
+                                      _correctTextFormFieldForm('업태',controller: _typeOfServiceController, inputFormatter: [FilteringTextInputFormatter.allow(RegExp('[ㄱ-ㅎ|가-힣|a-z|A-Z]'))], keyboardType: TextInputType.text,
+                                          validator: (text)=>text.isNotEmpty?null:''),
+                                      _correctTextFormFieldForm('주소',controller: _storeLocationController, inputFormatter: [], keyboardType: TextInputType.text,
+                                          validator: (text){}),
+                                      SizedBox(height: 5.h,),
+                                      InkWell(
+                                        onTap: (){
+                                          FirebaseFirestore.instance.collection(
+                                              COLLECTION_USERS).doc(userModel.userKey).update({
+                                            'representative':  '',
+                                            'storeName':  '',
+                                            'pocCode':  '',
+                                            'openDate':  '',
+                                            'typeOfService':  '',
+                                            'typeOfBusiness':  '',
+                                            'storeLocation':  '',
+                                            'personalOrCorporate': '',
+                                            'storeCode': '',
+                                          });
+                                        },
+                                        child: Row(
                                           children: <Widget>[
                                             Text('삭제하기', style: TextStyle(color: Colors.cyanAccent,fontSize: 30, fontWeight: FontWeight.bold,fontFamily: 'Yanolja'),textAlign: TextAlign.center,),
                                             Icon(Icons.clear_sharp, color: Colors.cyanAccent,)
                                           ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

@@ -269,6 +269,7 @@ class _MainScreenState extends State<MainScreen> {
         return SafeArea(
           child: GestureDetector(
             onTap: (){
+              _advancedDrawerController.hideDrawer();
             },
             child: AdvancedDrawer(
               openRatio: 0.4,
@@ -294,7 +295,8 @@ class _MainScreenState extends State<MainScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => StoreDetailScreen()));
                             } else{
-                              alertDialogForm(context, type: CoolAlertType.success, title: '인증완료', text: '수정을 하시겠습니까 ?', confirmBtnText: '수정하기',
+                              _advancedDrawerController.hideDrawer();
+                              alertDialogForm(context, type: CoolAlertType.success, title: '인증완료', text: '', confirmBtnText: '확인',
                                   backColors: Colors.amber, confirmBtnColors: Colors.amber, onConfirmBtnTap: (){
                                     Navigator.of(context).pop();
                                   });
@@ -323,6 +325,7 @@ class _MainScreenState extends State<MainScreen> {
                             (userModel.storeCode!.isEmpty || userModel.storeName!.isEmpty) ?
                             storeDetailWarningShowModalBottomSheetForm(context, backColors: Colors.amber.shade50, textColor: Colors.black54) :
                             _mainScreenProfileSimpleBottomSheetForm(context, userModel);
+
                           },
                           leading: Icon(Icons.account_circle),
                           title: Text('프로필'),
@@ -401,10 +404,10 @@ class _MainScreenState extends State<MainScreen> {
                 appBarBottom: PreferredSize(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(userModel.storeName!.isEmpty ? userModel.email!.split('@')[0] : userModel.storeName!, style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 28,
+                      child: Text(userModel.storeName!.isEmpty ? userModel.userName! : userModel.storeName! ,
+                        style: TextStyle(
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
                         foreground: Paint()..shader = secondMainColor,
                       ),),
                     ),
