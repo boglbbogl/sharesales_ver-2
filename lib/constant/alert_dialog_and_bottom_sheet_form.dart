@@ -4,6 +4,30 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:sharesales_ver2/screen/store_detail_screen.dart';
 import 'package:sizer/sizer.dart';
 
+void showMaterialModalBottomSheetShareSalesConstantForm(context, {required widget, required duration, required height, required colors}){
+  showMaterialModalBottomSheet(
+    closeProgressThreshold: 5.0,
+    elevation: 0,
+    enableDrag: true,
+    animationCurve: Curves.fastOutSlowIn,
+    duration: duration,
+    barrierColor: Colors.white12,
+    backgroundColor: Colors.white12,
+    context: context, builder: (BuildContext context){
+     return GestureDetector(
+       onTap: ()=> FocusScope.of(context).unfocus(),
+       child: Container(
+         height: height,
+         decoration: BoxDecoration(
+           color: colors,
+           borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30))
+         ),
+         child: widget,
+       ),
+     );
+  });
+}
+
 void storeDetailWarningShowModalBottomSheetForm(context, {Color? backColors, Color? textColor}){
   showMaterialModalBottomSheet(
       closeProgressThreshold: 5.0,

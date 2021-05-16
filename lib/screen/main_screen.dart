@@ -18,6 +18,7 @@ import 'package:sharesales_ver2/firebase_firestore/chart_model.dart';
 import 'package:sharesales_ver2/firebase_firestore/user_model.dart';
 import 'package:sharesales_ver2/screen/create_management_screen.dart';
 import 'package:sharesales_ver2/screen/store_detail_screen.dart';
+import 'package:sharesales_ver2/widget/main_profile_setting_bottom_sheet.dart';
 import 'package:sharesales_ver2/widget/main_screen_chart_form.dart';
 import 'package:sharesales_ver2/widget/main_screen_tab_indicator_form.dart';
 import 'package:sharesales_ver2/widget/my_progress_indicator.dart';
@@ -356,7 +357,10 @@ class _MainScreenState extends State<MainScreen> {
                           title: Text('검색'),
                         ),
                         ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            _advancedDrawerController.hideDrawer();
+                            mainProfileSettingBottomSheet(context);
+                          },
                           leading: Icon(Icons.settings),
                           title: Text('설정'),
                         ),
@@ -538,7 +542,7 @@ class _MainScreenState extends State<MainScreen> {
                           width: 90.w,height: 0.1.h, color: Colors.deepOrangeAccent,),
                         Container(
                           margin: EdgeInsets.symmetric(vertical: 1.h),
-                          child: Text(userModel.personalOrCorporate=='개인' ? '상         호   :   ' + userModel.storeName! :'법   인   명   :   ' + userModel.storeName! ),
+                          child: Text(userModel.personalOrCorporate=='개인' ? '상         호   :   ' + userModel.storeName! :'법   인   명   :   ' + userModel.storeName!),
                         ),
                         Row(
                           children: <Widget>[
@@ -550,7 +554,7 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                             Container(
                               margin: EdgeInsets.symmetric(vertical: 1.h),
-                              child: Text(userModel.personalOrCorporate=='개인' ? '생년월일   :   ' +userModel.pocCode! : '법인등록번호   :   ' + userModel.pocCode!),
+                              child: Text(userModel.personalOrCorporate=='개인' ? '생년월일   :   ' +userModel.pocCode! : '법인등록번호   :   ' + userModel.pocCode!.substring(0,8)),
                             ),
                           ],
                         ),
