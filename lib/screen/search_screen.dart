@@ -176,7 +176,15 @@ class _SearchScreenState extends State<SearchScreen> {
               backgroundColor: Colors.deepPurple.shade50,
               appBar: mainAppBar(context, secondMainColor,'share sales', Colors.deepPurple.shade50,
                 IconButton(icon: Icon(Icons.search_rounded, color: Colors.deepPurpleAccent,),
-                  onPressed: ()=> _searchScreenShowBottomSheetRangeDatePickerList(context),),
+                  onPressed: (){
+                  if(userModel.storeCode!.isEmpty || userModel.storeCode!.length==0 || userModel.storeName!.isEmpty || userModel.storeName!.length==0 ||
+                      userModel.personalOrCorporate!.isEmpty || userModel.pocCode!.isEmpty || userModel.openDate!.isEmpty || userModel.representative!.isEmpty ||
+                      userModel.typeOfBusiness!.isEmpty || userModel.typeOfService!.isEmpty){
+                    storeDetailWarningShowModalBottomSheetForm(context, backColors: Colors.black, textColor: Colors.white);
+                  }else{
+                    _searchScreenShowBottomSheetRangeDatePickerList(context);
+                  }
+                  }),
                 leadingIcon: _rangePickerStartDate==null ? Icon(Icons.autorenew_rounded, color: Colors.deepPurple.shade50,) : IconButton(icon: Icon(Icons.autorenew_rounded),
                   color: circularChartSwitcher ? Colors.pinkAccent : Colors.deepPurpleAccent,
                 onPressed: (){

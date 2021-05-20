@@ -75,14 +75,7 @@ class ProfileScreenBodyFlipCard extends StatelessWidget {
                 _flipCardBackBasicTextForm(hint: '사업장소재지'),
               ],
             ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: _flipCardBackBasicTextForm(hint: userModel.storeLocation!),
-                ),
-              ],
-            ),
+            _flipCardBackTextForm(title: userModel.storeLocation!),
           ],
         ),
       );
